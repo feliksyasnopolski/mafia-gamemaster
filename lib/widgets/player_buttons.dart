@@ -214,7 +214,7 @@ class PlayerButtons extends OrientationDependentWidget {
                     padding: const EdgeInsets.all(4),
                     child: _buildPlayerButton(
                       context,
-                      controller.players[i.isEven ? i + itemsPerRow + i - j - 1 : j].number,
+                      controller.players[i.isEven ? j*2 : (j-itemsPerRow)*2+1].number,
                       controller.state,
                     ),
                   ),

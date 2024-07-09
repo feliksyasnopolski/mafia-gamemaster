@@ -21,10 +21,13 @@ class Player {
   final PlayerRole role;
   final int number;
   final bool isAlive;
+  final String nickname;
+
 
   const Player({
     required this.role,
     required this.number,
+    required this.nickname,
     this.isAlive = true,
   });
 
@@ -32,11 +35,13 @@ class Player {
     PlayerRole? role,
     int? number,
     bool? isAlive,
+    String? nickname,
   }) =>
       Player(
         isAlive: isAlive ?? this.isAlive,
         role: role ?? this.role,
         number: number ?? this.number,
+        nickname: nickname ?? this.nickname,
       );
 
   @override
@@ -81,7 +86,7 @@ List<Player> generatePlayers({
   return playerRoles
       .asMap()
       .entries
-      .map((entry) => Player(role: entry.value, number: entry.key + 1))
+      .map((entry) => Player(role: entry.value, number: entry.key + 1, nickname: "Игрок ${entry.key + 1}"))
       .toList(growable: false)
     ..sort((a, b) => a.number.compareTo(b.number))
     ..toUnmodifiableList();

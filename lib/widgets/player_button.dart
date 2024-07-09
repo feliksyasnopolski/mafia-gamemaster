@@ -12,6 +12,7 @@ class PlayerButton extends StatelessWidget {
   final List<Widget> longPressActions;
   final bool showRole;
 
+
   const PlayerButton({
     super.key,
     required this.player,
@@ -28,7 +29,7 @@ class PlayerButton extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Игрок ${player.number}"),
+        title: Text(player.nickname.isEmpty ? "Игрок ${player.number}" : player.nickname),
         content: Text(
           "Состояние: $isAliveText\n"
           "Роль: ${player.role.prettyName}\n"
@@ -92,26 +93,26 @@ class PlayerButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final borderColor = _getBorderColor(context);
-    final cardText = "${player.number}${_getRoleSuffix()}";
+    final cardText = "${player.number}\n ${player.nickname}\n ${_getRoleSuffix()}";
     return Stack(
       children: [
         ElevatedButton(
           style: ButtonStyle(
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
             ),
             side: borderColor != null
-                ? MaterialStateProperty.all(
+                ? WidgetStateProperty.all(
                     BorderSide(
                       color: borderColor,
                       width: 1,
                     ),
                   )
                 : null,
-            backgroundColor: MaterialStateProperty.all(_getBackgroundColor(context)),
-            foregroundColor: MaterialStateProperty.all(_getForegroundColor(context)),
+            backgroundColor: WidgetStateProperty.all(_getBackgroundColor(context)),
+            foregroundColor: WidgetStateProperty.all(_getForegroundColor(context)),
           ),
           onPressed: onTap,
           onLongPress: () => _onLongPress(context),

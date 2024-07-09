@@ -7,7 +7,7 @@ extension PlayerRolePrettyString on PlayerRole {
   String get prettyName {
     switch (this) {
       case PlayerRole.citizen:
-        return "Мирный житель";
+        return "Мирный";
       case PlayerRole.mafia:
         return "Мафия";
       case PlayerRole.don:
