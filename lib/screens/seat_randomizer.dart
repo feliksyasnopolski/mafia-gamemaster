@@ -55,17 +55,17 @@ class _SeatRandomizerScreenState extends State<SeatRandomizerScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (lastSeat != null)
-              Text(
-                "Твоё место — #$lastSeat",
-                style: const TextStyle(fontSize: 48),
-                textAlign: TextAlign.center,
-              ),
-            Text(
-              "Количество свободных мест: ${seatCount - _seats.length}/$seatCount",
-              style: const TextStyle(fontSize: 20),
-            ),
-            _getTextButton(seatCount),
+            // if (lastSeat != null)
+            //   Text(
+            //     "Твоё место — #$lastSeat",
+            //     style: const TextStyle(fontSize: 48),
+            //     textAlign: TextAlign.center,
+            //   ),
+            // Text(
+            //   "Количество свободных мест: ${seatCount - _seats.length}/$seatCount",
+            //   style: const TextStyle(fontSize: 20),
+            // ),
+            // _getTextButton(seatCount),
           ],
         ),
       ),

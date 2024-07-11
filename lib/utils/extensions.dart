@@ -1,4 +1,5 @@
 import "dart:math";
+import "../game/controller.dart";
 
 extension MinMaxItemNum<T extends num> on Iterable<T> {
   T max() => reduce((value, element) => value > element ? value : element);

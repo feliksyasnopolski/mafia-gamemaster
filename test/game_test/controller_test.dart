@@ -4,16 +4,16 @@ import "package:mafia_companion/game/player.dart";
 import "package:mafia_companion/game/states.dart";
 
 const players = <Player>[
-  Player(role: PlayerRole.citizen, number: 1),
-  Player(role: PlayerRole.mafia, number: 2),
-  Player(role: PlayerRole.citizen, number: 3),
-  Player(role: PlayerRole.citizen, number: 4),
-  Player(role: PlayerRole.don, number: 5),
-  Player(role: PlayerRole.citizen, number: 6),
-  Player(role: PlayerRole.sheriff, number: 7),
-  Player(role: PlayerRole.mafia, number: 8),
-  Player(role: PlayerRole.citizen, number: 9),
-  Player(role: PlayerRole.citizen, number: 10),
+  Player(role: PlayerRole.citizen,  number: 1,   nickname: "Player 1"),
+  Player(role: PlayerRole.mafia,    number: 2,   nickname: "Player 2"),
+  Player(role: PlayerRole.citizen,  number: 3,   nickname: "Player 3"),
+  Player(role: PlayerRole.citizen,  number: 4,   nickname: "Player 4"),
+  Player(role: PlayerRole.don,      number: 5,   nickname: "Player 5"),
+  Player(role: PlayerRole.citizen,  number: 6,   nickname: "Player 6"),
+  Player(role: PlayerRole.sheriff,  number: 7,   nickname: "Player 7"),
+  Player(role: PlayerRole.mafia,    number: 8,   nickname: "Player 8"),
+  Player(role: PlayerRole.citizen,  number: 9,   nickname: "Player 9"),
+  Player(role: PlayerRole.citizen,  number: 10,  nickname: "Player 10"),
 ];
 
 extension _GameSkipStates on Game {

@@ -6,6 +6,7 @@ import "package:provider/provider.dart";
 
 import "screens/game_log.dart";
 import "screens/main.dart";
+import "screens/game.dart";
 import "screens/roles.dart";
 import "screens/seat_randomizer.dart";
 import "screens/settings.dart";
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
     const seedColor = Colors.purple;
     return DynamicColorBuilder(
       builder: (light, dark) => MaterialApp(
-        title: "Mafia companion",
+        title: "Помощник ведущего",
         theme: ThemeData(
           colorScheme: (settings.colorSchemeType == ColorSchemeType.system ? light : null) ??
               ColorScheme.fromSeed(
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
         themeMode: settings.themeMode,
         routes: {
           "/": (context) => const MainScreen(),
+          "/game": (context) => const GameScreen(),
           "/roles": (context) => const RolesScreen(),
           "/settings": (context) => const SettingsScreen(),
           "/seats": (context) => const SeatRandomizerScreen(),

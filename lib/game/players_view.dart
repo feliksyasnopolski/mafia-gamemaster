@@ -7,11 +7,11 @@ class PlayersView with IterableMixin<Player> {
   final List<Player> _players;
 
   PlayersView(List<Player> players)
-      : assert(
-          players.asMap().entries.every((element) => element.value.number == element.key + 1),
-          "Players must be sorted by numbers sequentially 1..10",
-        ),
-        _players = players;
+      // : assert(
+      //     players.asMap().entries.every((element) => element.value.number == element.key + 1),
+      //     "Players must be sorted by numbers sequentially 1..10",
+      //   ),
+       : _players = players;
 
   Player operator [](int index) => _players[index];
 

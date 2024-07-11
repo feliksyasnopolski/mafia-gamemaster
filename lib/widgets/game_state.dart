@@ -6,8 +6,11 @@ import "package:vibration/vibration.dart";
 
 import "../game/player.dart";
 import "../game/states.dart";
+import "../screens/main.dart";
+import "../screens/roles.dart";
 import "../utils/extensions.dart";
 import "../utils/game_controller.dart";
+import "../utils/navigation.dart";
 import "../utils/settings.dart";
 import "../utils/ui.dart";
 import "counter.dart";
@@ -50,16 +53,7 @@ class BottomGameStateWidget extends StatelessWidget {
     if (gameState.stage == GameStage.prepare) {
       return Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          TextButton(
-            onPressed: () => Navigator.pushNamed(context, "/seats"),
-            child: const Text("Случайная рассадка", style: TextStyle(fontSize: 20)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pushNamed(context, "/roles"),
-            child: const Text("Раздача ролей", style: TextStyle(fontSize: 20)),
-          ),
-        ],
+        children: [],
       );
     }
 
@@ -109,20 +103,21 @@ class BottomGameStateWidget extends StatelessWidget {
           Text(resultText, style: const TextStyle(fontSize: 20)),
           TextButton(
             onPressed: () async {
-              final restartGame = await showDialog<bool>(
-                context: context,
-                builder: (context) => const RestartGameDialog(),
-              );
-              if (restartGame ?? false) {
-                controller.restart();
-                if (context.mounted) {
-                  unawaited(
-                    showSnackBar(context, const SnackBar(content: Text("Игра перезапущена"))),
-                  );
-                }
+              // final restartGame = await showDialog<bool>(
+              //   context: context,
+              //   builder: (context) => const RestartGameDialog(),
+              // );
+              // if (restartGame ?? false) {
+              openPage(context, MainScreen());
+              // controller.restart();
+              if (context.mounted) {
+                unawaited(
+                  showSnackBar(context, const SnackBar(content: Text("Игра перезапущена"))),
+                );
               }
+              // }
             },
-            child: const Text("Начать заново", style: TextStyle(fontSize: 20)),
+            child: const Text("На главную", style: TextStyle(fontSize: 20)),
           ),
         ],
       );
@@ -145,17 +140,11 @@ class BottomGameStateWidget extends StatelessWidget {
         key: ValueKey(controller.state),
         duration: timeLimit,
         onTimerTick: (duration) async {
-          if (await Vibration.hasVibrator() != true) {
-            return;
-          }
           if (duration == Duration.zero) {
-            await Vibration.vibrate(duration: 100);
             await Future<void>.delayed(
               const Duration(milliseconds: 300),
             ); // 100 vibration + 200 pause
-            await Vibration.vibrate(duration: 100);
           } else if (duration <= const Duration(seconds: 5)) {
-            await Vibration.vibrate(duration: 20);
           }
         },
       );

@@ -52,33 +52,33 @@ class AppDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             child: Center(
-              child: Text(packageInfo.appName, style: Theme.of(context).textTheme.titleLarge),
+              child: Text("High Tech Mafia club", style: Theme.of(context).textTheme.titleLarge),
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.group),
-            title: const Text("Случайная рассадка"),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, "/seats");
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text("Раздача ролей"),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, "/roles");
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.format_list_numbered),
-            title: const Text("Официальные правила"),
-            onTap: () {
-              Navigator.pop(context);
-              _openGameRules(context);
-            },
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.group),
+          //   title: const Text("Случайная рассадка"),
+          //   onTap: () {
+          //     Navigator.pop(context);
+          //     Navigator.pushNamed(context, "/seats");
+          //   },
+          // ),
+          // ListTile(
+          //   leading: const Icon(Icons.person),
+          //   title: const Text("Раздача ролей"),
+          //   onTap: () {
+          //     Navigator.pop(context);
+          //     Navigator.pushNamed(context, "/roles");
+          //   },
+          // ),
+          // ListTile(
+          //   leading: const Icon(Icons.format_list_numbered),
+          //   title: const Text("Официальные правила"),
+          //   onTap: () {
+          //     Navigator.pop(context);
+          //     _openGameRules(context);
+          //   },
+          // ),
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text("Настройки"),
