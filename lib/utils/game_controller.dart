@@ -10,17 +10,16 @@ import "api_calls.dart";
 class GameController with ChangeNotifier {
   Game _game = Game();
   List<Player> _players = [];
-  
+
   set players(List<Player> value) {
     assert(value.length == 10, "Nicknames list must have 10 elements");
     _players = value;
   }
+
   bool isStarted = false;
   Iterable<BaseGameLogItem> get gameLog => _game.log;
 
   BaseGameState get state => _game.state;
-
-  BaseGameState? get nextStateAssumption => _game.nextStateAssumption;
 
   BaseGameState? get previousState => _game.previousState;
 
@@ -36,7 +35,19 @@ class GameController with ChangeNotifier {
 
   PlayerRole? get winTeamAssumption => _game.winTeamAssumption;
 
+  BaseGameState? get nextStateAssumption {
+    final assumption = _game.nextStateAssumption;
+    if (assumption == null) {
+      apiCalls.stopGame();
+    }
+    return assumption;
+  }
+
+
   void restart() {
+    _players = [];
+    _game = Game();
+    isStarted = false;
     notifyListeners();
   }
 
@@ -63,8 +74,10 @@ class GameController with ChangeNotifier {
   }
 
   void setNextState() {
+    apiCalls.updateLog(_game);
     _game.setNextState();
     apiCalls.updatePlayers(players);
+      // ..updateVoteCandidates(voteCandidates);
     notifyListeners();
   }
 
@@ -74,7 +87,8 @@ class GameController with ChangeNotifier {
   }
 
   void warnPlayer(int player) {
-    apiCalls?.updateStatus({"action": "kill", "player": _players[player].nickname});
+    // apiCalls
+    //     .updateStatus({"action": "foul", "player": _players[player].nickname});
     _game.warnPlayer(player);
     notifyListeners();
   }
@@ -87,7 +101,8 @@ class GameController with ChangeNotifier {
   }
 
   void killPlayer(int player) {
-    apiCalls.updateStatus({"action": "kill", "player": _players[player].nickname});
+    // apiCalls
+    //     .updateStatus({"action": "kill", "player": _players[player].nickname});
     _game.players.kill(player);
     notifyListeners();
   }

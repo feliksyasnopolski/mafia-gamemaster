@@ -16,6 +16,19 @@ extension PlayerRolePrettyString on PlayerRole {
         return "Шериф";
     }
   }
+
+  String get jsonName {
+    switch (this) {
+      case PlayerRole.citizen:
+        return "citizen";
+      case PlayerRole.mafia:
+        return "mafia";
+      case PlayerRole.don:
+        return "godfather";
+      case PlayerRole.sheriff:
+        return "sheriff";
+    }
+  }
 }
 
 extension GameStatePrettyString on BaseGameState {

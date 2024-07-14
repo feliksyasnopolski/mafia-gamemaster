@@ -19,6 +19,7 @@ import "../widgets/player_buttons.dart";
 import "../widgets/restart_dialog.dart";
 import "../game/player.dart";
 import "../utils/navigation.dart";
+import "roles.dart";
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -49,7 +50,9 @@ class _GameScreenState extends State<GameScreen> {
       builder: (context) => const RestartGameDialog(),
     );
     if (context.mounted && (restartGame ?? false)) {
+      unawaited(apiCalls.stopGame());
       context.read<GameController>().restart();
+      openPage(context, const RolesScreen());
       unawaited(showSnackBar(context, const SnackBar(content: Text("Игра перезапущена"))));
     }
   }
