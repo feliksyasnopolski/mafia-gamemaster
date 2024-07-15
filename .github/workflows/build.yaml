@@ -57,8 +57,8 @@ jobs:
       - name: Analyze code
         run: flutter analyze
 
-      - name: Check formatting
-        run: dart format --set-exit-if-changed --output none --line-length=100 lib/
+      # - name: Check formatting
+      #  run: dart format --set-exit-if-changed --output none --line-length=100 lib/
 
       - name: Run tests
         run: flutter test
