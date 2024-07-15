@@ -16,12 +16,14 @@ enum ColorSchemeType {
 const defaultTimerType = TimerType.plus5;
 const defaultThemeMode = ThemeMode.system;
 const defaultColorSchemeType = ColorSchemeType.system;
+const defaultToken = "";
 
 Future<SettingsModel> getSettings() async {
   final prefs = await SharedPreferences.getInstance();
   final timerTypeString = prefs.getString("timerType") ?? defaultTimerType.name;
   final theme = prefs.getString("theme") ?? defaultThemeMode.name;
   final colorSchemeTypeString = prefs.getString("colorSchemeType") ?? defaultColorSchemeType.name;
+  final appToken = prefs.getString("appToken") ?? defaultToken;
 
   final TimerType timerType;
   switch (timerTypeString) {
@@ -69,6 +71,7 @@ Future<SettingsModel> getSettings() async {
     timerType: timerType,
     themeMode: themeMode,
     colorSchemeType: colorSchemeType,
+    appToken: appToken
   );
 }
 
@@ -81,26 +84,40 @@ Future<void> saveSettings(SettingsModel settings) async {
   await prefs.setString("timerType", timerTypeString);
   await prefs.setString("theme", theme);
   await prefs.setString("colorSchemeType", colorSchemeTypeString);
+  await prefs.setString("appToken", settings.appToken);
 }
 
 class SettingsModel with ChangeNotifier {
   TimerType _timerType;
   ThemeMode _themeMode;
   ColorSchemeType _colorSchemeType;
+  String    _appToken;
 
   SettingsModel({
     required TimerType timerType,
     required ThemeMode themeMode,
     required ColorSchemeType colorSchemeType,
+    required String appToken,
   })  : _timerType = timerType,
         _themeMode = themeMode,
-        _colorSchemeType = colorSchemeType;
+        _colorSchemeType = colorSchemeType,
+        _appToken = appToken;
 
   TimerType get timerType => _timerType;
 
   ThemeMode get themeMode => _themeMode;
 
   ColorSchemeType get colorSchemeType => _colorSchemeType;
+
+  String get appToken => _appToken;
+
+  void setAppToken(String value, {bool save = true}) {
+    _appToken = value;
+    if (save) {
+      saveSettings(this);
+    }
+    notifyListeners();
+  }
 
   void setTimerType(TimerType value, {bool save = true}) {
     _timerType = value;
