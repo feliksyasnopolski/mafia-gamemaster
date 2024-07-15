@@ -50,7 +50,8 @@ class _GameScreenState extends State<GameScreen> {
     if (context.mounted && (restartGame ?? false)) {
       unawaited(apiCalls.stopGame());
       context.read<GameController>().restart();
-      openPage(context, const RolesScreen());
+      await openPage(context, const RolesScreen());
+      // ignore: use_build_context_synchronously
       unawaited(showSnackBar(context, const SnackBar(content: Text("Игра перезапущена"))));
     }
   }

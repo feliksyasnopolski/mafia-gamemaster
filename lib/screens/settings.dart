@@ -145,8 +145,4 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
   }
-  
-  showInputDialog({required BuildContext context, required String title, required String initialValue, required String hintText}) {
-
-  }
 }

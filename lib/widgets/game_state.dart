@@ -105,7 +105,7 @@ class BottomGameStateWidget extends StatelessWidget {
               //   builder: (context) => const RestartGameDialog(),
               // );
               // if (restartGame ?? false) {
-              openPage(context, const MainScreen());
+              await openPage(context, const MainScreen());
               // controller.restart();
               if (context.mounted) {
                 unawaited(

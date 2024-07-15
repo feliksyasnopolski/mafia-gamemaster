@@ -1,3 +1,5 @@
+// ignore_for_file: inference_failure_on_instance_creation
+
 import "dart:async";
 import "dart:convert";
 import "dart:io";
@@ -10,7 +12,7 @@ import "../game/states.dart";
 import "./api_models.dart";
 import "ui.dart";
 
-const String BASE_URL = "https://htmafia.nl";
+const String baseUrl = "https://htmafia.nl";
 // const String BASE_URL = 'http://localhost:3000';
 
 class ApiCalls {
@@ -18,7 +20,7 @@ class ApiCalls {
 
   Future<List<PlayersModel>> getPlayers() async {
     try {
-      final response = await http.get(Uri.parse("$BASE_URL/users"));
+      final response = await http.get(Uri.parse("$baseUrl/users"));
       final body = json.decode(response.body) as List;
       if (response.statusCode == 200) {
         return body.map((dynamic json) {
@@ -54,7 +56,7 @@ class ApiCalls {
     //   json_players[player.number.toString()] = player.role.toString();
     // });
     try {
-      final response = await http.post(Uri.parse("$BASE_URL/new_game"),
+      final response = await http.post(Uri.parse("$baseUrl/new_game"),
           body: json.encode(jsonPlayers),
           headers: {"Content-Type": "application/json"},);
       if (response.statusCode == 200) {
@@ -71,7 +73,7 @@ class ApiCalls {
 
   Future<void> stopGame() async {
     try {
-      final response = await http.post(Uri.parse("$BASE_URL/stop_game"),
+      final response = await http.post(Uri.parse("$baseUrl/stop_game"),
           headers: {"Content-Type": "application/json"},);
       if (response.statusCode == 200) {
         return;
@@ -87,7 +89,7 @@ class ApiCalls {
 
   Future<void> updateStatus(Map<String, dynamic> status) async {
     try {
-      final response = await http.post(Uri.parse("$BASE_URL/update_status"),
+      final response = await http.post(Uri.parse("$baseUrl/update_status"),
           body: json.encode(status),
           headers: {"Content-Type": "application/json"},);
       if (response.statusCode == 200) {
@@ -114,7 +116,7 @@ class ApiCalls {
         ],
       };
       final response = await http.post(
-          Uri.parse("$BASE_URL/update_status"),
+          Uri.parse("$baseUrl/update_status"),
           body: json.encode(jsonPlayers),
           headers: {"Content-Type": "application/json"},);
       if (response.statusCode == 200) {
@@ -176,7 +178,7 @@ class ApiCalls {
       }
 
       final response = await http.post(
-          Uri.parse("$BASE_URL/update_log"),
+          Uri.parse("$baseUrl/update_log"),
           body: json.encode(jsonData),
           headers: {"Content-Type": "application/json"},);
       if (response.statusCode == 200) {
@@ -195,7 +197,7 @@ class ApiCalls {
       final jsonPlayers = <String, dynamic>{"vote_candidates": players};
 
       final response = await http.post(
-          Uri.parse("$BASE_URL/update_votes"),
+          Uri.parse("$baseUrl/update_votes"),
           body: json.encode(jsonPlayers),
           headers: {"Content-Type": "application/json"},);
       if (response.statusCode == 200) {

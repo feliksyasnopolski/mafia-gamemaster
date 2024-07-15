@@ -8,7 +8,7 @@ import "screens/game.dart";
 import "screens/game_log.dart";
 import "screens/main.dart";
 import "screens/roles.dart";
-import "screens/seat_randomizer.dart";
+// import "screens/seat_randomizer.dart";
 import "screens/settings.dart";
 import "utils/game_controller.dart";
 import "utils/settings.dart";
@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
           "/game": (context) => const GameScreen(),
           "/roles": (context) => const RolesScreen(),
           "/settings": (context) => const SettingsScreen(),
-          "/seats": (context) => const SeatRandomizerScreen(),
+          // "/seats": (context) => const SeatRandomizerScreen(),
           "/log": (context) => const GameLogScreen(),
         },
         localizationsDelegates: const [

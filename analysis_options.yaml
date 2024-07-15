@@ -31,6 +31,7 @@ linter:
     # Error
     avoid_slow_async_io: true
     comment_references: true
+
     #discarded_futures: true  # todo: use
     implicit_reopen: true  # experimental
     invalid_case_patterns: true  # experimental
@@ -127,7 +128,7 @@ linter:
     use_test_throws_matchers: true
     use_to_and_as_if_applicable: true
     # Pub
-    sort_pub_dependencies: true
+    sort_pub_dependencies: false
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

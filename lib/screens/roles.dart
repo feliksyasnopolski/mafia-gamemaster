@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
@@ -34,11 +36,11 @@ class _RolesScreenState extends State<RolesScreen> {
   Future<void> _onFabPressed(BuildContext context) async {
     setState(_validate);
     if (_errorsByIndex.isNotEmpty || _errorsByRole.isNotEmpty) {
-      showSnackBar(context, const SnackBar(content: Text("Для продолжения исправьте ошибки")));
+      unawaited(showSnackBar(context, const SnackBar(content: Text("Для продолжения исправьте ошибки"))));
       return;
     }
 
-    final newRoles = _chosenRoles.toList(growable: false);
+    // final newRoles = _chosenRoles.toList(growable: false);
     final players = <Player>[];
     
     for (var i = 0; i < 10; i++) {
@@ -66,7 +68,7 @@ class _RolesScreenState extends State<RolesScreen> {
     {
       context.read<GameController>().startWithPlayers();
     }
-    openPage(context, const GameScreen());
+    await openPage(context, const GameScreen());
   }
 
   void _onNicknameSelected(int index, String? value) {
@@ -177,7 +179,6 @@ class _RolesScreenState extends State<RolesScreen> {
                         if (newSelection.isEmpty) {
                           _chosenRoles[i] = null;
                         } else {
-                          print((newSelection.first! as PlayerRole).prettyName);
                           _chosenRoles[i] = newSelection.first! as PlayerRole;
                         }
                       });

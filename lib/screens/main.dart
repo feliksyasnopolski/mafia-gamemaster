@@ -2,7 +2,6 @@ import "dart:async";
 
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:package_info_plus/package_info_plus.dart";
 import "package:provider/provider.dart";
 
 import "../game/states.dart";
@@ -11,11 +10,8 @@ import "../utils/game_controller.dart";
 import "../utils/navigation.dart";
 import "../utils/ui.dart";
 import "../widgets/app_drawer.dart";
-import "../widgets/bottom_controls.dart";
 import "../widgets/confirmation_dialog.dart";
-import "../widgets/game_state.dart";
 import "../widgets/orientation_dependent.dart";
-import "../widgets/player_buttons.dart";
 import "../widgets/restart_dialog.dart";
 
 class MainScreen extends StatefulWidget {
@@ -68,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
     final controller = context.watch<GameController>();
     final gameState = controller.state;
     final isGameRunning = !gameState.stage.isAnyOf([GameStage.prepare, GameStage.finish]);
-    final packageInfo = context.watch<PackageInfo>();
+    // final packageInfo = context.watch<PackageInfo>();
 
     return PopScope(
       canPop: controller.state.stage == GameStage.prepare,
