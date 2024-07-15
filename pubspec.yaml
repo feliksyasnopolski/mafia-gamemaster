@@ -38,6 +38,7 @@ dependencies:
   vibration: ^1.8.3
   vibration_web: ^1.6.5  # adds web support for `vibration` package
 
+  http: any
 dev_dependencies:
   flutter_lints: ^3.0.0
   flutter_test:

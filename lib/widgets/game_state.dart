@@ -2,12 +2,10 @@ import "dart:async";
 
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
-import "package:vibration/vibration.dart";
 
 import "../game/player.dart";
 import "../game/states.dart";
 import "../screens/main.dart";
-import "../screens/roles.dart";
 import "../utils/extensions.dart";
 import "../utils/game_controller.dart";
 import "../utils/navigation.dart";
@@ -15,7 +13,6 @@ import "../utils/settings.dart";
 import "../utils/ui.dart";
 import "counter.dart";
 import "player_timer.dart";
-import "restart_dialog.dart";
 
 class GameStateInfo extends StatelessWidget {
   const GameStateInfo({super.key});
@@ -51,7 +48,7 @@ class BottomGameStateWidget extends StatelessWidget {
     final gameState = controller.state;
 
     if (gameState.stage == GameStage.prepare) {
-      return Column(
+      return const Column(
         mainAxisSize: MainAxisSize.min,
         children: [],
       );
@@ -108,7 +105,7 @@ class BottomGameStateWidget extends StatelessWidget {
               //   builder: (context) => const RestartGameDialog(),
               // );
               // if (restartGame ?? false) {
-              openPage(context, MainScreen());
+              openPage(context, const MainScreen());
               // controller.restart();
               if (context.mounted) {
                 unawaited(

@@ -32,11 +32,11 @@ class InputDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            String inputText = _textEditingController.text;
+            final inputText = _textEditingController.text;
             // Do something with the input text
             Navigator.pop(context, inputText);
           },
-          child: Text("OK"),
+          child: const Text("OK"),
         ),
       ],
     );

@@ -112,7 +112,7 @@ class SettingsScreen extends StatelessWidget {
               if (res != null) {
                 settings.setAppToken(res);
               }
-            }
+            },
         // );await InputDialog(
         //         context: context,
         //         title: "Токен приложения",

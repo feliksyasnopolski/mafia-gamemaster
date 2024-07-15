@@ -4,8 +4,8 @@ import "../game/controller.dart";
 import "../game/log.dart";
 import "../game/player.dart";
 import "../game/states.dart";
-import "extensions.dart";
 import "api_calls.dart";
+import "extensions.dart";
 
 class GameController with ChangeNotifier {
   Game _game = Game();

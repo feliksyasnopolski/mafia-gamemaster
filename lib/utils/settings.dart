@@ -71,7 +71,7 @@ Future<SettingsModel> getSettings() async {
     timerType: timerType,
     themeMode: themeMode,
     colorSchemeType: colorSchemeType,
-    appToken: appToken
+    appToken: appToken,
   );
 }
 

@@ -20,6 +20,7 @@ enum _ValidationErrorType {
 class RolesScreen extends StatefulWidget {
   const RolesScreen({super.key});
 
+  @override
   State<RolesScreen> createState() => _RolesScreenState();
 }
 
@@ -38,7 +39,7 @@ class _RolesScreenState extends State<RolesScreen> {
     }
 
     final newRoles = _chosenRoles.toList(growable: false);
-    final List<Player> players = [];
+    final players = <Player>[];
     
     for (var i = 0; i < 10; i++) {
       if (_chosenRoles[i] != null) {
@@ -47,15 +48,8 @@ class _RolesScreenState extends State<RolesScreen> {
           number: i+1,
           nickname: nickname,
           role: _chosenRoles[i]!,
-        ));
+        ),);
       }
-    }
-    if (newRoles == null) {
-      await showSnackBar(
-        context,
-        const SnackBar(content: Text("Невозможно применить выбранные роли")),
-      );
-      return;
     }
 
     if (!context.mounted) {
@@ -204,7 +198,7 @@ class _RolesScreenState extends State<RolesScreen> {
       const DropdownMenuEntry(
         value: null,
         label: "",
-        labelWidget: Text("(*без никнейма*)", style: TextStyle(fontStyle: FontStyle.italic))),
+        labelWidget: Text("(*без никнейма*)", style: TextStyle(fontStyle: FontStyle.italic)),),
 
       for (final nickname in players.map((p) => p.nickname).toList(growable: false)..sort())
         DropdownMenuEntry(
@@ -239,8 +233,8 @@ class _RolesScreenState extends State<RolesScreen> {
           future: apiCalls.getPlayers(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              final api_players = snapshot.data!;
-              return _buildPlayerTable(_buildNicknameEntries(api_players));
+              final apiPlayers = snapshot.data!;
+              return _buildPlayerTable(_buildNicknameEntries(apiPlayers));
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
             }

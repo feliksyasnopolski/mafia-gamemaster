@@ -64,37 +64,37 @@ class Player {
   int get hashCode => Object.hash(role, number, isAlive);
 }
 
-// List<Player> generatePlayers({
-//   Map<PlayerRole, int> roles = const {
-//     PlayerRole.citizen: 6,
-//     PlayerRole.mafia: 2,
-//     PlayerRole.sheriff: 1,
-//     PlayerRole.don: 1,
-//   },
-// }) {
-//   for (final role in PlayerRole.values) {
-//     if (!roles.containsKey(role)) {
-//       throw ArgumentError("Role $role is not defined in the role map");
-//     }
-//   }
-//   if (roles[PlayerRole.sheriff]! != 1) {
-//     throw ArgumentError("Only one sheriff is allowed");
-//   }
-//   if (roles[PlayerRole.don]! != 1) {
-//     throw ArgumentError("Only one don is allowed");
-//   }
-//   if (roles[PlayerRole.mafia]! >= roles[PlayerRole.citizen]!) {
-//     throw ArgumentError("Too many mafia");
-//   }
-//   final playerRoles = roles.entries
-//       .expand((entry) => List.filled(entry.value, entry.key))
-//       .toList(growable: false)
-//     ..shuffle();
-//   return playerRoles
-//       .asMap()
-//       .entries
-//       .map((entry) => Player(role: entry.value, number: entry.key + 1, nickname: "Игрок ${entry.key + 1}"))
-//       .toList(growable: false)
-//     ..sort((a, b) => a.number.compareTo(b.number))
-//     ..toUnmodifiableList();
-// }
+List<Player> generatePlayers({
+  Map<PlayerRole, int> roles = const {
+    PlayerRole.citizen: 6,
+    PlayerRole.mafia: 2,
+    PlayerRole.sheriff: 1,
+    PlayerRole.don: 1,
+  },
+}) {
+  for (final role in PlayerRole.values) {
+    if (!roles.containsKey(role)) {
+      throw ArgumentError("Role $role is not defined in the role map");
+    }
+  }
+  if (roles[PlayerRole.sheriff]! != 1) {
+    throw ArgumentError("Only one sheriff is allowed");
+  }
+  if (roles[PlayerRole.don]! != 1) {
+    throw ArgumentError("Only one don is allowed");
+  }
+  if (roles[PlayerRole.mafia]! >= roles[PlayerRole.citizen]!) {
+    throw ArgumentError("Too many mafia");
+  }
+  final playerRoles = roles.entries
+      .expand((entry) => List.filled(entry.value, entry.key))
+      .toList(growable: false)
+    ..shuffle();
+  return playerRoles
+      .asMap()
+      .entries
+      .map((entry) => Player(role: entry.value, number: entry.key + 1, nickname: "Игрок ${entry.key + 1}"))
+      .toList(growable: false)
+    ..sort((a, b) => a.number.compareTo(b.number))
+    ..toUnmodifiableList();
+}

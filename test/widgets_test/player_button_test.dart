@@ -8,6 +8,7 @@ Widget _buildWidget({
   required PlayerRole role,
   required bool isAlive,
   required bool isSelected,
+  required String nickname,
   bool isActive = false,
   required int warnCount,
   VoidCallback? onTap,
@@ -21,6 +22,7 @@ Widget _buildWidget({
             number: number,
             role: role,
             isAlive: isAlive,
+            nickname: nickname,
           ),
           isSelected: isSelected,
           isActive: isActive,
@@ -37,6 +39,7 @@ void main() {
     testWidgets("Test UI consistency", (tester) async {
       final button = _buildWidget(
         number: 1,
+        nickname: "Test",
         role: PlayerRole.citizen,
         isAlive: true,
         isSelected: false,
@@ -53,6 +56,7 @@ void main() {
       (tester) async {
         final button = _buildWidget(
           number: 1,
+          nickname: "Test",
           role: PlayerRole.citizen,
           isAlive: true,
           isSelected: false,
@@ -70,6 +74,7 @@ void main() {
     testWidgets("Test long press menu", (tester) async {
       final button = _buildWidget(
         number: 1,
+        nickname: "Test",
         role: PlayerRole.citizen,
         isAlive: true,
         isSelected: false,

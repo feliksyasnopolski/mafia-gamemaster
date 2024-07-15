@@ -51,7 +51,7 @@ class _SeatRandomizerScreenState extends State<SeatRandomizerScreen> {
       appBar: AppBar(
         title: const Text("Случайная рассадка"),
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

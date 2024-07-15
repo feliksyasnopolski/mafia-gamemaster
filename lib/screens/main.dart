@@ -8,6 +8,7 @@ import "package:provider/provider.dart";
 import "../game/states.dart";
 import "../utils/extensions.dart";
 import "../utils/game_controller.dart";
+import "../utils/navigation.dart";
 import "../utils/ui.dart";
 import "../widgets/app_drawer.dart";
 import "../widgets/bottom_controls.dart";
@@ -16,8 +17,6 @@ import "../widgets/game_state.dart";
 import "../widgets/orientation_dependent.dart";
 import "../widgets/player_buttons.dart";
 import "../widgets/restart_dialog.dart";
-import "../game/player.dart";
-import "../utils/navigation.dart";
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -120,29 +119,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-class _RotatableGameScreenBody extends OrientationDependentWidget {
-  final bool showRoles;
-
-  const _RotatableGameScreenBody({
-    this.showRoles = false,
-  });
-
-  @override
-  Widget buildPortrait(BuildContext context) => Column(
-        children: [
-          PlayerButtons(showRoles: showRoles),
-          const Flexible(child: _MainScreenGameBodyContent()),
-        ],
-      );
-
-  @override
-  Widget buildLandscape(BuildContext context) => Row(
-        children: [
-          PlayerButtons(showRoles: showRoles),
-          const Flexible(child: _MainScreenGameBodyContent()),
-        ],
-      );
-}
 
 class _RotatableMainScreenBody extends OrientationDependentWidget {
   final bool showRoles;
@@ -152,55 +128,18 @@ class _RotatableMainScreenBody extends OrientationDependentWidget {
   });
 
   @override
-  Widget buildPortrait(BuildContext context) => Column(
+  Widget buildPortrait(BuildContext context) => const Column(
         children: [
-          const Flexible(child: _MainScreenMainBodyContent()),
+          Flexible(child: _MainScreenMainBodyContent()),
         ],
       );
 
   @override
-  Widget buildLandscape(BuildContext context) => Row(
+  Widget buildLandscape(BuildContext context) => const Row(
         children: [
-          const Flexible(child: _MainScreenMainBodyContent()),
+          Flexible(child: _MainScreenMainBodyContent()),
         ],
       );
-}
-
-class _MainScreenGameBodyContent extends StatelessWidget {
-  const _MainScreenGameBodyContent();
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = context.watch<GameController>();
-    // const players = <Player>[
-    //   Player(role: PlayerRole.citizen,  number: 1,   nickname: "Player 1"),
-    //   Player(role: PlayerRole.mafia,    number: 2,   nickname: "Player 2"),
-    //   Player(role: PlayerRole.citizen,  number: 3,   nickname: "Player 3"),
-    //   Player(role: PlayerRole.citizen,  number: 4,   nickname: "Player 4"),
-    //   Player(role: PlayerRole.don,      number: 5,   nickname: "Player 5"),
-    //   Player(role: PlayerRole.citizen,  number: 6,   nickname: "Player 6"),
-    //   Player(role: PlayerRole.sheriff,  number: 7,   nickname: "Player 7"),
-    //   Player(role: PlayerRole.mafia,    number: 8,   nickname: "Player 8"),
-    //   Player(role: PlayerRole.citizen,  number: 9,   nickname: "Player 9"),
-    //   Player(role: PlayerRole.citizen,  number: 10,  nickname: "Player 10"),
-    // ];
-
-    // controller.initializeGame(players);
-
-    final previousState = controller.previousState;
-    final nextStateAssumption = controller.nextStateAssumption;
-    return Column(
-      children: [
-        const Expanded(child: Center(child: GameStateInfo())),
-        BottomControlBar(
-          backLabel: previousState?.prettyName ?? "(отмена невозможна)",
-          onTapBack: previousState != null ? controller.setPreviousState : null,
-          onTapNext: nextStateAssumption != null ? controller.setNextState : null,
-          nextLabel: nextStateAssumption?.prettyName ?? "(игра окончена)",
-        ),
-      ],
-    );
-  }
 }
 
 class _MainScreenMainBodyContent extends StatelessWidget {
