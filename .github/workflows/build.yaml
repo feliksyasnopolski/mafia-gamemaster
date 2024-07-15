@@ -113,28 +113,28 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          java-version: ${{ env.JAVA_VERSION }}
+      # - name: Install Java
+      #   uses: actions/setup-java@v3
+      #   with:
+      #     distribution: ${{ env.JAVA_DISTRIBUTION }}
+      #     java-version: ${{ env.JAVA_VERSION }}
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: ${{ env.FLUTTER_CHANNEL }}
-          cache: true
+      # - name: Install Flutter
+      #   uses: subosito/flutter-action@v2
+      #   with:
+      #     channel: ${{ env.FLUTTER_CHANNEL }}
+      #     cache: true
 
-      - name: Get Flutter dependencies
-        run: flutter pub get
+      # - name: Get Flutter dependencies
+      #   run: flutter pub get
 
-      - name: Build app for web
-        run: flutter build web
+      # - name: Build app for web
+      #   run: flutter build web
 
-      - name: Patch app name for web
-        run: |
-          jq -c '.app_name = "Mafia companion"' build/web/version.json >build/web/version.new.json
-          mv build/web/version{.new,}.json
+      # - name: Patch app name for web
+      #   run: |
+      #     jq -c '.app_name = "Mafia companion"' build/web/version.json >build/web/version.new.json
+      #     mv build/web/version{.new,}.json
 
       - name: Set up Docker CLI
         uses: docker/setup-buildx-action@v3
@@ -149,7 +149,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/feliksyasnopolski/mafia-frontend:latest
+          tags: ghcr.io/feliksyasnopolski/mafia-gamemaster:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
