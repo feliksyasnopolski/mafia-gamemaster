@@ -14,6 +14,7 @@ import "../widgets/confirmation_dialog.dart";
 import "../widgets/orientation_dependent.dart";
 import "../widgets/restart_dialog.dart";
 
+// ignore: deprecated_member_use
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -65,7 +66,7 @@ class _MainScreenState extends State<MainScreen> {
     final gameState = controller.state;
     final isGameRunning = !gameState.stage.isAnyOf([GameStage.prepare, GameStage.finish]);
     // final packageInfo = context.watch<PackageInfo>();
-
+    // $PLACEHOLDER$
     return PopScope(
       canPop: controller.state.stage == GameStage.prepare,
       onPopInvoked: (didPop) async {
