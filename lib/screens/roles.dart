@@ -76,7 +76,24 @@ class _RolesScreenState extends State<RolesScreen> {
       _chosenNicknames[index] = value;
     });
   }
-
+  String roleName(PlayerRole role, Orientation orientation) {
+    var name = "";
+    if (orientation == Orientation.landscape) {
+      name = role.prettyName;
+    } else {
+        switch (role) {
+          case PlayerRole.citizen:
+            name = "👍";
+          case PlayerRole.mafia:
+            name = "👎";
+          case PlayerRole.sheriff:
+            name = "👌";
+          case PlayerRole.don:
+            name = "👑";
+        }
+      }
+    return name;
+  }
     /// Validates roles. Must be called from `setState` to update errors.
   void _validate() {
     final byRole = <PlayerRole, _ValidationErrorType>{};
@@ -122,77 +139,107 @@ class _RolesScreenState extends State<RolesScreen> {
       ..clear()
       ..addAll(byIndex);
   }
+  List<Widget> buildColumn(List<DropdownMenuEntry<String?>> nicknameEntries, Orientation orientation, int playerNumber)
+  {
+    final columns = <Widget>[];
+    columns..add(
+      Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                child: DropdownMenu(
+                  expandedInsets: EdgeInsets.zero,
+                  enableFilter: true,
+                  enableSearch: true,
+                  label: Text("Игрок ${playerNumber + 1}"),
+                  menuHeight: 256,
+                  inputDecorationTheme: const InputDecorationTheme(
+                    isDense: true,
+                    border: OutlineInputBorder(),
+                    errorStyle: TextStyle(fontSize: 0),
+                  ),
+                  requestFocusOnTap: true,
+                  initialSelection: _chosenNicknames[playerNumber],
+                  dropdownMenuEntries: nicknameEntries,
+                  errorText: _errorsByIndex.contains(playerNumber) ? "Роль не выбрана" : null,
+                  onSelected: (value) => _onNicknameSelected(playerNumber, value),
+                ),
+              ),
+    )
+    ..add(
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        child:
+            SegmentedButton(
+              segments: [
+                for (final role in PlayerRole.values)
+                  ButtonSegment(
+                    label: Text(roleName(role, orientation)),
+                    value: role,
+                  ),
+              ],
+              selected: _chosenRoles[playerNumber] != null ? {_chosenRoles[playerNumber]!} : {},
+              emptySelectionAllowed: true,
+              onSelectionChanged: (newSelection) {
+                setState(() {
+                  if (newSelection.isEmpty) {
+                    _chosenRoles[playerNumber] = null;
+                  } else {
+                    _chosenRoles[playerNumber] = newSelection.first! as PlayerRole;
+                  }
+                });
+              },
+            ),
+        ),        
+    );
 
-  Widget _buildPlayerTable(List<DropdownMenuEntry<String?>> nicknameEntries) => SingleChildScrollView(
+    if (orientation == Orientation.landscape)
+    {
+      columns.add(
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        ),
+      );
+    }
+
+    return columns; 
+  }
+
+  Widget _buildPlayerTable(List<DropdownMenuEntry<String?>> nicknameEntries, Orientation orientation) 
+  {
+    final landscape = orientation == Orientation.landscape;
+    final columnWidths = landscape
+        ? const {
+            0: FlexColumnWidth(5),
+            1: FlexColumnWidth(4),
+            2: FlexColumnWidth(1),
+          }
+        : const {
+            0: FlexColumnWidth(5),
+            1: FlexColumnWidth(4),
+          };
+    final tableHeader = landscape 
+        ? const TableRow(children: [
+            Center(child: Text("Игрок")),
+            Center(child: Text("Роль")),
+            Center(child: Text("")),
+          ],)
+        : const TableRow(children: [
+            Center(child: Text("Игрок")),
+            Center(child: Text("Роль")),
+          ],); 
+    return SingleChildScrollView(
       child: Table(
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        columnWidths: const {
-          0: FlexColumnWidth(5),
-          1: FlexColumnWidth(3),
-          2: FlexColumnWidth(1),
-        },
+        columnWidths: columnWidths,
         children: [
-          const TableRow(
-            children: [
-              Center(child: Text("Игрок")),
-              Center(child: Text("Роль")),
-              Center(child: Text("")),
-            ],
-          ),
+          tableHeader,
           for (var i = 0; i < 10; i++)
             TableRow(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                  child: DropdownMenu(
-                    expandedInsets: EdgeInsets.zero,
-                    enableFilter: true,
-                    enableSearch: true,
-                    label: Text("Игрок ${i + 1}"),
-                    menuHeight: 256,
-                    inputDecorationTheme: const InputDecorationTheme(
-                      isDense: true,
-                      border: OutlineInputBorder(),
-                      errorStyle: TextStyle(fontSize: 0),
-                    ),
-                    requestFocusOnTap: true,
-                    initialSelection: _chosenNicknames[i],
-                    dropdownMenuEntries: nicknameEntries,
-                    errorText: _errorsByIndex.contains(i) ? "Роль не выбрана" : null,
-                    onSelected: (value) => _onNicknameSelected(i, value),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                  child: SegmentedButton(
-                    segments: [
-                      for (final role in PlayerRole.values)
-                        ButtonSegment(
-                          label: Text(role.prettyName),
-                          value: role,
-                        ),
-                    ],
-                    selected: _chosenRoles[i] != null ? {_chosenRoles[i]!} : {},
-                    emptySelectionAllowed: true,
-                    onSelectionChanged: (newSelection) {
-                      setState(() {
-                        if (newSelection.isEmpty) {
-                          _chosenRoles[i] = null;
-                        } else {
-                          _chosenRoles[i] = newSelection.first! as PlayerRole;
-                        }
-                      });
-                    },
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                ),
-              ],
+              children: buildColumn(nicknameEntries, orientation, i),
             ),
         ],
       ),
     );
+  }
 
   List<DropdownMenuEntry<String?>> _buildNicknameEntries(List<PlayersModel> players) {
     final nicknameEntries = [
@@ -235,7 +282,9 @@ class _RolesScreenState extends State<RolesScreen> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final apiPlayers = snapshot.data!;
-              return _buildPlayerTable(_buildNicknameEntries(apiPlayers));
+              return OrientationBuilder(builder: (context, orientation) =>
+                _buildPlayerTable(_buildNicknameEntries(apiPlayers), orientation),
+              );
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
             }
