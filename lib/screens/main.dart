@@ -85,7 +85,7 @@ class _MainScreenState extends State<MainScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: isGameRunning ? Text("День ${controller.state.day}") : const Text("Подготовка к игре1"),
+          title: isGameRunning ? Text("День ${controller.state.day}") : const Text("Подготовка к игре"),
           actions: [
             IconButton(
               onPressed: () => Navigator.pushNamed(context, "/log"),

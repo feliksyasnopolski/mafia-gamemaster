@@ -16,7 +16,7 @@ class AppDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             child: Center(
-              child: Text("High Tech Mafia club ${packageInfo.buildNumber}", style: Theme.of(context).textTheme.titleLarge),
+              child: Text("High Tech Mafia club", style: Theme.of(context).textTheme.titleLarge),
             ),
           ),
           ListTile(
