@@ -144,11 +144,14 @@ jobs:
           registry: ghcr.io
           username: ${{ secrets.GH_PACKAGE_USERNAME }}
           password: ${{ secrets.GH_PACKAGE_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
+          platforms: linux/arm64
           tags: ghcr.io/feliksyasnopolski/mafia-gamemaster:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
