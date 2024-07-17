@@ -12,7 +12,6 @@ class PlayerButton extends StatelessWidget {
   final List<Widget> longPressActions;
   final bool showRole;
 
-
   const PlayerButton({
     super.key,
     required this.player,
@@ -29,7 +28,9 @@ class PlayerButton extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(player.nickname.isEmpty ? "Игрок ${player.number}" : player.nickname),
+        title: Text(player.nickname.isEmpty
+            ? "Игрок ${player.number}"
+            : player.nickname,),
         content: Text(
           "Состояние: $isAliveText\n"
           "Роль: ${player.role.prettyName}\n"
@@ -80,11 +81,11 @@ class PlayerButton extends StatelessWidget {
     if (player.role == PlayerRole.citizen) {
       return "";
     } else if (player.role == PlayerRole.mafia) {
-      return "М";
+      return "👎";
     } else if (player.role == PlayerRole.don) {
-      return "ДМ";
+      return "👑";
     } else if (player.role == PlayerRole.sheriff) {
-      return "Ш";
+      return "👌";
     } else {
       throw AssertionError("Unknown role: ${player.role}");
     }
@@ -93,7 +94,8 @@ class PlayerButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final borderColor = _getBorderColor(context);
-    final cardText = "${player.number}\n ${player.nickname}\n ${_getRoleSuffix()}";
+    final cardText =
+        "${player.number}\n ${player.nickname}\n ${_getRoleSuffix()}";
     return Stack(
       children: [
         ElevatedButton(
@@ -111,12 +113,35 @@ class PlayerButton extends StatelessWidget {
                     ),
                   )
                 : null,
-            backgroundColor: WidgetStateProperty.all(_getBackgroundColor(context)),
-            foregroundColor: WidgetStateProperty.all(_getForegroundColor(context)),
+            backgroundColor:
+                WidgetStateProperty.all(_getBackgroundColor(context)),
+            foregroundColor:
+                WidgetStateProperty.all(_getForegroundColor(context)),
+            minimumSize: WidgetStateProperty.all(const Size.fromHeight(48)),
           ),
           onPressed: onTap,
           onLongPress: () => _onLongPress(context),
-          child: Center(child: Text(cardText, textAlign: TextAlign.center)),
+          child: Stack(
+            children: [
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("${player.number}", 
+                  style: const TextStyle(
+                    color: Colors.white,
+
+                  ),
+                ), // Adjust text style as needed
+              ),
+              Center(
+                  child: Text("${player.nickname} ${_getRoleSuffix()}", 
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ), // Adjust text style as needed
+              ),
+            ],
+          ),
         ),
         Positioned(
           top: 6,

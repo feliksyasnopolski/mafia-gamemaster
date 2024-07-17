@@ -167,7 +167,7 @@ class PlayerButtons extends OrientationDependentWidget {
   @override
   Widget buildPortrait(BuildContext context) {
     final controller = context.watch<GameController>();
-    const itemsPerRow = 5;
+    const itemsPerRow = 1;
     final totalPlayers = controller.totalPlayersCount;
     final size = (MediaQuery.of(context).size.width / itemsPerRow).floorToDouble();
     return Column(
@@ -180,7 +180,7 @@ class PlayerButtons extends OrientationDependentWidget {
               for (var j = i; j < i + itemsPerRow && j < totalPlayers; j++)
                 SizedBox(
                   width: size,
-                  height: size,
+                  height: 48,
                   child: Padding(
                     padding: const EdgeInsets.all(4),
                     child:

@@ -142,54 +142,62 @@ class _RolesScreenState extends State<RolesScreen> {
   List<Widget> buildColumn(List<DropdownMenuEntry<String?>> nicknameEntries, Orientation orientation, int playerNumber)
   {
     final columns = <Widget>[];
-    columns..add(
-      Padding(
+    // ignore: cascade_invocations
+    columns
+            ..add(
+              Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                        child: DropdownMenu(
+                          expandedInsets: EdgeInsets.zero,
+                          enableFilter: true,
+                          enableSearch: true,
+                          label: Text("Игрок ${playerNumber + 1}"),
+                          menuHeight: 256,
+                          inputDecorationTheme: const InputDecorationTheme(
+                            isDense: true,
+                            border: OutlineInputBorder(),
+                            errorStyle: TextStyle(fontSize: 0),
+                          ),
+                          requestFocusOnTap: true,
+                          initialSelection: _chosenNicknames[playerNumber],
+                          dropdownMenuEntries: nicknameEntries,
+                          errorText: _errorsByIndex.contains(playerNumber) ? "Роль не выбрана" : null,
+                          onSelected: (value) => _onNicknameSelected(playerNumber, value),
+                        ),
+                      ),
+            )
+            ..add(
+              Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                child: DropdownMenu(
-                  expandedInsets: EdgeInsets.zero,
-                  enableFilter: true,
-                  enableSearch: true,
-                  label: Text("Игрок ${playerNumber + 1}"),
-                  menuHeight: 256,
-                  inputDecorationTheme: const InputDecorationTheme(
-                    isDense: true,
-                    border: OutlineInputBorder(),
-                    errorStyle: TextStyle(fontSize: 0),
-                  ),
-                  requestFocusOnTap: true,
-                  initialSelection: _chosenNicknames[playerNumber],
-                  dropdownMenuEntries: nicknameEntries,
-                  errorText: _errorsByIndex.contains(playerNumber) ? "Роль не выбрана" : null,
-                  onSelected: (value) => _onNicknameSelected(playerNumber, value),
-                ),
-              ),
-    )
-    ..add(
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        child:
-            SegmentedButton(
-              segments: [
-                for (final role in PlayerRole.values)
-                  ButtonSegment(
-                    label: Text(roleName(role, orientation)),
-                    value: role,
-                  ),
-              ],
-              selected: _chosenRoles[playerNumber] != null ? {_chosenRoles[playerNumber]!} : {},
-              emptySelectionAllowed: true,
-              onSelectionChanged: (newSelection) {
-                setState(() {
-                  if (newSelection.isEmpty) {
-                    _chosenRoles[playerNumber] = null;
-                  } else {
-                    _chosenRoles[playerNumber] = newSelection.first! as PlayerRole;
-                  }
-                });
-              },
-            ),
-        ),        
-    );
+                child:
+                    SegmentedButton(
+                      segments: [
+                        for (final role in PlayerRole.values)
+                          ButtonSegment(
+                            label: Text(roleName(role, orientation)),
+                            value: role,
+                            icon: const Icon(null),
+                          ),
+                      ],
+                      style: ButtonStyle(
+                        padding: WidgetStateProperty.all(EdgeInsets.zero),
+                        iconSize: WidgetStateProperty.all(0),
+                        textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 24)),
+                      ),
+                      selected: _chosenRoles[playerNumber] != null ? {_chosenRoles[playerNumber]!} : {},
+                      emptySelectionAllowed: true,
+                      onSelectionChanged: (newSelection) {
+                        setState(() {
+                          if (newSelection.isEmpty) {
+                            _chosenRoles[playerNumber] = null;
+                          } else {
+                            _chosenRoles[playerNumber] = newSelection.first! as PlayerRole;
+                          }
+                        });
+                      },
+                    ),
+                ),        
+            );
 
     if (orientation == Orientation.landscape)
     {
@@ -214,7 +222,7 @@ class _RolesScreenState extends State<RolesScreen> {
           }
         : const {
             0: FlexColumnWidth(5),
-            1: FlexColumnWidth(4),
+            1: FlexColumnWidth(5),
           };
     final tableHeader = landscape 
         ? const TableRow(children: [
@@ -258,6 +266,23 @@ class _RolesScreenState extends State<RolesScreen> {
     return nicknameEntries;
   }
 
+  void shufflePlayerRoles() {
+    const roles = {
+      PlayerRole.citizen: 6,
+      PlayerRole.mafia: 2,
+      PlayerRole.sheriff: 1,
+      PlayerRole.don: 1,
+    };
+    final playerRoles = roles.entries
+      .expand((entry) => List.filled(entry.value, entry.key))
+      .toList(growable: false)
+    ..shuffle();
+
+    for (var i = 0; i < 10; i++) {
+      _chosenRoles[i] = playerRoles[i];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final game = context.watch<GameController>();
@@ -292,11 +317,50 @@ class _RolesScreenState extends State<RolesScreen> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-          tooltip: "Применить",
-          onPressed: () => _onFabPressed(context),
-          child: const Icon(Icons.check),
+      floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  for (var i = 0; i < 10; i++) {
+                    _chosenNicknames[i] = null;
+                    _chosenRoles[i] = null;
+                  }
+                });
+              },
+              heroTag: null,
+              child: const Icon(
+                Icons.delete,
+              ),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            FloatingActionButton(           
+              onPressed: () => setState(shufflePlayerRoles),
+              heroTag: null,           
+              child: const Icon(
+                Icons.shuffle,
+              ),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            FloatingActionButton(           
+              onPressed: () => _onFabPressed(context),
+              heroTag: null,           
+              child: const Icon(
+                Icons.check,
+              ),
+            ),
+          ],
         ),
+      // FloatingActionButton(
+      //     tooltip: "Применить",
+      //     onPressed: () => _onFabPressed(context),
+      //     child: const Icon(Icons.check),
+      //   ),
     );
   }
 }
