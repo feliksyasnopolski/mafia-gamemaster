@@ -81,7 +81,6 @@ class Game {
   /// Doesn't change internal state. May throw exceptions if game internal state is inconsistent.
   BaseGameState? get nextStateAssumption {
     switch (_state.stage) {
-      // TODO: Dart 3 pattern matching
       case GameStage.prepare:
         return GameStateWithPlayers(
           stage: GameStage.night0,
