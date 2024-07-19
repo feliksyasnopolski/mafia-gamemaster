@@ -14,7 +14,7 @@ enum ColorSchemeType {
 }
 
 const defaultTimerType = TimerType.plus5;
-const defaultThemeMode = ThemeMode.system;
+const defaultThemeMode = ThemeMode.dark;
 const defaultColorSchemeType = ColorSchemeType.system;
 const defaultToken = "";
 
