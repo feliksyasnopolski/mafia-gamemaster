@@ -146,7 +146,7 @@ class _RolesScreenState extends State<RolesScreen> {
     columns
             ..add(
               Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
                         child: DropdownMenu(
                           expandedInsets: EdgeInsets.zero,
                           enableFilter: true,
@@ -182,7 +182,7 @@ class _RolesScreenState extends State<RolesScreen> {
                       style: ButtonStyle(
                         padding: WidgetStateProperty.all(EdgeInsets.zero),
                         iconSize: WidgetStateProperty.all(0),
-                        textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 24)),
+                        textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 20)),
                       ),
                       selected: _chosenRoles[playerNumber] != null ? {_chosenRoles[playerNumber]!} : {},
                       emptySelectionAllowed: true,
