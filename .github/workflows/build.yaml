@@ -190,7 +190,7 @@ jobs:
       - build-apk
     permissions:
       contents: write
-    if: startsWith(github.ref, 'refs/tags/v')
+    # if: startsWith(github.ref, 'refs/tags/v')
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4

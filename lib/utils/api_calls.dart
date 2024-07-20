@@ -13,8 +13,8 @@ import "../game/states.dart";
 import "./api_models.dart";
 import "ui.dart";
 
-const String baseUrl = "https://htmafia.nl";
-// const String baseUrl = 'http://localhost:3000';
+// const String baseUrl = "https://htmafia.nl";
+const String baseUrl = 'http://localhost:3000';
 
 class ApiCalls {
   final prefs = SharedPreferences.getInstance();
