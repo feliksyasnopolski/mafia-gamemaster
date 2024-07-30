@@ -13,8 +13,8 @@ import "../game/states.dart";
 import "./api_models.dart";
 import "ui.dart";
 
-const String baseUrl = "https://htmafia.nl";
-// const String baseUrl = 'http://localhost:3000';
+// const String baseUrl = "https://ehv.htmafia.nl";
+const String baseUrl = "http://localhost:3000";
 
 class ApiCalls {
   final prefs = SharedPreferences.getInstance();
@@ -95,7 +95,12 @@ class ApiCalls {
     if (state0.stage == GameStage.nightCheck)
     {
       final state = state0 as GameStateNightCheck;
-      jsonData["stage"] = "nightCheck";
+      if (state.activePlayerRole == PlayerRole.sheriff)
+      {
+        jsonData["stage"] = "sheriffCheck";
+      } else {
+        jsonData["stage"] = "donCheck";
+      }
       jsonData["day"] = state.day;
       jsonData["checked"] = state.activePlayerNumber;
     }
@@ -107,6 +112,61 @@ class ApiCalls {
       jsonData["day"] = state.day;
       jsonData["accused_players"] = state.playerNumbers;
     }
+
+    if (state0.stage == GameStage.excuse)
+    {
+      final state = state0 as GameStateWithCurrentPlayer;
+      jsonData["stage"] = "excuse";
+      jsonData["day"] = state.day;
+      jsonData["accused"] = state.currentPlayerNumber;
+    }
+
+    if (state0.stage == GameStage.preFinalVoting)
+    {
+      final state = state0 as GameStateWithPlayers;
+      jsonData["stage"] = "preFinalVoting";
+      jsonData["day"] = state.day;
+      jsonData["accused_players"] = state.playerNumbers;
+    }
+
+    if (state0.stage == GameStage.nightLastWords)
+    {
+      final state = state0 as GameStateWithPlayer;
+      jsonData["stage"] = "lastWords";
+      jsonData["day"] = state.day;
+      jsonData["player"] = state.currentPlayerNumber;
+    }
+
+    if (state0.stage == GameStage.dayLastWords)
+    {
+      final state = state0 as GameStateWithCurrentPlayer;
+      jsonData["stage"] = "lastWords";
+      jsonData["day"] = state.day;
+      jsonData["player"] = state.currentPlayerNumber;
+    }
+    
+    if (state0.stage == GameStage.dropTableVoting)
+    {
+      final state = state0 as GameStateDropTableVoting;
+      jsonData["stage"] = "dropTableVoting";
+      jsonData["day"] = state.day;
+      jsonData["votes"] = state.votesForDropTable;
+    }
+
+    if (state0.stage == GameStage.preFinalVoting)
+    {
+      final state = state0 as GameStateWithPlayers;
+      jsonData["stage"] = "preFinalVoting";
+      jsonData["day"] = state.day;
+      jsonData["accused_players"] = state.playerNumbers;
+    }
+
+    // {
+    //   final state = state0 as GameStateWithPlayers;
+    //   jsonData["stage"] = "preVoting";
+    //   jsonData["day"] = state.day;
+    //   jsonData["accused_players"] = state.playerNumbers;
+    // }
 
     if (state0.stage == GameStage.voting)
     {

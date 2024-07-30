@@ -2,8 +2,9 @@ import "package:flutter/material.dart";
 
 import "../game/player.dart";
 import "../utils/ui.dart";
+import "orientation_dependent.dart";
 
-class PlayerButton extends StatelessWidget {
+class PlayerButton extends OrientationDependentWidget {
   final Player player;
   final bool isSelected;
   final bool isActive;
@@ -92,10 +93,10 @@ class PlayerButton extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildLandscape(BuildContext context) {
     final borderColor = _getBorderColor(context);
-    final cardText =
-        "${player.number}\n ${player.nickname}\n ${_getRoleSuffix()}";
+    // final cardText =
+    //     "${player.number}\n ${player.nickname}\n ${_getRoleSuffix()}";
     return Stack(
       children: [
         ElevatedButton(
@@ -117,14 +118,14 @@ class PlayerButton extends StatelessWidget {
                 WidgetStateProperty.all(_getBackgroundColor(context)),
             foregroundColor:
                 WidgetStateProperty.all(_getForegroundColor(context)),
-            minimumSize: WidgetStateProperty.all(const Size.fromHeight(48)),
+            minimumSize: WidgetStateProperty.all(const Size.fromHeight(96)),
           ),
           onPressed: onTap,
           onLongPress: () => _onLongPress(context),
           child: Stack(
             children: [
               Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: Alignment.topCenter,
                   child: Text("${player.number}", 
                   style: const TextStyle(
                     color: Colors.white,
@@ -133,12 +134,22 @@ class PlayerButton extends StatelessWidget {
                 ), // Adjust text style as needed
               ),
               Center(
-                  child: Text("${player.nickname} ${_getRoleSuffix()}", 
+                  child: Text(player.nickname, 
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ), // Adjust text style as needed
+              ),
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(_getRoleSuffix(), 
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28,
+                    ),
+                  ),
               ),
             ],
           ),
@@ -148,7 +159,80 @@ class PlayerButton extends StatelessWidget {
           right: 6,
           child: Text(
             "!" * warnCount,
-            style: const TextStyle(color: Colors.red),
+            style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget buildPortrait(BuildContext context) {
+    final borderColor = _getBorderColor(context);
+    // final cardText =
+    //     "${player.number}\n ${player.nickname}\n ${_getRoleSuffix()}";
+    return Stack(
+      children: [
+        ElevatedButton(
+          style: ButtonStyle(
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            side: borderColor != null
+                ? WidgetStateProperty.all(
+                    BorderSide(
+                      color: borderColor,
+                      width: 1,
+                    ),
+                  )
+                : null,
+            backgroundColor:
+                WidgetStateProperty.all(_getBackgroundColor(context)),
+            foregroundColor:
+                WidgetStateProperty.all(_getForegroundColor(context)),
+            minimumSize: WidgetStateProperty.all(const Size.fromHeight(96)),
+          ),
+          onPressed: onTap,
+          onLongPress: () => _onLongPress(context),
+          child:Stack(
+            children: [
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("${player.number}", 
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ), // Adjust text style as needed
+              ),
+              Center(
+                  child: Text(player.nickname, 
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ), // Adjust text style as needed
+              ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(_getRoleSuffix(), 
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28,
+                    ),
+                  ),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          top: 6,
+          right: 6,
+          child: Text(
+            "!" * warnCount,
+            style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
           ),
         ),
       ],

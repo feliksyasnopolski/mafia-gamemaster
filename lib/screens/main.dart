@@ -8,9 +8,11 @@ import "../game/states.dart";
 import "../utils/extensions.dart";
 import "../utils/game_controller.dart";
 import "../utils/navigation.dart";
+import "../utils/settings.dart";
 import "../utils/ui.dart";
 import "../widgets/app_drawer.dart";
 import "../widgets/confirmation_dialog.dart";
+import "../widgets/input_dialog.dart";
 import "../widgets/orientation_dependent.dart";
 import "../widgets/restart_dialog.dart";
 
@@ -25,6 +27,44 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   var _showRoles = false;
   final _notesController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final settings = Provider.of<SettingsModel>(context, listen: false); //context.watch<SettingsModel>();
+
+      if (settings.appToken.isEmpty)
+      {
+        const res = "";
+        showDialog<String>(
+          context: context,
+          builder: (context) => InputDialog(
+            title: "Токен приложения",
+            content: Text(settings.appToken),
+            ),
+        ).then((res) {
+          if (res != null) {
+            settings.setAppToken(res);
+          }
+        });
+        // showDialog(
+        //   context: context,
+        //   barrierColor: Colors.blue.withOpacity(0.5),
+        //   builder: (context) => AlertDialog(
+        //     content: const Text("Dialog content"),
+        //     actions: [
+        //       TextButton(
+        //         onPressed: () => Navigator.pop(context),
+        //         child: const Text("Accept"),
+        //       ),
+        //     ],
+        //   ),
+        // );
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -92,11 +132,11 @@ class _MainScreenState extends State<MainScreen> {
               tooltip: "Журнал игры",
               icon: const Icon(Icons.list),
             ),
-            IconButton(
-              onPressed: () => _showNotes(context),
-              tooltip: "Заметки",
-              icon: const Icon(Icons.sticky_note_2),
-            ),
+            // IconButton(
+            //   onPressed: () => _showNotes(context),
+            //   tooltip: "Заметки",
+            //   icon: const Icon(Icons.sticky_note_2),
+            // ),
             IconButton(
               onPressed: () => setState(() => _showRoles = !_showRoles),
               tooltip: "${!_showRoles ? "Показать" : "Скрыть"} роли",

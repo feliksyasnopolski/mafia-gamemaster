@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsModel>();
     const seedColor = Colors.purple;
+
     return DynamicColorBuilder(
       builder: (light, dark) => MaterialApp(
         title: "Помощник ведущего",

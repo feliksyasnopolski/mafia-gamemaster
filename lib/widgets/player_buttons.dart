@@ -196,32 +196,60 @@ class PlayerButtons extends OrientationDependentWidget {
   @override
   Widget buildLandscape(BuildContext context) {
     final controller = context.watch<GameController>();
-    const itemsPerRow = 5;
+    const itemsPerRow = 10;
     final totalPlayers = controller.totalPlayersCount;
-    final size = (MediaQuery.of(context).size.height / itemsPerRow).floorToDouble() - 18;
+    final size = (MediaQuery.of(context).size.width / itemsPerRow).floorToDouble();
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      // mainAxisSize: MainAxisSize.min,
       children: [
-        for (var i = 0; i < totalPlayers; i += itemsPerRow)
+        for (var i = 0; i < totalPlayers; i += 1)
           Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // mainAxisSize: MainAxisSize.min,
             children: [
-              for (var j = i; j < i + itemsPerRow && j < totalPlayers; j++)
-                SizedBox(
-                  width: size + 24,
-                  height: size,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: _buildPlayerButton(
-                      context,
-                      controller.players[i.isEven ? j*2 : (j-itemsPerRow)*2+1].number,
-                      controller.state,
-                    ),
-                  ),
+              SizedBox(
+                width: size,
+                height: 96,
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child:
+                      _buildPlayerButton(context, controller.players[i].number, controller.state),
                 ),
+              ),
             ],
           ),
       ],
     );
   }
+  // @override
+  // Widget buildLandscape(BuildContext context) {
+  //   final controller = context.watch<GameController>();
+  //   const itemsPerRow = 10;
+  //   final totalPlayers = controller.totalPlayersCount;
+  //   final size = (MediaQuery.of(context).size.height / itemsPerRow).floorToDouble() - 18;
+  //   return Row(
+  //     mainAxisSize: MainAxisSize.min,
+  //     children: [
+  //       for (var i = 0; i < totalPlayers; i += itemsPerRow)
+  //         Column(
+  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //           children: [
+  //             for (var j = i; j < i + itemsPerRow && j < totalPlayers; j++)
+  //               SizedBox(
+  //                 width: size + 24,
+  //                 height: size,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(4),
+  //                   child: _buildPlayerButton(
+  //                     context,
+  //                     controller.players[i.isEven ? j*2 : (j-itemsPerRow)*2+1].number,
+  //                     controller.state,
+  //                   ),
+  //                 ),
+  //               ),
+  //           ],
+  //         ),
+  //     ],
+  //   );
+  // }
 }

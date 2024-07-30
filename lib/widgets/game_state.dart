@@ -6,27 +6,33 @@ import "package:provider/provider.dart";
 import "../game/player.dart";
 import "../game/states.dart";
 import "../screens/main.dart";
+import "../utils/api_calls.dart";
 import "../utils/extensions.dart";
 import "../utils/game_controller.dart";
 import "../utils/navigation.dart";
 import "../utils/settings.dart";
 import "../utils/ui.dart";
 import "counter.dart";
+import "orientation_dependent.dart";
 import "player_timer.dart";
 
-class GameStateInfo extends StatelessWidget {
+class GameStateInfo extends OrientationDependentWidget {
   const GameStateInfo({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildPortrait(BuildContext context) => buildWidget(context, isLandscape: false);
+  @override
+  Widget buildLandscape(BuildContext context) => buildWidget(context, isLandscape: true);
+
+  Widget buildWidget(BuildContext context, {required bool isLandscape}) {
     final gameState = context.watch<GameController>().state;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          gameState.prettyName,
-          style: const TextStyle(fontSize: 32),
+          gameState.prettyName(isLandscape: isLandscape),
+          style: TextStyle(fontSize: isLandscape ? 32 : 16),
           textAlign: TextAlign.center,
         ),
         const Padding(
@@ -38,11 +44,15 @@ class GameStateInfo extends StatelessWidget {
   }
 }
 
-class BottomGameStateWidget extends StatelessWidget {
+class BottomGameStateWidget extends OrientationDependentWidget {
   const BottomGameStateWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildPortrait(BuildContext context) => buildWidget(context, false);
+  @override
+  Widget buildLandscape(BuildContext context) => buildWidget(context, true);
+
+  Widget buildWidget(BuildContext context, bool isLandscape) {
     final controller = context.watch<GameController>();
     final settings = context.watch<SettingsModel>();
     final gameState = controller.state;
@@ -88,6 +98,7 @@ class BottomGameStateWidget extends StatelessWidget {
     }
 
     if (gameState case GameStateFinish(winner: final winner)) {
+      ApiCalls().stopGame();
       final resultText = switch (winner) {
         PlayerRole.citizen => "Победа команды мирных жителей",
         PlayerRole.mafia => "Победа команды мафии",
@@ -136,6 +147,7 @@ class BottomGameStateWidget extends StatelessWidget {
       return PlayerTimer(
         key: ValueKey(controller.state),
         duration: timeLimit,
+        isLandscape: isLandscape,
         onTimerTick: (duration) async {
           if (duration == Duration.zero) {
             await Future<void>.delayed(

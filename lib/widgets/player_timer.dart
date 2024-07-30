@@ -7,7 +7,7 @@ import "../utils/countdown.dart";
 class PlayerTimer extends StatefulWidget {
   /// The duration of the timer.
   final Duration duration;
-
+  final bool isLandscape;
   /// Called when the timer ticks.
   final ValueChanged<Duration>? onTimerTick;
 
@@ -15,6 +15,7 @@ class PlayerTimer extends StatefulWidget {
     super.key,
     required this.duration,
     this.onTimerTick,
+    this.isLandscape = true,
   });
 
   @override
@@ -93,29 +94,57 @@ class _PlayerTimerState extends State<PlayerTimer> {
     }
     final text = "${timeLeft.inMinutes.toString().padLeft(2, "0")}:"
         "${(timeLeft.inSeconds % 60).toString().padLeft(2, "0")}";
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        AnimatedOpacity(
-          curve: Curves.easeInOut,
-          opacity: _textVisible ? 1 : 0.2,
-          duration: const Duration(milliseconds: 500),
-          child: Text(text, style: TextStyle(fontSize: 20, color: textColor)),
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              onPressed: buttonCallback,
-              icon: Icon((_timer?.isPaused ?? false) ? Icons.play_arrow : Icons.pause),
-            ),
-            IconButton(
-              onPressed: _initTimer,
-              icon: const Icon(Icons.restart_alt),
-            ),
-          ],
-        ),
-      ],
-    );
+    if (widget.isLandscape) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AnimatedOpacity(
+            curve: Curves.easeInOut,
+            opacity: _textVisible ? 1 : 0.2,
+            duration: const Duration(milliseconds: 500),
+            child: Text(text, style: TextStyle(fontSize: 40, color: textColor, fontWeight: FontWeight.bold)),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: buttonCallback,
+                icon: Icon((_timer?.isPaused ?? false) ? Icons.play_arrow : Icons.pause),
+              ),
+              IconButton(
+                onPressed: _initTimer,
+                icon: const Icon(Icons.restart_alt),
+              ),
+            ],
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedOpacity(
+                curve: Curves.easeInOut,
+                opacity: _textVisible ? 1 : 0.2,
+                duration: const Duration(milliseconds: 500),
+                child: Text(text, style: TextStyle(fontSize: 40, color: textColor, fontWeight: FontWeight.bold)),
+              ),
+              IconButton(
+                onPressed: buttonCallback,
+                icon: Icon((_timer?.isPaused ?? false) ? Icons.play_arrow : Icons.pause),
+              ),
+              IconButton(
+                onPressed: _initTimer,
+                icon: const Icon(Icons.restart_alt),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
+    
   }
 }

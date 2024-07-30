@@ -17,7 +17,7 @@ import "../widgets/game_state.dart";
 import "../widgets/orientation_dependent.dart";
 import "../widgets/player_buttons.dart";
 import "../widgets/restart_dialog.dart";
-import "roles.dart";
+import "main.dart";
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -50,7 +50,7 @@ class _GameScreenState extends State<GameScreen> {
     if (context.mounted && (restartGame ?? false)) {
       unawaited(apiCalls.stopGame());
       context.read<GameController>().restart();
-      await openPage(context, const RolesScreen());
+      await openPage(context, const MainScreen());
       // ignore: use_build_context_synchronously
       unawaited(showSnackBar(context, const SnackBar(content: Text("Игра перезапущена"))));
     }
@@ -105,11 +105,11 @@ class _GameScreenState extends State<GameScreen> {
               tooltip: "Журнал игры",
               icon: const Icon(Icons.list),
             ),
-            IconButton(
-              onPressed: () => _showNotes(context),
-              tooltip: "Заметки",
-              icon: const Icon(Icons.sticky_note_2),
-            ),
+            // IconButton(
+            //   onPressed: () => _showNotes(context),
+            //   tooltip: "Заметки",
+            //   icon: const Icon(Icons.sticky_note_2),
+            // ),
             IconButton(
               onPressed: () => setState(() => _showRoles = !_showRoles),
               tooltip: "${!_showRoles ? "Показать" : "Скрыть"} роли",
@@ -138,6 +138,7 @@ class _RotatableGameScreenBody extends OrientationDependentWidget {
 
   @override
   Widget buildPortrait(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           PlayerButtons(showRoles: showRoles),
           const Flexible(child: _GameScreenGameBodyContent()),
@@ -145,7 +146,7 @@ class _RotatableGameScreenBody extends OrientationDependentWidget {
       );
 
   @override
-  Widget buildLandscape(BuildContext context) => Row(
+  Widget buildLandscape(BuildContext context) => Column(
         children: [
           PlayerButtons(showRoles: showRoles),
           const Flexible(child: _GameScreenGameBodyContent()),
@@ -153,23 +154,31 @@ class _RotatableGameScreenBody extends OrientationDependentWidget {
       );
 }
 
-class _GameScreenGameBodyContent extends StatelessWidget {
+class _GameScreenGameBodyContent extends OrientationDependentWidget {
   const _GameScreenGameBodyContent();
 
   @override
-  Widget build(BuildContext context) {
-    final controller = context.watch<GameController>();
+  Widget buildPortrait(BuildContext context) => buildWidget(context, false);
+  @override
+  Widget buildLandscape(BuildContext context) => buildWidget(context, true);
 
+  Widget buildWidget(BuildContext context, bool isLandscape) {
+    final controller = context.watch<GameController>();
     final previousState = controller.previousState;
     final nextStateAssumption = controller.nextStateAssumption;
+
     return Column(
       children: [
-        const Expanded(child: Center(child: GameStateInfo())),
+        const Expanded(
+          child: Center(
+            child: GameStateInfo(),
+          ),
+        ),
         BottomControlBar(
-          backLabel: previousState?.prettyName ?? "(отмена невозможна)",
+          backLabel: previousState?.prettyName(isLandscape: isLandscape) ?? "(отмена невозможна)",
           onTapBack: previousState != null ? controller.setPreviousState : null,
           onTapNext: nextStateAssumption != null ? controller.setNextState : null,
-          nextLabel: nextStateAssumption?.prettyName ?? "(игра окончена)",
+          nextLabel: nextStateAssumption?.prettyName(isLandscape: isLandscape) ?? "(игра окончена)",
         ),
       ],
     );

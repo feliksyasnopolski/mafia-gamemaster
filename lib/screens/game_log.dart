@@ -31,7 +31,7 @@ extension DescribeLogItem on BaseGameLogItem {
           case GameStateFinish():
             throw AssertionError();
         }
-        result.add('Этап игры изменён с "${oldState.prettyName}"');
+        result.add('- "${oldState.prettyName()}"');
       case PlayerCheckedGameLogItem(
           playerNumber: final playerNumber,
           checkedByRole: final checkedByRole,
