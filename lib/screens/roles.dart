@@ -1,15 +1,15 @@
 import "dart:async";
 
+import "package:auto_route/auto_route.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
 import "../game/player.dart";
-import "../screens/game.dart";
+import "../router/router.gr.dart";
 import "../utils/api_calls.dart";
 import "../utils/api_models.dart";
 import "../utils/errors.dart";
 import "../utils/game_controller.dart";
-import "../utils/navigation.dart";
 import "../utils/ui.dart";
 
 
@@ -18,7 +18,7 @@ enum _ValidationErrorType {
   tooFew,
   missing,
 }
-
+@RoutePage()
 class RolesScreen extends StatefulWidget {
   const RolesScreen({super.key});
 
@@ -60,15 +60,16 @@ class _RolesScreenState extends State<RolesScreen> {
     // if (showRoles == null) {
     //   return;
     // }
-    setState(() {
-      context.read<GameController>().players = players;
-    });
+    // setState(() {
+    context.read<GameController>().players = players;
+    // });
 
     if (context.mounted)
     {
       context.read<GameController>().startWithPlayers();
+      await context.router.replace(const GameRoute());
     }
-    await openPage(context, const GameScreen());
+    // await openPage(context, const GameScreen());
   }
 
   void _onNicknameSelected(int index, String? value) {
@@ -145,26 +146,47 @@ class _RolesScreenState extends State<RolesScreen> {
     // ignore: cascade_invocations
     columns
             ..add(
-              Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
-                        child: DropdownMenu(
-                          expandedInsets: EdgeInsets.zero,
-                          enableFilter: true,
-                          enableSearch: true,
-                          label: Text("Игрок ${playerNumber + 1}"),
-                          menuHeight: 256,
-                          inputDecorationTheme: const InputDecorationTheme(
-                            isDense: true,
-                            border: OutlineInputBorder(),
-                            errorStyle: TextStyle(fontSize: 0),
-                          ),
-                          requestFocusOnTap: true,
-                          initialSelection: _chosenNicknames[playerNumber],
-                          dropdownMenuEntries: nicknameEntries,
-                          errorText: _errorsByIndex.contains(playerNumber) ? "Роль не выбрана" : null,
-                          onSelected: (value) => _onNicknameSelected(playerNumber, value),
-                        ),
-                      ),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                  child: DropdownMenu(
+                    expandedInsets: EdgeInsets.zero,
+                    enableFilter: true,
+                    enableSearch: true,
+                    label: Text("Игрок ${playerNumber + 1}"),
+                    menuHeight: 256,
+                    inputDecorationTheme: const InputDecorationTheme(
+                      isDense: true,
+                      border: OutlineInputBorder(),
+                      errorStyle: TextStyle(fontSize: 0),
+                    ),
+                    requestFocusOnTap: true,
+                    initialSelection: _chosenNicknames[playerNumber],
+                    dropdownMenuEntries: nicknameEntries,
+                    errorText: _errorsByIndex.contains(playerNumber) ? "Роль не выбрана" : null,
+                    onSelected: (value) => _onNicknameSelected(playerNumber, value),
+                  ),
+                )
+              // Padding(
+              //           padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+              //           child: DropdownMenu(
+              //             expandedInsets: EdgeInsets.zero,
+              //             enableFilter: true,
+              //             enableSearch: true,
+              //             label: Text("Игрок ${playerNumber + 1}"),
+              //             menuHeight: 256,
+              //             inputDecorationTheme: const InputDecorationTheme(
+              //               isDense: true,
+              //               border: OutlineInputBorder(),
+              //               errorStyle: TextStyle(fontSize: 0),
+              //             ),
+              //             requestFocusOnTap: true,
+              //             initialSelection: _chosenNicknames[playerNumber],
+              //             dropdownMenuEntries: nicknameEntries,
+              //             errorText: _errorsByIndex.contains(playerNumber) ? "Роль не выбрана" : null,
+              //             onSelected: (value) => _onNicknameSelected(playerNumber, value),
+              //           ),
+              //         ),
             )
             ..add(
               Padding(
@@ -234,19 +256,35 @@ class _RolesScreenState extends State<RolesScreen> {
             Center(child: Text("Игрок")),
             Center(child: Text("Роль")),
           ],); 
-    return SingleChildScrollView(
-      child: Table(
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        columnWidths: columnWidths,
-        children: [
-          tableHeader,
-          for (var i = 0; i < 10; i++)
-            TableRow(
-              children: buildColumn(nicknameEntries, orientation, i),
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Table(
+            // defaultVerticalAlignment: TableCellVerticalAlignment.fill,
+            columnWidths: columnWidths,
+            children: [
+              tableHeader,
+              for (var i = 0; i < 10; i++)
+                TableRow(
+                  children: buildColumn(nicknameEntries, orientation, i),
+                ),
+              if (orientation == Orientation.portrait)
+                TableRow(
+                  children: [
+                    const SizedBox(
+                      height: 90,
+                    ),
+                    const SizedBox(
+                      height: 90,
+                    ),
+                  ],
+                ),
+              ],
             ),
+          ),
         ],
-      ),
-    );
+      );
   }
 
   List<DropdownMenuEntry<String?>> _buildNicknameEntries(List<PlayersModel> players) {
@@ -298,55 +336,125 @@ class _RolesScreenState extends State<RolesScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Раздача ролей"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: FutureBuilder<List<PlayersModel>>(
-          future: apiCalls.getPlayers(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final apiPlayers = snapshot.data!;
-              return OrientationBuilder(builder: (context, orientation) =>
-                _buildPlayerTable(_buildNicknameEntries(apiPlayers), orientation),
-              );
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
-            return const CircularProgressIndicator();
-          },
-        ),
-      ),
-      floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton(
-              onPressed: () {
-                setState(() {
+        title: const Text("Роли"),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              switch (value) {
+                case "shuffle":
+                  setState(shufflePlayerRoles);
+                  break;
+                case "clear":
+                  setState(() {
+                    for (var i = 0; i < 10; i++) {
+                        _chosenNicknames[i] = null;
+                        _chosenRoles[i] = null;
+                      };
+                  });
+                  break;
+                case "seating":
+                  // fill the array from 1 to 10 and shuffle it
+                  var seating = List<int>.generate(10, (index) => index + 1);
+                  seating.shuffle();
                   for (var i = 0; i < 10; i++) {
                     _chosenNicknames[i] = null;
                     _chosenRoles[i] = null;
                   }
-                });
-              },
-              heroTag: null,
-              child: const Icon(
-                Icons.delete,
+                  showSimpleDialog(
+                    context: context,
+                    title: const Text("Рассадка"),
+                    content: const Text("Рассадка игроков"),
+                  );
+                  break;
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: "shuffle",
+                child: Text("Перемешать роли"),
+              ),
+              const PopupMenuItem(
+                child: Text("Рассадка"),
+                value: "seating",
+              ),
+              const PopupMenuItem(
+                value: "clear",
+                child: Text("Очистить"),
+              ),
+            ],
+          ),
+          IconButton(
+            icon: const Icon(Icons.help),
+            onPressed: () => showSimpleDialog(
+              context: context,
+              title: const Text("Помощь"),
+              content: const Text(
+                "Выберите роли для игроков и их никнеймы.\n"
+                "После нажатия на галочку начнется игра.\n"
+                "👍 - мирный житель\n👎 - мафия\n👌 - шериф\n👑 - дон",
               ),
             ),
-            const SizedBox(
-              width: 20,
-            ),
-            FloatingActionButton(           
-              onPressed: () => setState(shufflePlayerRoles),
-              heroTag: null,           
-              child: const Icon(
-                Icons.shuffle,
-              ),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.check),
+            onPressed: () => _onFabPressed(context),
+          ),
+
+        ],
+      ),
+      body: FutureBuilder<List<PlayersModel>>(
+        future: apiCalls.getPlayers(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final apiPlayers = snapshot.data!;
+            return OrientationBuilder(builder: (context, orientation) =>
+              // Padding(
+              //   padding: const EdgeInsets.all(8),
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(8),
+              //     child: 
+                  _buildPlayerTable(_buildNicknameEntries(apiPlayers), orientation),
+                // ),
+                // _buildPlayerTable(_buildNicknameEntries(apiPlayers), orientation),
+              // ),
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
+
+      floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            // FloatingActionButton(
+            //   onPressed: () {
+            //     setState(() {
+            //       for (var i = 0; i < 10; i++) {
+            //         _chosenNicknames[i] = null;
+            //         _chosenRoles[i] = null;
+            //       }
+            //     });
+            //   },
+            //   heroTag: null,
+            //   child: const Icon(
+            //     Icons.delete,
+            //   ),
+            // ),
+            // const SizedBox(
+            //   width: 20,
+            // ),
+            // FloatingActionButton(           
+            //   onPressed: () => setState(shufflePlayerRoles),
+            //   heroTag: null,           
+            //   child: const Icon(
+            //     Icons.shuffle,
+            //   ),
+            // ),
+            // const SizedBox(
+            //   width: 20,
+            // ),
             FloatingActionButton(           
               onPressed: () => _onFabPressed(context),
               heroTag: null,           

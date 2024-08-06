@@ -52,13 +52,13 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: app.htmafia.nl
+    - host: app.mafiaarena.org
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - hosts:
-      - app.htmafia.nl
+      - app.mafiaarena.org
       secretName: letsencrypt-prod-front
 
 resources: {}

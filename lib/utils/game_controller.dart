@@ -16,6 +16,7 @@ class GameController with ChangeNotifier {
     _players = value;
   }
 
+  String tableToken = "";
   bool isStarted = false;
   Iterable<BaseGameLogItem> get gameLog => _game.log;
 
@@ -38,7 +39,7 @@ class GameController with ChangeNotifier {
   BaseGameState? get nextStateAssumption {
     final assumption = _game.nextStateAssumption;
     if (assumption == null) {
-      apiCalls.stopGame();
+      apiCalls.stopGame(tableToken);
     }
     return assumption;
   }
@@ -54,7 +55,7 @@ class GameController with ChangeNotifier {
   void startWithPlayers() {
     isStarted = true;
 
-    apiCalls.startGame(_players);
+    apiCalls.startGame(_players, tableToken);
     _game = Game.withPlayers(_players);
     notifyListeners();
   }
@@ -74,9 +75,9 @@ class GameController with ChangeNotifier {
   }
 
   void setNextState() {
-    apiCalls.updateLog(_game);
+    apiCalls.updateLog(_game, tableToken);
     _game.setNextState();
-    apiCalls.updatePlayers(players);
+    apiCalls.updatePlayers(players, tableToken);
       // ..updateVoteCandidates(voteCandidates);
     notifyListeners();
   }

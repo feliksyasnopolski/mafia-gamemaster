@@ -39,7 +39,11 @@ dependencies:
   vibration_web: ^1.6.5  # adds web support for `vibration` package
 
   http: any
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+  auto_route: ^9.2.0
 dev_dependencies:
+  auto_route_generator: ^9.0.0
   flutter_lints: ^3.0.0
   flutter_test:
     sdk: flutter

@@ -98,7 +98,7 @@ class BottomGameStateWidget extends OrientationDependentWidget {
     }
 
     if (gameState case GameStateFinish(winner: final winner)) {
-      ApiCalls().stopGame();
+      ApiCalls().stopGame(controller.tableToken);
       final resultText = switch (winner) {
         PlayerRole.citizen => "Победа команды мирных жителей",
         PlayerRole.mafia => "Победа команды мафии",
@@ -116,7 +116,7 @@ class BottomGameStateWidget extends OrientationDependentWidget {
               //   builder: (context) => const RestartGameDialog(),
               // );
               // if (restartGame ?? false) {
-              await openPage(context, const MainScreen());
+              await openMainPage(context);
               // controller.restart();
               if (context.mounted) {
                 unawaited(

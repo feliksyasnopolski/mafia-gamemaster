@@ -2,6 +2,7 @@ import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:package_info_plus/package_info_plus.dart";
 import "package:provider/provider.dart";
+import "package:auto_route/auto_route.dart";
 
 import "../utils/settings.dart";
 import "../utils/ui.dart";
@@ -49,6 +50,7 @@ class _ChoiceListTile<T> extends StatelessWidget {
       );
 }
 
+@RoutePage()
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 

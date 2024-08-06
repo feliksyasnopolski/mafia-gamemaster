@@ -3,6 +3,7 @@ import "dart:async";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:provider/provider.dart";
+import "package:auto_route/auto_route.dart";
 
 import "../game/states.dart";
 import "../utils/extensions.dart";
@@ -13,10 +14,12 @@ import "../utils/ui.dart";
 import "../widgets/app_drawer.dart";
 import "../widgets/confirmation_dialog.dart";
 import "../widgets/input_dialog.dart";
+import "../widgets/table_chooser_dialog.dart";
 import "../widgets/orientation_dependent.dart";
 import "../widgets/restart_dialog.dart";
 
 // ignore: deprecated_member_use
+@RoutePage()
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -32,38 +35,14 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final settings = Provider.of<SettingsModel>(context, listen: false); //context.watch<SettingsModel>();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   final settings = Provider.of<SettingsModel>(context, listen: false); //context.watch<SettingsModel>();
 
-      if (settings.appToken.isEmpty)
-      {
-        const res = "";
-        showDialog<String>(
-          context: context,
-          builder: (context) => InputDialog(
-            title: "Токен приложения",
-            content: Text(settings.appToken),
-            ),
-        ).then((res) {
-          if (res != null) {
-            settings.setAppToken(res);
-          }
-        });
-        // showDialog(
-        //   context: context,
-        //   barrierColor: Colors.blue.withOpacity(0.5),
-        //   builder: (context) => AlertDialog(
-        //     content: const Text("Dialog content"),
-        //     actions: [
-        //       TextButton(
-        //         onPressed: () => Navigator.pop(context),
-        //         child: const Text("Accept"),
-        //       ),
-        //     ],
-        //   ),
-        // );
-      }
-    });
+    //   if (settings.appToken.isEmpty)
+    //   {
+    //     Navigator.pushReplacementNamed(context, "/login");
+    //   }
+    // });
   }
 
   @override
@@ -125,29 +104,8 @@ class _MainScreenState extends State<MainScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: isGameRunning ? Text("День ${controller.state.day}") : const Text("Подготовка к игре"),
-          actions: [
-            IconButton(
-              onPressed: () => Navigator.pushNamed(context, "/log"),
-              tooltip: "Журнал игры",
-              icon: const Icon(Icons.list),
-            ),
-            // IconButton(
-            //   onPressed: () => _showNotes(context),
-            //   tooltip: "Заметки",
-            //   icon: const Icon(Icons.sticky_note_2),
-            // ),
-            IconButton(
-              onPressed: () => setState(() => _showRoles = !_showRoles),
-              tooltip: "${!_showRoles ? "Показать" : "Скрыть"} роли",
-              icon: const Icon(Icons.person_search),
-            ),
-            IconButton(
-              onPressed: () => _askRestartGame(context),
-              tooltip: "Перезапустить игру",
-              icon: const Icon(Icons.restart_alt),
-            ),
-          ],
+          title: const Text("Mafia Arena"),
+          actions: [],
         ),
         drawer: const AppDrawer(),
         body: _RotatableMainScreenBody(showRoles: _showRoles),
@@ -183,7 +141,12 @@ class _MainScreenMainBodyContent extends StatelessWidget {
   const _MainScreenMainBodyContent();
 
   Future<void> _onStartGamePressed(BuildContext context, GameController controller) async {
-    await openRoleChooserPage(context);
+    await showDialog<String>(
+      context: context,
+      builder: (context) => TableChooserDialog(
+        gameController: controller,
+      ),
+    );
   }
 
   @override

@@ -3,6 +3,7 @@ import "dart:async";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:provider/provider.dart";
+import "package:auto_route/auto_route.dart";
 
 import "../game/states.dart";
 import "../utils/api_calls.dart";
@@ -19,6 +20,7 @@ import "../widgets/player_buttons.dart";
 import "../widgets/restart_dialog.dart";
 import "main.dart";
 
+@RoutePage()
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
 
@@ -39,7 +41,8 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
-    unawaited(apiCalls.startGame(context.read<GameController>().players));
+    final gameController = context.read<GameController>();
+    unawaited(apiCalls.startGame(gameController.players, gameController.tableToken));
   }
 
   Future<void> _askRestartGame(BuildContext context) async {
@@ -48,9 +51,9 @@ class _GameScreenState extends State<GameScreen> {
       builder: (context) => const RestartGameDialog(),
     );
     if (context.mounted && (restartGame ?? false)) {
-      unawaited(apiCalls.stopGame());
+      unawaited(apiCalls.stopGame(context.read<GameController>().tableToken));
       context.read<GameController>().restart();
-      await openPage(context, const MainScreen());
+      await openMainPage(context);
       // ignore: use_build_context_synchronously
       unawaited(showSnackBar(context, const SnackBar(content: Text("Игра перезапущена"))));
     }

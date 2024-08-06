@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
+import "package:auto_route/auto_route.dart";
 
 import "../game/log.dart";
 import "../game/states.dart";
@@ -44,6 +45,7 @@ extension DescribeLogItem on BaseGameLogItem {
   }
 }
 
+@RoutePage()
 class GameLogScreen extends StatelessWidget {
   const GameLogScreen({super.key});
 

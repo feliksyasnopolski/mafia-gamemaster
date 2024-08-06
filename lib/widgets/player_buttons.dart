@@ -5,6 +5,7 @@ import "package:provider/provider.dart";
 
 import "../game/player.dart";
 import "../game/states.dart";
+import "../utils/api_calls.dart";
 import "../utils/game_controller.dart";
 import "../utils/ui.dart";
 import "confirmation_dialog.dart";
@@ -47,12 +48,14 @@ class PlayerButtons extends OrientationDependentWidget {
         } else {
           msg = "НЕ шериф";
         }
+        ApiCalls().sendNightCheckResult("donCheck", playerNumber, controller.tableToken);
       } else if (p.role == PlayerRole.sheriff) {
         if (player.role.isMafia) {
           msg = "МАФИЯ 👎";
         } else {
           msg = "НЕ мафия 👍";
         }
+        ApiCalls().sendNightCheckResult("sheriffCheck", playerNumber, controller.tableToken);
       } else {
         throw AssertionError();
       }

@@ -1,5 +1,6 @@
 import "package:dynamic_color/dynamic_color.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:package_info_plus/package_info_plus.dart";
 import "package:provider/provider.dart";
@@ -8,10 +9,12 @@ import "screens/game.dart";
 import "screens/game_log.dart";
 import "screens/main.dart";
 import "screens/roles.dart";
-// import "screens/seat_randomizer.dart";
+import "screens/login.dart";
 import "screens/settings.dart";
 import "utils/game_controller.dart";
 import "utils/settings.dart";
+import "utils/login/login_bloc.dart";
+import "router/router.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,14 +26,17 @@ void main() async {
         ChangeNotifierProvider<SettingsModel>.value(value: settings),
         Provider<PackageInfo>.value(value: packageInfo),
         ChangeNotifierProvider<GameController>(create: (context) => GameController()),
+        BlocProvider<LoginBloc>(create: (context) => LoginBloc()),
       ],
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +44,7 @@ class MyApp extends StatelessWidget {
     const seedColor = Colors.purple;
 
     return DynamicColorBuilder(
-      builder: (light, dark) => MaterialApp(
+      builder: (light, dark) => MaterialApp.router(
         title: "Помощник ведущего",
         theme: ThemeData(
           colorScheme: (settings.colorSchemeType == ColorSchemeType.system ? light : null) ??
@@ -57,14 +63,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         themeMode: settings.themeMode,
-        routes: {
-          "/": (context) => const MainScreen(),
-          "/game": (context) => const GameScreen(),
-          "/roles": (context) => const RolesScreen(),
-          "/settings": (context) => const SettingsScreen(),
-          // "/seats": (context) => const SeatRandomizerScreen(),
-          "/log": (context) => const GameLogScreen(),
-        },
+        routerConfig: _appRouter.config(),
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
