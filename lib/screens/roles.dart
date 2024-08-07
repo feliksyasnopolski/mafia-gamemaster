@@ -166,7 +166,7 @@ class _RolesScreenState extends State<RolesScreen> {
                     errorText: _errorsByIndex.contains(playerNumber) ? "Роль не выбрана" : null,
                     onSelected: (value) => _onNicknameSelected(playerNumber, value),
                   ),
-                )
+                ),
               // Padding(
               //           padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
               //           child: DropdownMenu(
@@ -270,12 +270,12 @@ class _RolesScreenState extends State<RolesScreen> {
                   children: buildColumn(nicknameEntries, orientation, i),
                 ),
               if (orientation == Orientation.portrait)
-                TableRow(
+                const TableRow(
                   children: [
-                    const SizedBox(
+                    SizedBox(
                       height: 90,
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 90,
                     ),
                   ],
@@ -343,18 +343,16 @@ class _RolesScreenState extends State<RolesScreen> {
               switch (value) {
                 case "shuffle":
                   setState(shufflePlayerRoles);
-                  break;
                 case "clear":
                   setState(() {
                     for (var i = 0; i < 10; i++) {
                         _chosenNicknames[i] = null;
                         _chosenRoles[i] = null;
-                      };
+                      }
                   });
-                  break;
                 case "seating":
                   // fill the array from 1 to 10 and shuffle it
-                  var seating = List<int>.generate(10, (index) => index + 1);
+                  final seating = List<int>.generate(10, (index) => index + 1);
                   seating.shuffle();
                   for (var i = 0; i < 10; i++) {
                     _chosenNicknames[i] = null;
@@ -365,7 +363,6 @@ class _RolesScreenState extends State<RolesScreen> {
                     title: const Text("Рассадка"),
                     content: const Text("Рассадка игроков"),
                   );
-                  break;
               }
             },
             itemBuilder: (context) => [
@@ -374,8 +371,8 @@ class _RolesScreenState extends State<RolesScreen> {
                 child: Text("Перемешать роли"),
               ),
               const PopupMenuItem(
-                child: Text("Рассадка"),
                 value: "seating",
+                child: Text("Рассадка"),
               ),
               const PopupMenuItem(
                 value: "clear",
@@ -428,33 +425,6 @@ class _RolesScreenState extends State<RolesScreen> {
       floatingActionButton: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            // FloatingActionButton(
-            //   onPressed: () {
-            //     setState(() {
-            //       for (var i = 0; i < 10; i++) {
-            //         _chosenNicknames[i] = null;
-            //         _chosenRoles[i] = null;
-            //       }
-            //     });
-            //   },
-            //   heroTag: null,
-            //   child: const Icon(
-            //     Icons.delete,
-            //   ),
-            // ),
-            // const SizedBox(
-            //   width: 20,
-            // ),
-            // FloatingActionButton(           
-            //   onPressed: () => setState(shufflePlayerRoles),
-            //   heroTag: null,           
-            //   child: const Icon(
-            //     Icons.shuffle,
-            //   ),
-            // ),
-            // const SizedBox(
-            //   width: 20,
-            // ),
             FloatingActionButton(           
               onPressed: () => _onFabPressed(context),
               heroTag: null,           

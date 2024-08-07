@@ -3,8 +3,9 @@ import "package:auto_route/auto_route.dart";
 import "package:flutter/material.dart";
 import "package:package_info_plus/package_info_plus.dart";
 import "package:provider/provider.dart";
-import "../utils/settings.dart";
+
 import "../router/router.gr.dart";
+import "../utils/settings.dart";
 
 
 class AppDrawer extends StatelessWidget {

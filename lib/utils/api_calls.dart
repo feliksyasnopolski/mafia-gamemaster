@@ -28,12 +28,12 @@ class ApiCalls {
       };
 
       final response = await http.post(
-          Uri.parse(baseUrl + "auth/sign_in"),
+          Uri.parse("${baseUrl}auth/sign_in"),
           body: json.encode(body),
           headers: {"Content-Type": "application/json"},
         );
       if (response.statusCode == 200) {
-        final token = response.headers['authorization']?.replaceAll('Bearer ', '');
+        final token = response.headers["authorization"]?.replaceAll("Bearer ", "");
         await prefs.then((value) => value.setString("appToken", token ?? ""));
 
         return;
@@ -245,7 +245,7 @@ class ApiCalls {
         Uri.parse(url),
         headers: {
           "Authorization": "Bearer $token",
-        });
+        },);
       if (response.statusCode == 200) {
         return response.body;
       }

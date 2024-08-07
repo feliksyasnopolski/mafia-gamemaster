@@ -1,19 +1,17 @@
-import "package:flutter/material.dart";
-import "package:provider/provider.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
 import "package:auto_route/auto_route.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:provider/provider.dart";
 
-
-import "../widgets/input_dialog.dart";
 import "../utils/login/login_bloc.dart";
-import "../utils/settings.dart";
 import "../utils/navigation.dart";
+import "../utils/settings.dart";
 
 @RoutePage()
 class LoginScreen extends StatefulWidget {
  const LoginScreen({
-  Key ? key
- }): super(key: key);
+  super.key,
+ });
 
  @override
  _LoginScreenState createState() => _LoginScreenState();
@@ -44,18 +42,18 @@ class _LoginScreenState extends State <LoginScreen> {
       ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
        content: Text(state.error),
        duration: const Duration(seconds: 3),
-      ));
+      ),);
      } else if (state is LoginSuccess) {
-      ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(const SnackBar(
        content: Text("Вход выполнен"),
-       duration: const Duration(seconds: 3),
-      ));
+       duration: Duration(seconds: 3),
+      ),);
       openMainPage(context);
      }
     },
     child: BlocBuilder<LoginBloc, LoginState> (
      builder: (context, state) => Padding(
-       padding: const EdgeInsets.all(16.0),
+       padding: const EdgeInsets.all(16),
         child: Column(
          mainAxisAlignment: MainAxisAlignment.center,
          children: < Widget > [
@@ -92,7 +90,7 @@ class _LoginScreenState extends State <LoginScreen> {
             ),
             if (state is LoginLoading)
              const Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8),
               child: CircularProgressIndicator(),
              ),
          ],

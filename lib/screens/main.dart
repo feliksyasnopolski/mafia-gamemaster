@@ -1,22 +1,19 @@
 import "dart:async";
 
+import "package:auto_route/auto_route.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:provider/provider.dart";
-import "package:auto_route/auto_route.dart";
 
 import "../game/states.dart";
 import "../utils/extensions.dart";
 import "../utils/game_controller.dart";
-import "../utils/navigation.dart";
-import "../utils/settings.dart";
 import "../utils/ui.dart";
 import "../widgets/app_drawer.dart";
 import "../widgets/confirmation_dialog.dart";
-import "../widgets/input_dialog.dart";
-import "../widgets/table_chooser_dialog.dart";
 import "../widgets/orientation_dependent.dart";
 import "../widgets/restart_dialog.dart";
+import "../widgets/table_chooser_dialog.dart";
 
 // ignore: deprecated_member_use
 @RoutePage()
@@ -28,7 +25,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  var _showRoles = false;
+  final _showRoles = false;
   final _notesController = TextEditingController();
 
   @override
@@ -105,7 +102,7 @@ class _MainScreenState extends State<MainScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Mafia Arena"),
-          actions: [],
+          actions: const [],
         ),
         drawer: const AppDrawer(),
         body: _RotatableMainScreenBody(showRoles: _showRoles),

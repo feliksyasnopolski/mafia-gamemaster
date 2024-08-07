@@ -1,6 +1,6 @@
 import "package:bloc/bloc.dart";
-import "package:provider/provider.dart";
 import "package:equatable/equatable.dart";
+
 import "../api_calls.dart";
 import "../settings.dart";
 
@@ -13,7 +13,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginButtonPressed>(_onLoginButtonPressed);
   }
 
-  void _onLoginButtonPressed(LoginButtonPressed event, Emitter<LoginState> emit) async {
+  Future<void> _onLoginButtonPressed(LoginButtonPressed event, Emitter<LoginState> emit) async {
     emit(LoginLoading());
 
     try {

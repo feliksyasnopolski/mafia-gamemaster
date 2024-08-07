@@ -1,4 +1,4 @@
-part of 'login_bloc.dart';
+part of "login_bloc.dart";
 
 abstract class LoginState extends Equatable {
   const LoginState();
@@ -22,5 +22,5 @@ class LoginFailure extends LoginState {
   List<Object> get props => [error];
 
   @override
-  String toString() => 'LoginFailure { error: $error }';
+  String toString() => "LoginFailure { error: $error }";
 }

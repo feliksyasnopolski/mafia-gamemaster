@@ -5,16 +5,10 @@ import "package:flutter_localizations/flutter_localizations.dart";
 import "package:package_info_plus/package_info_plus.dart";
 import "package:provider/provider.dart";
 
-import "screens/game.dart";
-import "screens/game_log.dart";
-import "screens/main.dart";
-import "screens/roles.dart";
-import "screens/login.dart";
-import "screens/settings.dart";
-import "utils/game_controller.dart";
-import "utils/settings.dart";
-import "utils/login/login_bloc.dart";
 import "router/router.dart";
+import "utils/game_controller.dart";
+import "utils/login/login_bloc.dart";
+import "utils/settings.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

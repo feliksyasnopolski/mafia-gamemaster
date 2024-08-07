@@ -1,4 +1,3 @@
-import "package:auto_route/auto_route.dart";
 import "package:flutter/material.dart";
 
 import "../utils/api_calls.dart";
@@ -10,14 +9,14 @@ class TableChooserDialog extends StatelessWidget {
   // final TextEditingController _textEditingController = TextEditingController();
   final GameController gameController;
 
-  TableChooserDialog({
+  const TableChooserDialog({
     super.key,
     required this.gameController,
     });
 
   @override
   Widget build(BuildContext context) {
-    String tableToken = "";
+    var tableToken = "";
 
     return AlertDialog(
       title: const Text("Выберите стол"),
@@ -38,7 +37,7 @@ class TableChooserDialog extends StatelessWidget {
           final tableItems = tables!.map((table) => DropdownMenuEntry<String>(
               value: table.token ?? "",
               label: table.name ?? "",
-            )).toList();
+            ),).toList();
 
           return DropdownMenu(
             dropdownMenuEntries: tableItems,

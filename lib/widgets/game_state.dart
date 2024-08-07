@@ -5,7 +5,6 @@ import "package:provider/provider.dart";
 
 import "../game/player.dart";
 import "../game/states.dart";
-import "../screens/main.dart";
 import "../utils/api_calls.dart";
 import "../utils/extensions.dart";
 import "../utils/game_controller.dart";

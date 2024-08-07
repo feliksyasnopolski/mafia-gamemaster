@@ -1,9 +1,9 @@
 import "dart:async";
 
+import "package:auto_route/auto_route.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:provider/provider.dart";
-import "package:auto_route/auto_route.dart";
 
 import "../game/states.dart";
 import "../utils/api_calls.dart";
@@ -18,7 +18,6 @@ import "../widgets/game_state.dart";
 import "../widgets/orientation_dependent.dart";
 import "../widgets/player_buttons.dart";
 import "../widgets/restart_dialog.dart";
-import "main.dart";
 
 @RoutePage()
 class GameScreen extends StatefulWidget {

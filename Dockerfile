@@ -10,7 +10,7 @@ RUN git clone https://github.com/flutter/flutter.git /usr/local/flutter
 ENV PATH="${PATH}:/usr/local/flutter/bin:/usr/local/flutter/bin/cache/dart-sdk/bin"
 # Run flutter doctor
 RUN flutter doctor -v
-RUN flutter channel master
+RUN flutter channel stable
 RUN flutter upgrade
 # Copy files to container and build
 RUN mkdir /app/
