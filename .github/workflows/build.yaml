@@ -89,7 +89,7 @@ jobs:
         run: flutter pub get
 
       - name: Build release app for Android
-        run: flutter build apk --split-per-abi
+        run: flutter config --no-enable-windows-desktop && flutter build apk
         #if: startsWith(github.ref, 'refs/tags/v')
 
       #- name: Build debug app for Android
