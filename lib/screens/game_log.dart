@@ -21,12 +21,20 @@ extension DescribeLogItem on BaseGameLogItem {
                 GameStateWithCurrentPlayer():
             // skip
             break;
-          case GameStateSpeaking(currentPlayerNumber: final pn, accusations: final accusations):
+          case GameStateSpeaking(
+              currentPlayerNumber: final pn,
+              accusations: final accusations
+            ):
             if (accusations[pn] != null) {
-              result.add("Игрок #$pn выставил на голосование игрока #${accusations[pn]}");
+              result.add(
+                  "Игрок #$pn выставил на голосование игрока #${accusations[pn]}");
             }
-          case GameStateVoting(currentPlayerNumber: final pn, currentPlayerVotes: final votes):
-            result.add("За игрока #$pn отдано голосов: ${votes ?? 0}"); // FIXME: i18n
+          case GameStateVoting(
+              currentPlayerNumber: final pn,
+              currentPlayerVotes: final votes
+            ):
+            result.add(
+                "За игрока #$pn отдано голосов: ${votes ?? 0}"); // FIXME: i18n
           case GameStateDropTableVoting(votesForDropTable: final votes):
             result.add("За подъём стола отдано голосов: $votes"); // FIXME: i18n
           case GameStateFinish():
@@ -37,7 +45,8 @@ extension DescribeLogItem on BaseGameLogItem {
           playerNumber: final playerNumber,
           checkedByRole: final checkedByRole,
         ):
-        result.add("${checkedByRole.prettyName} проверил игрока #$playerNumber");
+        result
+            .add("${checkedByRole.prettyName} проверил игрока #$playerNumber");
       case PlayerWarnedGameLogItem(playerNumber: final playerNumber):
         result.add("Выдан фол игроку #$playerNumber");
     }

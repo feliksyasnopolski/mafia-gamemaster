@@ -37,11 +37,13 @@ class _GameScreenState extends State<GameScreen> {
     _notesController.dispose();
     super.dispose();
   }
+
   @override
   void initState() {
     super.initState();
     final gameController = context.read<GameController>();
-    unawaited(apiCalls.startGame(gameController.players, gameController.tableToken));
+    unawaited(
+        apiCalls.startGame(gameController.players, gameController.tableToken));
   }
 
   Future<void> _askRestartGame(BuildContext context) async {
@@ -54,7 +56,8 @@ class _GameScreenState extends State<GameScreen> {
       context.read<GameController>().restart();
       await openMainPage(context);
       // ignore: use_build_context_synchronously
-      unawaited(showSnackBar(context, const SnackBar(content: Text("Игра перезапущена"))));
+      unawaited(showSnackBar(
+          context, const SnackBar(content: Text("Игра перезапущена"))));
     }
   }
 
@@ -78,9 +81,10 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<GameController>();
-    
+
     final gameState = controller.state;
-    final isGameRunning = !gameState.stage.isAnyOf([GameStage.prepare, GameStage.finish]);
+    final isGameRunning =
+        !gameState.stage.isAnyOf([GameStage.prepare, GameStage.finish]);
 
     return PopScope(
       canPop: controller.state.stage == GameStage.prepare,
@@ -90,7 +94,8 @@ class _GameScreenState extends State<GameScreen> {
           context: context,
           builder: (context) => const ConfirmationDialog(
             title: Text("Выход из игры"),
-            content: Text("Вы уверены, что хотите выйти из игры? Все данные будут потеряны."),
+            content: Text(
+                "Вы уверены, что хотите выйти из игры? Все данные будут потеряны."),
           ),
         );
         if ((res ?? false) && context.mounted) {
@@ -100,7 +105,9 @@ class _GameScreenState extends State<GameScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: isGameRunning ? Text("День ${controller.state.day}") : const Text("Подготовка к игре"),
+          title: isGameRunning
+              ? Text("День ${controller.state.day}")
+              : const Text("Подготовка к игре"),
           actions: [
             IconButton(
               onPressed: () => Navigator.pushNamed(context, "/log"),
@@ -177,10 +184,14 @@ class _GameScreenGameBodyContent extends OrientationDependentWidget {
           ),
         ),
         BottomControlBar(
-          backLabel: previousState?.prettyName(isLandscape: isLandscape) ?? "(отмена невозможна)",
+          backLabel: previousState?.prettyName(isLandscape: isLandscape) ??
+              "(отмена невозможна)",
           onTapBack: previousState != null ? controller.setPreviousState : null,
-          onTapNext: nextStateAssumption != null ? controller.setNextState : null,
-          nextLabel: nextStateAssumption?.prettyName(isLandscape: isLandscape) ?? "(игра окончена)",
+          onTapNext:
+              nextStateAssumption != null ? controller.setNextState : null,
+          nextLabel:
+              nextStateAssumption?.prettyName(isLandscape: isLandscape) ??
+                  "(игра окончена)",
         ),
       ],
     );

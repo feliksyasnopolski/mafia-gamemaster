@@ -29,9 +29,9 @@ class PlayerButton extends OrientationDependentWidget {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(player.nickname.isEmpty
-            ? "Игрок ${player.number}"
-            : player.nickname,),
+        title: Text(
+          player.nickname.isEmpty ? "Игрок ${player.number}" : player.nickname,
+        ),
         content: Text(
           "Состояние: $isAliveText\n"
           "Роль: ${player.role.prettyName}\n"
@@ -125,16 +125,17 @@ class PlayerButton extends OrientationDependentWidget {
           child: Stack(
             children: [
               Align(
-                  alignment: Alignment.topCenter,
-                  child: Text("${player.number}", 
+                alignment: Alignment.topCenter,
+                child: Text(
+                  "${player.number}",
                   style: const TextStyle(
                     color: Colors.white,
-
                   ),
                 ), // Adjust text style as needed
               ),
               Center(
-                  child: Text(player.nickname, 
+                child: Text(
+                  player.nickname,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -142,14 +143,15 @@ class PlayerButton extends OrientationDependentWidget {
                 ), // Adjust text style as needed
               ),
               Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Text(_getRoleSuffix(), 
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 28,
-                    ),
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  _getRoleSuffix(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 28,
                   ),
+                ),
               ),
             ],
           ),
@@ -159,7 +161,8 @@ class PlayerButton extends OrientationDependentWidget {
           right: 6,
           child: Text(
             "!" * warnCount,
-            style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            style:
+                const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
           ),
         ),
       ],
@@ -196,18 +199,20 @@ class PlayerButton extends OrientationDependentWidget {
           ),
           onPressed: onTap,
           onLongPress: () => _onLongPress(context),
-          child:Stack(
+          child: Stack(
             children: [
               Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("${player.number}", 
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "${player.number}",
                   style: const TextStyle(
                     color: Colors.white,
                   ),
                 ), // Adjust text style as needed
               ),
               Center(
-                  child: Text(player.nickname, 
+                child: Text(
+                  player.nickname,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -215,14 +220,15 @@ class PlayerButton extends OrientationDependentWidget {
                 ), // Adjust text style as needed
               ),
               Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(_getRoleSuffix(), 
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 28,
-                    ),
+                alignment: Alignment.centerRight,
+                child: Text(
+                  _getRoleSuffix(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 28,
                   ),
+                ),
               ),
             ],
           ),
@@ -232,7 +238,8 @@ class PlayerButton extends OrientationDependentWidget {
           right: 6,
           child: Text(
             "!" * warnCount,
-            style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            style:
+                const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
           ),
         ),
       ],

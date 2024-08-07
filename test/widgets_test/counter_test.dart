@@ -75,7 +75,8 @@ void main() {
       expect(find.text("2"), findsOneWidget);
     });
 
-    testWidgets("Test throw assertion error when out of bounds", (tester) async {
+    testWidgets("Test throw assertion error when out of bounds",
+        (tester) async {
       expect(
         () => _buildWidget(
           min: 0,

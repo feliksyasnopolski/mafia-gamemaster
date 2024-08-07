@@ -35,7 +35,8 @@ class PlayerButtons extends OrientationDependentWidget {
   void _onPlayerButtonTap(BuildContext context, int playerNumber) {
     final controller = context.read<GameController>();
     final player = controller.getPlayerByNumber(playerNumber);
-    if (controller.state case GameStateNightCheck(activePlayerNumber: final pn)) {
+    if (controller.state
+        case GameStateNightCheck(activePlayerNumber: final pn)) {
       final p = controller.getPlayerByNumber(pn);
       if (!p.isAlive) {
         return; // It's useless to allow dead players check others
@@ -48,14 +49,16 @@ class PlayerButtons extends OrientationDependentWidget {
         } else {
           msg = "НЕ шериф";
         }
-        ApiCalls().sendNightCheckResult("donCheck", playerNumber, controller.tableToken);
+        ApiCalls().sendNightCheckResult(
+            "donCheck", playerNumber, controller.tableToken);
       } else if (p.role == PlayerRole.sheriff) {
         if (player.role.isMafia) {
           msg = "МАФИЯ 👎";
         } else {
           msg = "НЕ мафия 👍";
         }
-        ApiCalls().sendNightCheckResult("sheriffCheck", playerNumber, controller.tableToken);
+        ApiCalls().sendNightCheckResult(
+            "sheriffCheck", playerNumber, controller.tableToken);
       } else {
         throw AssertionError();
       }
@@ -75,7 +78,8 @@ class PlayerButtons extends OrientationDependentWidget {
       context: context,
       builder: (context) => ConfirmationDialog(
         title: const Text("Выдать фол"),
-        content: Text("Вы уверены, что хотите выдать фол игроку #$playerNumber?"),
+        content:
+            Text("Вы уверены, что хотите выдать фол игроку #$playerNumber?"),
       ),
     );
     debugPrint("$res");
@@ -126,7 +130,8 @@ class PlayerButtons extends OrientationDependentWidget {
     }
   }
 
-  Widget _buildPlayerButton(BuildContext context, int playerNumber, BaseGameState gameState) {
+  Widget _buildPlayerButton(
+      BuildContext context, int playerNumber, BaseGameState gameState) {
     final controller = context.watch<GameController>();
     final isActive = switch (gameState) {
       GameState() || GameStateFinish() => false,
@@ -142,9 +147,14 @@ class PlayerButtons extends OrientationDependentWidget {
         ps.contains(playerNumber),
     };
     final isSelected = switch (gameState) {
-      GameStateSpeaking(accusations: final accusations) => accusations.containsValue(playerNumber),
-      GameStateNightKill(thisNightKilledPlayerNumber: final thisNightKilledPlayer) ||
-      GameStateNightCheck(thisNightKilledPlayerNumber: final thisNightKilledPlayer) =>
+      GameStateSpeaking(accusations: final accusations) =>
+        accusations.containsValue(playerNumber),
+      GameStateNightKill(
+        thisNightKilledPlayerNumber: final thisNightKilledPlayer
+      ) ||
+      GameStateNightCheck(
+        thisNightKilledPlayerNumber: final thisNightKilledPlayer
+      ) =>
         thisNightKilledPlayer == playerNumber,
       _ => false,
     };
@@ -172,7 +182,8 @@ class PlayerButtons extends OrientationDependentWidget {
     final controller = context.watch<GameController>();
     const itemsPerRow = 1;
     final totalPlayers = controller.totalPlayersCount;
-    final size = (MediaQuery.of(context).size.width / itemsPerRow).floorToDouble();
+    final size =
+        (MediaQuery.of(context).size.width / itemsPerRow).floorToDouble();
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -186,8 +197,8 @@ class PlayerButtons extends OrientationDependentWidget {
                   height: 48,
                   child: Padding(
                     padding: const EdgeInsets.all(4),
-                    child:
-                        _buildPlayerButton(context, controller.players[j].number, controller.state),
+                    child: _buildPlayerButton(context,
+                        controller.players[j].number, controller.state),
                   ),
                 ),
             ],
@@ -201,7 +212,8 @@ class PlayerButtons extends OrientationDependentWidget {
     final controller = context.watch<GameController>();
     const itemsPerRow = 10;
     final totalPlayers = controller.totalPlayersCount;
-    final size = (MediaQuery.of(context).size.width / itemsPerRow).floorToDouble();
+    final size =
+        (MediaQuery.of(context).size.width / itemsPerRow).floorToDouble();
     return Row(
       // mainAxisSize: MainAxisSize.min,
       children: [
@@ -215,8 +227,8 @@ class PlayerButtons extends OrientationDependentWidget {
                 height: 96,
                 child: Padding(
                   padding: const EdgeInsets.all(4),
-                  child:
-                      _buildPlayerButton(context, controller.players[i].number, controller.state),
+                  child: _buildPlayerButton(
+                      context, controller.players[i].number, controller.state),
                 ),
               ),
             ],

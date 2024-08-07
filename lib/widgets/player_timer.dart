@@ -8,6 +8,7 @@ class PlayerTimer extends StatefulWidget {
   /// The duration of the timer.
   final Duration duration;
   final bool isLandscape;
+
   /// Called when the timer ticks.
   final ValueChanged<Duration>? onTimerTick;
 
@@ -64,7 +65,8 @@ class _PlayerTimerState extends State<PlayerTimer> {
     }
     final Color? textColor;
     if (timeLeft <= const Duration(seconds: 5)) {
-      _blinkTimer ??= Timer.periodic(const Duration(milliseconds: 500), (timer) {
+      _blinkTimer ??=
+          Timer.periodic(const Duration(milliseconds: 500), (timer) {
         if (!mounted) {
           timer.cancel();
           return;
@@ -102,14 +104,20 @@ class _PlayerTimerState extends State<PlayerTimer> {
             curve: Curves.easeInOut,
             opacity: _textVisible ? 1 : 0.2,
             duration: const Duration(milliseconds: 500),
-            child: Text(text, style: TextStyle(fontSize: 40, color: textColor, fontWeight: FontWeight.bold)),
+            child: Text(text,
+                style: TextStyle(
+                    fontSize: 40,
+                    color: textColor,
+                    fontWeight: FontWeight.bold)),
           ),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
                 onPressed: buttonCallback,
-                icon: Icon((_timer?.isPaused ?? false) ? Icons.play_arrow : Icons.pause),
+                icon: Icon((_timer?.isPaused ?? false)
+                    ? Icons.play_arrow
+                    : Icons.pause),
               ),
               IconButton(
                 onPressed: _initTimer,
@@ -130,11 +138,17 @@ class _PlayerTimerState extends State<PlayerTimer> {
                 curve: Curves.easeInOut,
                 opacity: _textVisible ? 1 : 0.2,
                 duration: const Duration(milliseconds: 500),
-                child: Text(text, style: TextStyle(fontSize: 40, color: textColor, fontWeight: FontWeight.bold)),
+                child: Text(text,
+                    style: TextStyle(
+                        fontSize: 40,
+                        color: textColor,
+                        fontWeight: FontWeight.bold)),
               ),
               IconButton(
                 onPressed: buttonCallback,
-                icon: Icon((_timer?.isPaused ?? false) ? Icons.play_arrow : Icons.pause),
+                icon: Icon((_timer?.isPaused ?? false)
+                    ? Icons.play_arrow
+                    : Icons.pause),
               ),
               IconButton(
                 onPressed: _initTimer,
@@ -145,6 +159,5 @@ class _PlayerTimerState extends State<PlayerTimer> {
         ],
       );
     }
-    
   }
 }

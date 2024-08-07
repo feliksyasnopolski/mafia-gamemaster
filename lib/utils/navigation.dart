@@ -20,4 +20,3 @@ Future<void> openSettingsPage(BuildContext context) =>
 
 Future<void> openLoginPage(BuildContext context) =>
     context.router.replace(const LoginRoute());
-

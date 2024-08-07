@@ -9,7 +9,7 @@ class InputDialog extends StatelessWidget {
     super.key,
     required this.title,
     required this.content,
-    });
+  });
 
   @override
   Widget build(BuildContext context) {

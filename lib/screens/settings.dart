@@ -26,7 +26,8 @@ class _ChoiceListTile<T> extends StatelessWidget {
     required this.onChanged,
   });
 
-  String _itemToString(T item) => itemToString == null ? item.toString() : itemToString!(item);
+  String _itemToString(T item) =>
+      itemToString == null ? item.toString() : itemToString!(item);
 
   Future<void> _onTileClick(BuildContext context) async {
     final res = await showChoiceDialog(
@@ -102,29 +103,30 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.token),
             title: const Text("Токен приложения"),
-            subtitle: Text(settings.appToken.isNotEmpty ? settings.appToken : "Не задан"),
+            subtitle: Text(
+                settings.appToken.isNotEmpty ? settings.appToken : "Не задан"),
             onTap: () async {
-              final res =  await showDialog<String>(
+              final res = await showDialog<String>(
                 context: context,
                 builder: (context) => InputDialog(
                   title: "Токен приложения",
                   content: Text(settings.appToken),
-                  ),
+                ),
               );
               if (res != null) {
                 settings.setAppToken(res);
               }
             },
-        // );await InputDialog(
-        //         context: context,
-        //         title: "Токен приложения",
-        //         content: settings.appToken,
-        //         hintText: "Введите токен",
-        //       ) as String;
-        //       if (res != "") {
-        //         settings.setAppToken(res);
-        //       }
-        //     },
+            // );await InputDialog(
+            //         context: context,
+            //         title: "Токен приложения",
+            //         content: settings.appToken,
+            //         hintText: "Введите токен",
+            //       ) as String;
+            //       if (res != "") {
+            //         settings.setAppToken(res);
+            //       }
+            //     },
             // onTap: () async {
             //   final res = await showDurationDialog(context: context, duration: settings.timerDuration);
             //   if (res != null) {
@@ -139,7 +141,8 @@ class SettingsScreen extends StatelessWidget {
             onTap: () => showAboutDialog(
               context: context,
               applicationName: packageInfo.appName,
-              applicationVersion: "$appVersion build ${packageInfo.buildNumber}",
+              applicationVersion:
+                  "$appVersion build ${packageInfo.buildNumber}",
               applicationLegalese: "© 2023 Евгений Филимонов",
             ),
           ),

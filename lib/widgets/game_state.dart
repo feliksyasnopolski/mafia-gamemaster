@@ -19,9 +19,11 @@ class GameStateInfo extends OrientationDependentWidget {
   const GameStateInfo({super.key});
 
   @override
-  Widget buildPortrait(BuildContext context) => buildWidget(context, isLandscape: false);
+  Widget buildPortrait(BuildContext context) =>
+      buildWidget(context, isLandscape: false);
   @override
-  Widget buildLandscape(BuildContext context) => buildWidget(context, isLandscape: true);
+  Widget buildLandscape(BuildContext context) =>
+      buildWidget(context, isLandscape: true);
 
   Widget buildWidget(BuildContext context, {required bool isLandscape}) {
     final gameState = context.watch<GameController>().state;
@@ -63,7 +65,8 @@ class BottomGameStateWidget extends OrientationDependentWidget {
       );
     }
 
-    if (gameState.stage.isAnyOf([GameStage.preVoting, GameStage.preFinalVoting])) {
+    if (gameState.stage
+        .isAnyOf([GameStage.preVoting, GameStage.preFinalVoting])) {
       final selectedPlayers = controller.voteCandidates;
       return Text(
         "Выставлены: ${selectedPlayers.join(", ")}",
@@ -81,7 +84,8 @@ class BottomGameStateWidget extends OrientationDependentWidget {
         key: ValueKey(gameState.currentPlayerNumber),
         min: onlyOneSelected ? aliveCount : 0,
         max: aliveCount - controller.totalVotes,
-        onValueChanged: (value) => controller.vote(gameState.currentPlayerNumber, value),
+        onValueChanged: (value) =>
+            controller.vote(gameState.currentPlayerNumber, value),
         initialValue: onlyOneSelected ? aliveCount : currentPlayerVotes,
       );
     }
@@ -119,7 +123,8 @@ class BottomGameStateWidget extends OrientationDependentWidget {
               // controller.restart();
               if (context.mounted) {
                 unawaited(
-                  showSnackBar(context, const SnackBar(content: Text("Игра перезапущена"))),
+                  showSnackBar(context,
+                      const SnackBar(content: Text("Игра перезапущена"))),
                 );
               }
               // }
@@ -138,7 +143,8 @@ class BottomGameStateWidget extends OrientationDependentWidget {
         final t = timeLimits[gameState.stage];
         timeLimit = t != null ? t + const Duration(seconds: 5) : null;
       case TimerType.extended:
-        timeLimit = timeLimitsExtended[gameState.stage] ?? timeLimits[gameState.stage];
+        timeLimit =
+            timeLimitsExtended[gameState.stage] ?? timeLimits[gameState.stage];
       case TimerType.strict:
         timeLimit = timeLimits[gameState.stage];
     }
@@ -152,8 +158,7 @@ class BottomGameStateWidget extends OrientationDependentWidget {
             await Future<void>.delayed(
               const Duration(milliseconds: 300),
             ); // 100 vibration + 200 pause
-          } else if (duration <= const Duration(seconds: 5)) {
-          }
+          } else if (duration <= const Duration(seconds: 5)) {}
         },
       );
     }

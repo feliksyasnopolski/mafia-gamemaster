@@ -11,7 +11,7 @@ class PlayersView with IterableMixin<Player> {
       //     players.asMap().entries.every((element) => element.value.number == element.key + 1),
       //     "Players must be sorted by numbers sequentially 1..10",
       //   ),
-       : _players = players;
+      : _players = players;
 
   Player operator [](int index) => _players[index];
 
@@ -30,15 +30,19 @@ class PlayersView with IterableMixin<Player> {
   int get aliveMafiaCount =>
       _players.where((player) => player.role.isMafia && player.isAlive).length;
 
-  Player get don => _players.firstWhere((player) => player.role == PlayerRole.don);
+  Player get don =>
+      _players.firstWhere((player) => player.role == PlayerRole.don);
 
-  Player get sheriff => _players.firstWhere((player) => player.role == PlayerRole.sheriff);
+  Player get sheriff =>
+      _players.firstWhere((player) => player.role == PlayerRole.sheriff);
 
-  List<Player> get citizen =>
-      _players.where((player) => player.role == PlayerRole.citizen).toUnmodifiableList();
+  List<Player> get citizen => _players
+      .where((player) => player.role == PlayerRole.citizen)
+      .toUnmodifiableList();
 
-  List<Player> get mafia =>
-      _players.where((player) => player.role == PlayerRole.mafia).toUnmodifiableList();
+  List<Player> get mafia => _players
+      .where((player) => player.role == PlayerRole.mafia)
+      .toUnmodifiableList();
 
   List<Player> get mafiaTeam =>
       _players.where((player) => player.role.isMafia).toUnmodifiableList();
@@ -46,7 +50,9 @@ class PlayersView with IterableMixin<Player> {
   List<Player> get citizenTeam =>
       _players.where((player) => player.role.isCitizen).toUnmodifiableList();
 
-  void kill(int number) => _players[number - 1] = _players[number - 1].copyWith(isAlive: false);
+  void kill(int number) =>
+      _players[number - 1] = _players[number - 1].copyWith(isAlive: false);
 
-  void revive(int number) => _players[number - 1] = _players[number - 1].copyWith(isAlive: true);
+  void revive(int number) =>
+      _players[number - 1] = _players[number - 1].copyWith(isAlive: true);
 }

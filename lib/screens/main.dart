@@ -55,7 +55,8 @@ class _MainScreenState extends State<MainScreen> {
     );
     if (context.mounted && (restartGame ?? false)) {
       context.read<GameController>().restart();
-      unawaited(showSnackBar(context, const SnackBar(content: Text("Игра перезапущена"))));
+      unawaited(showSnackBar(
+          context, const SnackBar(content: Text("Игра перезапущена"))));
     }
   }
 
@@ -80,7 +81,8 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final controller = context.watch<GameController>();
     final gameState = controller.state;
-    final isGameRunning = !gameState.stage.isAnyOf([GameStage.prepare, GameStage.finish]);
+    final isGameRunning =
+        !gameState.stage.isAnyOf([GameStage.prepare, GameStage.finish]);
     // final packageInfo = context.watch<PackageInfo>();
     // $PLACEHOLDER$
     return PopScope(
@@ -91,7 +93,8 @@ class _MainScreenState extends State<MainScreen> {
           context: context,
           builder: (context) => const ConfirmationDialog(
             title: Text("Выход из игры"),
-            content: Text("Вы уверены, что хотите выйти из игры? Все данные будут потеряны."),
+            content: Text(
+                "Вы уверены, что хотите выйти из игры? Все данные будут потеряны."),
           ),
         );
         if ((res ?? false) && context.mounted) {
@@ -110,7 +113,6 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
-
 
 class _RotatableMainScreenBody extends OrientationDependentWidget {
   final bool showRoles;
@@ -137,7 +139,8 @@ class _RotatableMainScreenBody extends OrientationDependentWidget {
 class _MainScreenMainBodyContent extends StatelessWidget {
   const _MainScreenMainBodyContent();
 
-  Future<void> _onStartGamePressed(BuildContext context, GameController controller) async {
+  Future<void> _onStartGamePressed(
+      BuildContext context, GameController controller) async {
     await showDialog<String>(
       context: context,
       builder: (context) => TableChooserDialog(
@@ -149,14 +152,14 @@ class _MainScreenMainBodyContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<GameController>();
-  
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         TextButton(
-            onPressed: () => _onStartGamePressed(context, controller),
-            child: const Text("Начать игру", style: TextStyle(fontSize: 20)),
-          ),
+          onPressed: () => _onStartGamePressed(context, controller),
+          child: const Text("Начать игру", style: TextStyle(fontSize: 20)),
+        ),
       ],
     );
   }

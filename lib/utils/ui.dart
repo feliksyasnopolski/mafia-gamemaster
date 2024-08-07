@@ -40,31 +40,55 @@ extension GameStatePrettyString on BaseGameState {
         return isLandscape ? "Первая ночь" : "первая ночь";
       case GameStateWithPlayer(stage: GameStage.night0SheriffCheck):
         return isLandscape ? "Шериф осматривает стол" : "осмотр шерифом";
-      case GameStateSpeaking(stage: GameStage.speaking, currentPlayerNumber: final playerNumber):
-        return isLandscape ? "Речь игрока $playerNumber" : "речь #$playerNumber";
+      case GameStateSpeaking(
+          stage: GameStage.speaking,
+          currentPlayerNumber: final playerNumber
+        ):
+        return isLandscape
+            ? "Речь игрока $playerNumber"
+            : "речь #$playerNumber";
       case GameStateWithPlayers(stage: GameStage.preVoting):
         return isLandscape ? "Голосование" : "голосование";
-      case GameStateVoting(stage: GameStage.voting, currentPlayerNumber: final playerNumber):
-        return isLandscape ? "Голосование против игрока $playerNumber" : "голосование против #$playerNumber";
+      case GameStateVoting(
+          stage: GameStage.voting,
+          currentPlayerNumber: final playerNumber
+        ):
+        return isLandscape
+            ? "Голосование против игрока $playerNumber"
+            : "голосование против #$playerNumber";
       case GameStateWithCurrentPlayer(
           stage: GameStage.excuse,
           currentPlayerNumber: final playerNumber,
         ):
-        return isLandscape ? "Повторная речь игрока $playerNumber" : "повторная речь #$playerNumber";
+        return isLandscape
+            ? "Повторная речь игрока $playerNumber"
+            : "повторная речь #$playerNumber";
       case GameStateWithPlayers(stage: GameStage.preFinalVoting):
         return isLandscape ? "Повторное голосование" : "повторное голосование";
-      case GameStateVoting(stage: GameStage.finalVoting, currentPlayerNumber: final playerNumber):
-        return isLandscape ? "Повторное голосование против игрока $playerNumber" : "повторное голосование против #$playerNumber";
+      case GameStateVoting(
+          stage: GameStage.finalVoting,
+          currentPlayerNumber: final playerNumber
+        ):
+        return isLandscape
+            ? "Повторное голосование против игрока $playerNumber"
+            : "повторное голосование против #$playerNumber";
       case GameStateDropTableVoting():
-        return isLandscape ? "Голосование за подъём стола" : "голосование за подъём стола";
+        return isLandscape
+            ? "Голосование за подъём стола"
+            : "голосование за подъём стола";
       case GameStateWithCurrentPlayer(
           stage: GameStage.dayLastWords,
           currentPlayerNumber: final playerNumber,
         ):
-        return isLandscape ? "Последние слова игрока $playerNumber" : "последние слова #$playerNumber";
+        return isLandscape
+            ? "Последние слова игрока $playerNumber"
+            : "последние слова #$playerNumber";
       case GameStateNightKill():
         return isLandscape ? "Ночь, ход Мафии" : "ночь, ход мафии";
-      case GameStateNightCheck(stage: GameStage.nightCheck, activePlayerRole: final playerRole):
+      case GameStateNightCheck(
+          stage: GameStage.nightCheck,
+          activePlayerRole: final playerRole
+        ):
         if (playerRole == PlayerRole.don) {
           return isLandscape ? "Ночь, ход Дона" : "ночь, ход дона";
         }
@@ -73,7 +97,9 @@ extension GameStatePrettyString on BaseGameState {
           stage: GameStage.nightLastWords,
           currentPlayerNumber: final playerNumber,
         ):
-        return isLandscape ? "Последние слова игрока $playerNumber" : "последние слова #$playerNumber";
+        return isLandscape
+            ? "Последние слова игрока $playerNumber"
+            : "последние слова #$playerNumber";
       case GameStateFinish():
         return isLandscape ? "Игра окончена" : "конец игры";
       default:

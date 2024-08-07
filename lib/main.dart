@@ -19,7 +19,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider<SettingsModel>.value(value: settings),
         Provider<PackageInfo>.value(value: packageInfo),
-        ChangeNotifierProvider<GameController>(create: (context) => GameController()),
+        ChangeNotifierProvider<GameController>(
+            create: (context) => GameController()),
         BlocProvider<LoginBloc>(create: (context) => LoginBloc()),
       ],
       child: MyApp(),
@@ -41,7 +42,9 @@ class MyApp extends StatelessWidget {
       builder: (light, dark) => MaterialApp.router(
         title: "Помощник ведущего",
         theme: ThemeData(
-          colorScheme: (settings.colorSchemeType == ColorSchemeType.system ? light : null) ??
+          colorScheme: (settings.colorSchemeType == ColorSchemeType.system
+                  ? light
+                  : null) ??
               ColorScheme.fromSeed(
                 seedColor: seedColor,
                 brightness: Brightness.light,
@@ -49,7 +52,9 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         darkTheme: ThemeData(
-          colorScheme: (settings.colorSchemeType == ColorSchemeType.system ? dark : null) ??
+          colorScheme: (settings.colorSchemeType == ColorSchemeType.system
+                  ? dark
+                  : null) ??
               ColorScheme.fromSeed(
                 seedColor: seedColor,
                 brightness: Brightness.dark,

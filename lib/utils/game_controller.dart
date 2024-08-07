@@ -44,7 +44,6 @@ class GameController with ChangeNotifier {
     return assumption;
   }
 
-
   void restart() {
     _players = [];
     _game = Game();
@@ -78,7 +77,7 @@ class GameController with ChangeNotifier {
     apiCalls.updateLog(_game, tableToken);
     _game.setNextState();
     apiCalls.updatePlayers(players, tableToken);
-      // ..updateVoteCandidates(voteCandidates);
+    // ..updateVoteCandidates(voteCandidates);
     notifyListeners();
   }
 

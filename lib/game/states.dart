@@ -71,7 +71,8 @@ class GameState extends BaseGameState {
   const GameState({
     required super.stage,
     required super.day,
-  })  : assert(stage == GameStage.prepare, "Invalid stage for GameState: $stage"),
+  })  : assert(
+            stage == GameStage.prepare, "Invalid stage for GameState: $stage"),
         assert(day >= 0, "Invalid day for GameState: $day");
 
   @override
@@ -98,7 +99,8 @@ class GameStateWithPlayer extends BaseGameState {
     required super.day,
     required this.currentPlayerNumber,
   }) : assert(
-          stage == GameStage.night0SheriffCheck || stage == GameStage.nightLastWords,
+          stage == GameStage.night0SheriffCheck ||
+              stage == GameStage.nightLastWords,
           "Invalid stage for GameStateWithPlayer: $stage",
         );
 
@@ -177,7 +179,8 @@ class GameStateVoting extends BaseGameState {
           currentPlayerVotes == other.currentPlayerVotes;
 
   @override
-  int get hashCode => Object.hash(stage, day, votes, currentPlayerNumber, currentPlayerVotes);
+  int get hashCode =>
+      Object.hash(stage, day, votes, currentPlayerNumber, currentPlayerVotes);
 }
 
 /// Represents state with [playerNumbers] and [votesForDropTable].
@@ -264,7 +267,8 @@ class GameStateNightKill extends BaseGameState {
           thisNightKilledPlayerNumber == other.thisNightKilledPlayerNumber;
 
   @override
-  int get hashCode => Object.hash(stage, day, mafiaTeam, thisNightKilledPlayerNumber);
+  int get hashCode =>
+      Object.hash(stage, day, mafiaTeam, thisNightKilledPlayerNumber);
 }
 
 /// Represents night check game state.
@@ -295,8 +299,8 @@ class GameStateNightCheck extends BaseGameState {
           thisNightKilledPlayerNumber == other.thisNightKilledPlayerNumber;
 
   @override
-  int get hashCode =>
-      Object.hash(stage, day, activePlayerNumber, activePlayerRole, thisNightKilledPlayerNumber);
+  int get hashCode => Object.hash(stage, day, activePlayerNumber,
+      activePlayerRole, thisNightKilledPlayerNumber);
 }
 
 /// Represents game state with related [playerNumbers] and current [currentPlayerIndex].
@@ -332,7 +336,8 @@ class GameStateWithCurrentPlayer extends BaseGameState {
           currentPlayerIndex == other.currentPlayerIndex;
 
   @override
-  int get hashCode => Object.hash(stage, day, playerNumbers, currentPlayerIndex);
+  int get hashCode =>
+      Object.hash(stage, day, playerNumbers, currentPlayerIndex);
 
   int get currentPlayerNumber => playerNumbers[currentPlayerIndex];
 }
@@ -394,9 +399,17 @@ const validTransitions = {
   GameStage.prepare: [GameStage.night0],
   GameStage.night0: [GameStage.night0SheriffCheck],
   GameStage.night0SheriffCheck: [GameStage.speaking],
-  GameStage.speaking: [GameStage.speaking, GameStage.preVoting, GameStage.nightKill],
+  GameStage.speaking: [
+    GameStage.speaking,
+    GameStage.preVoting,
+    GameStage.nightKill
+  ],
   GameStage.preVoting: [GameStage.voting, GameStage.dayLastWords],
-  GameStage.voting: [GameStage.voting, GameStage.excuse, GameStage.dayLastWords],
+  GameStage.voting: [
+    GameStage.voting,
+    GameStage.excuse,
+    GameStage.dayLastWords
+  ],
   GameStage.excuse: [GameStage.excuse, GameStage.preFinalVoting],
   GameStage.preFinalVoting: [GameStage.finalVoting],
   GameStage.finalVoting: [
@@ -407,7 +420,11 @@ const validTransitions = {
     GameStage.nightKill,
   ],
   GameStage.dropTableVoting: [GameStage.dayLastWords, GameStage.nightKill],
-  GameStage.dayLastWords: [GameStage.dayLastWords, GameStage.nightKill, GameStage.finish],
+  GameStage.dayLastWords: [
+    GameStage.dayLastWords,
+    GameStage.nightKill,
+    GameStage.finish
+  ],
   GameStage.nightKill: [GameStage.nightCheck],
   GameStage.nightCheck: [
     GameStage.nightCheck,

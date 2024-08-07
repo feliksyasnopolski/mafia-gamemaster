@@ -108,11 +108,14 @@ void main() {
 
       expect(tester.widget<Text>(find.text("00:15")).style!.color, null);
       await tester.pump(const Duration(seconds: 5));
-      expect(tester.widget<Text>(find.text("00:10")).style!.color, isSameColorAs(Colors.yellow));
+      expect(tester.widget<Text>(find.text("00:10")).style!.color,
+          isSameColorAs(Colors.yellow));
       await tester.pump(const Duration(seconds: 5));
-      expect(tester.widget<Text>(find.text("00:05")).style!.color, isSameColorAs(Colors.red));
+      expect(tester.widget<Text>(find.text("00:05")).style!.color,
+          isSameColorAs(Colors.red));
       await tester.pump(const Duration(seconds: 5));
-      expect(tester.widget<Text>(find.text("00:00")).style!.color, isSameColorAs(Colors.red));
+      expect(tester.widget<Text>(find.text("00:00")).style!.color,
+          isSameColorAs(Colors.red));
     });
   });
 }

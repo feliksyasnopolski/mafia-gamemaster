@@ -8,12 +8,12 @@ part "login_event.dart";
 part "login_state.dart";
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-
   LoginBloc() : super(LoginInitial()) {
     on<LoginButtonPressed>(_onLoginButtonPressed);
   }
 
-  Future<void> _onLoginButtonPressed(LoginButtonPressed event, Emitter<LoginState> emit) async {
+  Future<void> _onLoginButtonPressed(
+      LoginButtonPressed event, Emitter<LoginState> emit) async {
     emit(LoginLoading());
 
     try {

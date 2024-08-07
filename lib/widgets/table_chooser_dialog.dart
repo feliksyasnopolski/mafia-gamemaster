@@ -12,7 +12,7 @@ class TableChooserDialog extends StatelessWidget {
   const TableChooserDialog({
     super.key,
     required this.gameController,
-    });
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +34,14 @@ class TableChooserDialog extends StatelessWidget {
           }
           final tables = snapshot.data;
 
-          final tableItems = tables!.map((table) => DropdownMenuEntry<String>(
-              value: table.token ?? "",
-              label: table.name ?? "",
-            ),).toList();
+          final tableItems = tables!
+              .map(
+                (table) => DropdownMenuEntry<String>(
+                  value: table.token ?? "",
+                  label: table.name ?? "",
+                ),
+              )
+              .toList();
 
           return DropdownMenu(
             dropdownMenuEntries: tableItems,
@@ -56,9 +60,11 @@ class TableChooserDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-          if (tableToken == "") {
+            if (tableToken == "") {
               // show snackbar
-                ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
                   const SnackBar(
                     content: Text("Выберите стол"),
                     duration: Duration(seconds: 3),

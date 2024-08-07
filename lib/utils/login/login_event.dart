@@ -12,11 +12,13 @@ class LoginButtonPressed extends LoginEvent {
   final String password;
   SettingsModel settings;
 
-  LoginButtonPressed({required this.email, required this.password, required this.settings});
+  LoginButtonPressed(
+      {required this.email, required this.password, required this.settings});
 
   @override
   List<Object> get props => [email, password];
 
   @override
-  String toString() => "LoginButtonPressed { email: $email, password: $password }";
+  String toString() =>
+      "LoginButtonPressed { email: $email, password: $password }";
 }

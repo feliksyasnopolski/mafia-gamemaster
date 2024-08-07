@@ -1,4 +1,3 @@
-
 class PlayersModel {
   int? id;
   String? nickname;
@@ -17,6 +16,7 @@ class PlayersModel {
     return data;
   }
 }
+
 class TablesModel {
   int? id;
   String? name;

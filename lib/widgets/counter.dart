@@ -12,7 +12,8 @@ class Counter extends StatefulWidget {
     required this.max,
     this.onValueChanged,
     required this.initialValue,
-  }) : assert(min <= initialValue && initialValue <= max, "value must be in range [min, max]");
+  }) : assert(min <= initialValue && initialValue <= max,
+            "value must be in range [min, max]");
 
   @override
   State<Counter> createState() => _CounterState();
@@ -81,7 +82,9 @@ class _IconButtonWithLongPress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = onTap == null && onLongPress == null ? Theme.of(context).disabledColor : null;
+    final color = onTap == null && onLongPress == null
+        ? Theme.of(context).disabledColor
+        : null;
     return InkWell(
       borderRadius: BorderRadius.circular(24),
       onTap: onTap,

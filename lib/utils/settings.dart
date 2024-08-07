@@ -22,7 +22,8 @@ Future<SettingsModel> getSettings() async {
   final prefs = await SharedPreferences.getInstance();
   final timerTypeString = prefs.getString("timerType") ?? defaultTimerType.name;
   final theme = prefs.getString("theme") ?? defaultThemeMode.name;
-  final colorSchemeTypeString = prefs.getString("colorSchemeType") ?? defaultColorSchemeType.name;
+  final colorSchemeTypeString =
+      prefs.getString("colorSchemeType") ?? defaultColorSchemeType.name;
   final appToken = prefs.getString("appToken") ?? defaultToken;
 
   final TimerType timerType;
@@ -36,7 +37,8 @@ Future<SettingsModel> getSettings() async {
     case "disabled":
       timerType = TimerType.disabled;
     default:
-      assert(false, "Unknown timer type: $timerTypeString"); // fail for debug builds
+      assert(false,
+          "Unknown timer type: $timerTypeString"); // fail for debug builds
       timerType = defaultTimerType; // use default for release builds
       break;
   }
@@ -62,8 +64,10 @@ Future<SettingsModel> getSettings() async {
     case "app":
       colorSchemeType = ColorSchemeType.app;
     default:
-      assert(false, "Unknown color scheme type: $colorSchemeTypeString"); // fail for debug builds
-      colorSchemeType = defaultColorSchemeType; // use default for release builds
+      assert(false,
+          "Unknown color scheme type: $colorSchemeTypeString"); // fail for debug builds
+      colorSchemeType =
+          defaultColorSchemeType; // use default for release builds
       break;
   }
 
@@ -91,7 +95,7 @@ class SettingsModel with ChangeNotifier {
   TimerType _timerType;
   ThemeMode _themeMode;
   ColorSchemeType _colorSchemeType;
-  String    _appToken;
+  String _appToken;
 
   SettingsModel({
     required TimerType timerType,
