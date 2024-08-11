@@ -29,20 +29,6 @@ class _MainScreenState extends State<MainScreen> {
   final _notesController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   final settings = Provider.of<SettingsModel>(context, listen: false); //context.watch<SettingsModel>();
-
-    //   if (settings.appToken.isEmpty)
-    //   {
-    //     Navigator.pushReplacementNamed(context, "/login");
-    //   }
-    // });
-  }
-
-  @override
   void dispose() {
     _notesController.dispose();
     super.dispose();
@@ -56,25 +42,8 @@ class _MainScreenState extends State<MainScreen> {
     if (context.mounted && (restartGame ?? false)) {
       context.read<GameController>().restart();
       unawaited(showSnackBar(
-          context, const SnackBar(content: Text("Игра перезапущена"))));
+          context, const SnackBar(content: Text("Игра перезапущена")),),);
     }
-  }
-
-  void _showNotes(BuildContext context) {
-    showSimpleDialog(
-      context: context,
-      title: const Text("Заметки"),
-      content: TextField(
-        controller: _notesController,
-        maxLines: null,
-      ),
-      actions: [
-        TextButton(
-          onPressed: _notesController.clear,
-          child: const Text("Очистить"),
-        ),
-      ],
-    );
   }
 
   @override
@@ -94,7 +63,7 @@ class _MainScreenState extends State<MainScreen> {
           builder: (context) => const ConfirmationDialog(
             title: Text("Выход из игры"),
             content: Text(
-                "Вы уверены, что хотите выйти из игры? Все данные будут потеряны."),
+                "Вы уверены, что хотите выйти из игры? Все данные будут потеряны.",),
           ),
         );
         if ((res ?? false) && context.mounted) {
@@ -140,7 +109,7 @@ class _MainScreenMainBodyContent extends StatelessWidget {
   const _MainScreenMainBodyContent();
 
   Future<void> _onStartGamePressed(
-      BuildContext context, GameController controller) async {
+      BuildContext context, GameController controller,) async {
     await showDialog<String>(
       context: context,
       builder: (context) => TableChooserDialog(
@@ -153,14 +122,30 @@ class _MainScreenMainBodyContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = context.watch<GameController>();
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        TextButton(
-          onPressed: () => _onStartGamePressed(context, controller),
-          child: const Text("Начать игру", style: TextStyle(fontSize: 20)),
-        ),
-      ],
+    return Align(
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            child: const Text("Начать игру", style: TextStyle(fontSize: 20)),
+            onPressed: () => _onStartGamePressed(context, controller),
+          ),
+        ],
+      ),
     );
+    
+    // Align(
+    //       alignment: Alignment.center,
+    //       child: Padding(
+    //         padding: const EdgeInsets.all(8),
+    //         child: TextButton(
+    //           onPressed: () => _onStartGamePressed(context, controller),
+    //           child: const Text("Начать игру", style: TextStyle(fontSize: 20)),
+    //         ),
+    //       ),
+    //     );
   }
 }

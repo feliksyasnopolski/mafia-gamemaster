@@ -20,7 +20,7 @@ class AppDrawer extends StatelessWidget {
           DrawerHeader(
             child: Center(
               child: Text("MafiaArena",
-                  style: Theme.of(context).textTheme.titleLarge),
+                  style: Theme.of(context).textTheme.titleLarge,),
             ),
           ),
           ListTile(

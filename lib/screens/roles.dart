@@ -37,7 +37,7 @@ class _RolesScreenState extends State<RolesScreen> {
     setState(_validate);
     if (_errorsByIndex.isNotEmpty || _errorsByRole.isNotEmpty) {
       unawaited(showSnackBar(context,
-          const SnackBar(content: Text("Для продолжения исправьте ошибки"))));
+          const SnackBar(content: Text("Для продолжения исправьте ошибки")),),);
       return;
     }
 
@@ -147,13 +147,14 @@ class _RolesScreenState extends State<RolesScreen> {
   }
 
   List<Widget> buildColumn(List<DropdownMenuEntry<String?>> nicknameEntries,
-      Orientation orientation, int playerNumber) {
+      Orientation orientation, int playerNumber,) {
     final columns = <Widget>[];
+    // final elementHeight = (MediaQuery.of(context).size.height / 10)*0.7;
     // ignore: cascade_invocations
     columns
       ..add(
         Container(
-          height: 40,
+          height: 46,
           padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
           child: DropdownMenu(
             expandedInsets: EdgeInsets.zero,
@@ -198,7 +199,7 @@ class _RolesScreenState extends State<RolesScreen> {
       )
       ..add(
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
           child: SegmentedButton(
             segments: [
               for (final role in PlayerRole.values)
@@ -211,7 +212,7 @@ class _RolesScreenState extends State<RolesScreen> {
             style: ButtonStyle(
               padding: WidgetStateProperty.all(EdgeInsets.zero),
               iconSize: WidgetStateProperty.all(0),
-              textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 20)),
+              textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 18)),
             ),
             selected: _chosenRoles[playerNumber] != null
                 ? {_chosenRoles[playerNumber]!}
@@ -243,7 +244,7 @@ class _RolesScreenState extends State<RolesScreen> {
   }
 
   Widget _buildPlayerTable(List<DropdownMenuEntry<String?>> nicknameEntries,
-      Orientation orientation) {
+      Orientation orientation,) {
     final landscape = orientation == Orientation.landscape;
     final columnWidths = landscape
         ? const {
@@ -301,13 +302,13 @@ class _RolesScreenState extends State<RolesScreen> {
   }
 
   List<DropdownMenuEntry<String?>> _buildNicknameEntries(
-      List<PlayersModel> players) {
+      List<PlayersModel> players,) {
     final nicknameEntries = [
       const DropdownMenuEntry(
         value: null,
         label: "",
         labelWidget: Text("(*без никнейма*)",
-            style: TextStyle(fontStyle: FontStyle.italic)),
+            style: TextStyle(fontStyle: FontStyle.italic),),
       ),
       for (final nickname
           in players.map((p) => p.nickname).toList(growable: false)..sort())
@@ -427,7 +428,7 @@ class _RolesScreenState extends State<RolesScreen> {
                   //     padding: const EdgeInsets.all(8),
                   //     child:
                   _buildPlayerTable(
-                      _buildNicknameEntries(apiPlayers), orientation),
+                      _buildNicknameEntries(apiPlayers), orientation,),
               // ),
               // _buildPlayerTable(_buildNicknameEntries(apiPlayers), orientation),
               // ),
@@ -439,18 +440,18 @@ class _RolesScreenState extends State<RolesScreen> {
         },
       ),
 
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () => _onFabPressed(context),
-            heroTag: null,
-            child: const Icon(
-              Icons.check,
-            ),
-          ),
-        ],
-      ),
+      // floatingActionButton: Row(
+      //   mainAxisAlignment: MainAxisAlignment.end,
+      //   children: [
+      //     FloatingActionButton(
+      //       onPressed: () => _onFabPressed(context),
+      //       heroTag: null,
+      //       child: const Icon(
+      //         Icons.check,
+      //       ),
+      //     ),
+      //   ],
+      // ),
       // FloatingActionButton(
       //     tooltip: "Применить",
       //     onPressed: () => _onFabPressed(context),

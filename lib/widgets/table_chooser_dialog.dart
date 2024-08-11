@@ -1,3 +1,4 @@
+import "package:auto_route/auto_route.dart";
 import "package:flutter/material.dart";
 
 import "../utils/api_calls.dart";
@@ -54,7 +55,8 @@ class TableChooserDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
-            openMainPage(context);
+            context.router.maybePop();
+            // openMainPage(context);
           },
           child: const Text("Cancel"),
         ),
@@ -73,6 +75,7 @@ class TableChooserDialog extends StatelessWidget {
               return;
             }
             gameController.tableToken = tableToken;
+            gameController.restart();
             openRoleChooserPage(context);
           },
           child: const Text("OK"),

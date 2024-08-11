@@ -37,9 +37,9 @@ extension GameStatePrettyString on BaseGameState {
       case GameState(stage: GameStage.prepare):
         return isLandscape ? "Ожидание игроков..." : "ожидание";
       case GameStateWithPlayers(stage: GameStage.night0):
-        return isLandscape ? "Первая ночь" : "первая ночь";
+        return isLandscape ? "Договорка мафии" : "договорка";
       case GameStateWithPlayer(stage: GameStage.night0SheriffCheck):
-        return isLandscape ? "Шериф осматривает стол" : "осмотр шерифом";
+        return isLandscape ? "Шериф осматривает стол" : "осмотр шерифа";
       case GameStateSpeaking(
           stage: GameStage.speaking,
           currentPlayerNumber: final playerNumber
@@ -92,7 +92,7 @@ extension GameStatePrettyString on BaseGameState {
         if (playerRole == PlayerRole.don) {
           return isLandscape ? "Ночь, ход Дона" : "ночь, ход дона";
         }
-        return isLandscape ? "Ночь, ход Шерифа" : "ночь, ход шерифа";
+        return isLandscape ? "Ночь, ход Шерифа" : "ход шерифа";
       case GameStateWithPlayer(
           stage: GameStage.nightLastWords,
           currentPlayerNumber: final playerNumber,
@@ -100,6 +100,13 @@ extension GameStatePrettyString on BaseGameState {
         return isLandscape
             ? "Последние слова игрока $playerNumber"
             : "последние слова #$playerNumber";
+      case GameStateFirstKilled(
+          stage: GameStage.nightFirstKilled,
+          thisNightKilledPlayerNumber: final playerNumber,
+        ):
+        return isLandscape
+            ? "Первоубиенный игрок $playerNumber оставляет ЛХ"
+            : "ЛХ игрока #$playerNumber";
       case GameStateFinish():
         return isLandscape ? "Игра окончена" : "конец игры";
       default:
@@ -178,4 +185,15 @@ void showSimpleDialog({
       ],
     ),
   );
+}
+
+RelativeRect getRelativeRect(BuildContext context) =>
+    RelativeRect.fromSize(_getWidgetGlobalRect(context), const Size(200, 200));
+
+Rect _getWidgetGlobalRect(BuildContext context) {
+  final renderBox = context.findRenderObject()! as RenderBox;
+  final offset = renderBox.localToGlobal(Offset.zero);
+  debugPrint("Widget position: ${offset.dx} ${offset.dy}");
+  return Rect.fromLTWH((offset.dx / 3.5) - 20, offset.dy * 1.05,
+      renderBox.size.width, renderBox.size.height,);
 }

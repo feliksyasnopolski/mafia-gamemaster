@@ -9,12 +9,12 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i7;
-import 'package:mafia_companion/screens/game.dart' as _i2;
-import 'package:mafia_companion/screens/game_log.dart' as _i1;
-import 'package:mafia_companion/screens/login.dart' as _i3;
-import 'package:mafia_companion/screens/main.dart' as _i4;
-import 'package:mafia_companion/screens/roles.dart' as _i5;
-import 'package:mafia_companion/screens/settings.dart' as _i6;
+import 'package:mafia_gamemaster/screens/game.dart' as _i2;
+import 'package:mafia_gamemaster/screens/game_log.dart' as _i1;
+import 'package:mafia_gamemaster/screens/login.dart' as _i3;
+import 'package:mafia_gamemaster/screens/main.dart' as _i4;
+import 'package:mafia_gamemaster/screens/roles.dart' as _i5;
+import 'package:mafia_gamemaster/screens/settings.dart' as _i6;
 
 /// generated route for
 /// [_i1.GameLogScreen]

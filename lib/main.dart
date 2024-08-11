@@ -20,7 +20,7 @@ void main() async {
         ChangeNotifierProvider<SettingsModel>.value(value: settings),
         Provider<PackageInfo>.value(value: packageInfo),
         ChangeNotifierProvider<GameController>(
-            create: (context) => GameController()),
+            create: (context) => GameController(),),
         BlocProvider<LoginBloc>(create: (context) => LoginBloc()),
       ],
       child: MyApp(),

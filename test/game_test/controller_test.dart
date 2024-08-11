@@ -1,7 +1,7 @@
 import "package:flutter_test/flutter_test.dart";
-import "package:mafia_companion/game/controller.dart";
-import "package:mafia_companion/game/player.dart";
-import "package:mafia_companion/game/states.dart";
+import "package:mafia_gamemaster/game/controller.dart";
+import "package:mafia_gamemaster/game/player.dart";
+import "package:mafia_gamemaster/game/states.dart";
 
 const players = <Player>[
   Player(role: PlayerRole.citizen, number: 1, nickname: "Player 1"),
@@ -48,7 +48,7 @@ void main() {
         isA<GameStateWithPlayer>()
             .having((state) => state.stage, "stage", GameStage.nightLastWords)
             .having(
-                (state) => state.currentPlayerNumber, "currentPlayerNumber", 4),
+                (state) => state.currentPlayerNumber, "currentPlayerNumber", 4,),
       );
       game.setNextState();
       expect(game.players.getByNumber(4).isAlive, false);
@@ -134,7 +134,7 @@ void main() {
         isA<GameStateWithCurrentPlayer>()
             .having((state) => state.stage, "stage", GameStage.excuse)
             .having(
-                (state) => state.playerNumbers, "playerNumbers", hasLength(2)),
+                (state) => state.playerNumbers, "playerNumbers", hasLength(2),),
       );
     });
   });
@@ -150,7 +150,7 @@ void main() {
       expect(
         game.state,
         isA<GameStateSpeaking>().having(
-            (state) => state.currentPlayerNumber, "currentPlayerNumber", 2),
+            (state) => state.currentPlayerNumber, "currentPlayerNumber", 2,),
       );
 
       game
@@ -161,7 +161,7 @@ void main() {
       expect(
         game.state,
         isA<GameStateSpeaking>().having(
-            (state) => state.currentPlayerNumber, "currentPlayerNumber", 3),
+            (state) => state.currentPlayerNumber, "currentPlayerNumber", 3,),
       );
 
       game
@@ -172,7 +172,7 @@ void main() {
       expect(
         game.state,
         isA<GameStateSpeaking>().having(
-            (state) => state.currentPlayerNumber, "currentPlayerNumber", 5),
+            (state) => state.currentPlayerNumber, "currentPlayerNumber", 5,),
       );
 
       game

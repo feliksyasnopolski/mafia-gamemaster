@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
-import "package:mafia_companion/widgets/bottom_controls.dart";
+import "package:mafia_gamemaster/widgets/bottom_controls.dart";
 
 Widget _createWidget({
   VoidCallback? onTapBack,

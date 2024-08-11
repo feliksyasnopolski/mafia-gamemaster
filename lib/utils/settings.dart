@@ -3,7 +3,6 @@ import "package:shared_preferences/shared_preferences.dart";
 
 enum TimerType {
   strict,
-  plus5,
   extended,
   disabled,
 }
@@ -13,7 +12,7 @@ enum ColorSchemeType {
   app,
 }
 
-const defaultTimerType = TimerType.plus5;
+const defaultTimerType = TimerType.strict;
 const defaultThemeMode = ThemeMode.dark;
 const defaultColorSchemeType = ColorSchemeType.system;
 const defaultToken = "";
@@ -30,15 +29,15 @@ Future<SettingsModel> getSettings() async {
   switch (timerTypeString) {
     case "strict":
       timerType = TimerType.strict;
-    case "plus5":
-      timerType = TimerType.plus5;
     case "extended":
       timerType = TimerType.extended;
     case "disabled":
       timerType = TimerType.disabled;
     default:
-      assert(false,
-          "Unknown timer type: $timerTypeString"); // fail for debug builds
+      assert(
+        false,
+        "Unknown timer type: $timerTypeString",
+      ); // fail for debug builds
       timerType = defaultTimerType; // use default for release builds
       break;
   }
@@ -64,8 +63,10 @@ Future<SettingsModel> getSettings() async {
     case "app":
       colorSchemeType = ColorSchemeType.app;
     default:
-      assert(false,
-          "Unknown color scheme type: $colorSchemeTypeString"); // fail for debug builds
+      assert(
+        false,
+        "Unknown color scheme type: $colorSchemeTypeString",
+      ); // fail for debug builds
       colorSchemeType =
           defaultColorSchemeType; // use default for release builds
       break;

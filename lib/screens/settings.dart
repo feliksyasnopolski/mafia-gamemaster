@@ -6,7 +6,6 @@ import "package:provider/provider.dart";
 
 import "../utils/settings.dart";
 import "../utils/ui.dart";
-import "../widgets/input_dialog.dart";
 
 class _ChoiceListTile<T> extends StatelessWidget {
   final Widget? leading;
@@ -93,46 +92,11 @@ class SettingsScreen extends StatelessWidget {
             items: TimerType.values,
             itemToString: (item) => switch (item) {
               TimerType.strict => "Строгий",
-              TimerType.plus5 => "+5 секунд",
               TimerType.extended => "Увеличенный",
               TimerType.disabled => "Отключен",
             },
             index: settings.timerType.index,
             onChanged: settings.setTimerType,
-          ),
-          ListTile(
-            leading: const Icon(Icons.token),
-            title: const Text("Токен приложения"),
-            subtitle: Text(
-                settings.appToken.isNotEmpty ? settings.appToken : "Не задан"),
-            onTap: () async {
-              final res = await showDialog<String>(
-                context: context,
-                builder: (context) => InputDialog(
-                  title: "Токен приложения",
-                  content: Text(settings.appToken),
-                ),
-              );
-              if (res != null) {
-                settings.setAppToken(res);
-              }
-            },
-            // );await InputDialog(
-            //         context: context,
-            //         title: "Токен приложения",
-            //         content: settings.appToken,
-            //         hintText: "Введите токен",
-            //       ) as String;
-            //       if (res != "") {
-            //         settings.setAppToken(res);
-            //       }
-            //     },
-            // onTap: () async {
-            //   final res = await showDurationDialog(context: context, duration: settings.timerDuration);
-            //   if (res != null) {
-            //     settings.setTimerDuration(res);
-            //   }
-            // },
           ),
           ListTile(
             leading: const Icon(Icons.info),
@@ -143,7 +107,7 @@ class SettingsScreen extends StatelessWidget {
               applicationName: packageInfo.appName,
               applicationVersion:
                   "$appVersion build ${packageInfo.buildNumber}",
-              applicationLegalese: "© 2023 Евгений Филимонов",
+              applicationLegalese: "© 2024 Felix aka Хронос",
             ),
           ),
         ],

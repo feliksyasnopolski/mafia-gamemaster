@@ -33,11 +33,15 @@ class GameStateInfo extends OrientationDependentWidget {
       children: [
         Text(
           gameState.prettyName(isLandscape: isLandscape),
-          style: TextStyle(fontSize: isLandscape ? 32 : 16),
-          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: isLandscape ? 32 : 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.blueAccent,
+          ),
+          // textAlign: TextAlign.center,
         ),
         const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: EdgeInsets.symmetric(vertical: 0),
           child: BottomGameStateWidget(),
         ),
       ],
@@ -68,9 +72,12 @@ class BottomGameStateWidget extends OrientationDependentWidget {
     if (gameState.stage
         .isAnyOf([GameStage.preVoting, GameStage.preFinalVoting])) {
       final selectedPlayers = controller.voteCandidates;
-      return Text(
-        "Выставлены: ${selectedPlayers.join(", ")}",
-        style: const TextStyle(fontSize: 20),
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: Text(
+          "Выставлены: ${selectedPlayers.join(", ")}",
+          style: const TextStyle(fontSize: 20),
+        ),
       );
     }
 
@@ -119,12 +126,15 @@ class BottomGameStateWidget extends OrientationDependentWidget {
               //   builder: (context) => const RestartGameDialog(),
               // );
               // if (restartGame ?? false) {
+              controller.restart();
               await openMainPage(context);
               // controller.restart();
               if (context.mounted) {
                 unawaited(
-                  showSnackBar(context,
-                      const SnackBar(content: Text("Игра перезапущена"))),
+                  showSnackBar(
+                    context,
+                    const SnackBar(content: Text("Игра перезапущена")),
+                  ),
                 );
               }
               // }
@@ -139,9 +149,6 @@ class BottomGameStateWidget extends OrientationDependentWidget {
     switch (settings.timerType) {
       case TimerType.disabled:
         timeLimit = null;
-      case TimerType.plus5:
-        final t = timeLimits[gameState.stage];
-        timeLimit = t != null ? t + const Duration(seconds: 5) : null;
       case TimerType.extended:
         timeLimit =
             timeLimitsExtended[gameState.stage] ?? timeLimits[gameState.stage];

@@ -13,7 +13,7 @@ class Counter extends StatefulWidget {
     this.onValueChanged,
     required this.initialValue,
   }) : assert(min <= initialValue && initialValue <= max,
-            "value must be in range [min, max]");
+            "value must be in range [min, max]",);
 
   @override
   State<Counter> createState() => _CounterState();

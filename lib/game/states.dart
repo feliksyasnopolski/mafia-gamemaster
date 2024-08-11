@@ -44,6 +44,9 @@ enum GameStage {
   /// Further nights, don and sheriff check
   nightCheck,
 
+  /// First night, if the player was killed he have rights to leave numbers of 3 players
+  nightFirstKilled,
+
   /// Last words of player who was killed during night
   nightLastWords,
 
@@ -72,7 +75,9 @@ class GameState extends BaseGameState {
     required super.stage,
     required super.day,
   })  : assert(
-            stage == GameStage.prepare, "Invalid stage for GameState: $stage"),
+          stage == GameStage.prepare,
+          "Invalid stage for GameState: $stage",
+        ),
         assert(day >= 0, "Invalid day for GameState: $day");
 
   @override
@@ -271,6 +276,36 @@ class GameStateNightKill extends BaseGameState {
       Object.hash(stage, day, mafiaTeam, thisNightKilledPlayerNumber);
 }
 
+/// Represents night kill game state.
+///
+/// [stage] is always [GameStage.nightKill].
+@immutable
+class GameStateFirstKilled extends BaseGameState {
+  // final List<int> mafiaTeam;
+  final int? thisNightKilledPlayerNumber;
+  final List<int> bestMoves;
+
+  const GameStateFirstKilled({
+    required super.day,
+    // required this.mafiaTeam,
+    required this.thisNightKilledPlayerNumber,
+    required this.bestMoves,
+  }) : super(stage: GameStage.nightFirstKilled);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GameStateNightKill &&
+          runtimeType == other.runtimeType &&
+          stage == other.stage &&
+          day == other.day &&
+          // mafiaTeam == other.mafiaTeam &&
+          thisNightKilledPlayerNumber == other.thisNightKilledPlayerNumber;
+
+  @override
+  int get hashCode => Object.hash(stage, day, thisNightKilledPlayerNumber);
+}
+
 /// Represents night check game state.
 ///
 /// [stage] is always [GameStage.nightCheck].
@@ -299,8 +334,13 @@ class GameStateNightCheck extends BaseGameState {
           thisNightKilledPlayerNumber == other.thisNightKilledPlayerNumber;
 
   @override
-  int get hashCode => Object.hash(stage, day, activePlayerNumber,
-      activePlayerRole, thisNightKilledPlayerNumber);
+  int get hashCode => Object.hash(
+        stage,
+        day,
+        activePlayerNumber,
+        activePlayerRole,
+        thisNightKilledPlayerNumber,
+      );
 }
 
 /// Represents game state with related [playerNumbers] and current [currentPlayerIndex].
@@ -373,6 +413,7 @@ const timeLimits = {
   GameStage.night0: Duration(minutes: 1),
   GameStage.night0SheriffCheck: Duration(seconds: 20),
   GameStage.speaking: Duration(minutes: 1),
+
   // GameStage.preVoting: null,
   // GameStage.voting: null,
   GameStage.excuse: Duration(seconds: 30),
@@ -383,6 +424,7 @@ const timeLimits = {
   // GameStage.nightKill: null,
   GameStage.nightCheck: Duration(seconds: 10),
   GameStage.nightLastWords: Duration(minutes: 1),
+  GameStage.nightFirstKilled: Duration(seconds: 20),
   // GameStage.finish: null,
 };
 
@@ -402,13 +444,13 @@ const validTransitions = {
   GameStage.speaking: [
     GameStage.speaking,
     GameStage.preVoting,
-    GameStage.nightKill
+    GameStage.nightKill,
   ],
   GameStage.preVoting: [GameStage.voting, GameStage.dayLastWords],
   GameStage.voting: [
     GameStage.voting,
     GameStage.excuse,
-    GameStage.dayLastWords
+    GameStage.dayLastWords,
   ],
   GameStage.excuse: [GameStage.excuse, GameStage.preFinalVoting],
   GameStage.preFinalVoting: [GameStage.finalVoting],
@@ -423,14 +465,18 @@ const validTransitions = {
   GameStage.dayLastWords: [
     GameStage.dayLastWords,
     GameStage.nightKill,
-    GameStage.finish
+    GameStage.finish,
   ],
   GameStage.nightKill: [GameStage.nightCheck],
   GameStage.nightCheck: [
     GameStage.nightCheck,
     GameStage.nightLastWords,
+    GameStage.nightFirstKilled,
     GameStage.speaking,
     GameStage.finish,
+  ],
+  GameStage.nightFirstKilled: [
+    GameStage.nightLastWords,
   ],
   GameStage.nightLastWords: [GameStage.speaking, GameStage.finish],
   GameStage.finish: <GameStage>[],

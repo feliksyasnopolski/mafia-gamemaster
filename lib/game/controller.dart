@@ -245,6 +245,14 @@ class Game {
           day: state.day + 1,
           accusations: LinkedHashMap(),
         );
+      case GameStage.nightFirstKilled:
+        final state = _state as GameStateFirstKilled;
+        return GameStateWithPlayer(
+          stage: GameStage.nightLastWords,
+          day: state.day,
+          currentPlayerNumber: state.thisNightKilledPlayerNumber!,
+        );
+
       case GameStage.finish:
         return null;
     }
@@ -314,7 +322,6 @@ class Game {
   }
 
   void togglePlayerSelected(int playerNumber) {
-    // TODO: "best move" when logging will be added
     final state = _state;
     final player = players.getByNumber(playerNumber);
     if (!player.isAlive) {
@@ -330,6 +337,19 @@ class Game {
       }
       return;
     }
+
+    if (state is GameStateFirstKilled) {
+      if (state.bestMoves.contains(playerNumber)) {
+        // toggle (deselect) player
+        state.bestMoves.remove(playerNumber);
+      } else if (!state.bestMoves.contains(playerNumber) &&
+          state.bestMoves.length < 3) {
+        // player is not yet selected
+        state.bestMoves.add(playerNumber);
+      }
+      return;
+    }
+
     if (state is GameStateNightKill) {
       _state = GameStateNightKill(
         day: state.day,
@@ -431,8 +451,12 @@ class Game {
     if (state
         case GameStateNightCheck(activePlayerNumber: final playerNumber)) {
       final p = players.getByNumber(playerNumber);
-      _log.add(PlayerCheckedGameLogItem(
-          playerNumber: number, checkedByRole: p.role));
+      _log.add(
+        PlayerCheckedGameLogItem(
+          playerNumber: number,
+          checkedByRole: p.role,
+        ),
+      );
       if (p.role == PlayerRole.don) {
         return player.role == PlayerRole.sheriff;
       }
@@ -476,7 +500,7 @@ class Game {
         votes: LinkedHashMap.of(
           {
             ...state.votes,
-            state.currentPlayerNumber: state.currentPlayerVotes ?? 0
+            state.currentPlayerNumber: state.currentPlayerVotes ?? 0,
           },
         ),
         currentPlayerVotes: null,
@@ -521,11 +545,19 @@ class Game {
     final state = _state as GameStateNightCheck;
     final thisNightKilledPlayer = state.thisNightKilledPlayerNumber;
     if (thisNightKilledPlayer != null) {
-      return GameStateWithPlayer(
-        stage: GameStage.nightLastWords,
-        day: state.day,
-        currentPlayerNumber: thisNightKilledPlayer,
-      );
+      if (players.length == 10) {
+        return GameStateFirstKilled(
+          day: state.day,
+          thisNightKilledPlayerNumber: thisNightKilledPlayer,
+          bestMoves: const [],
+        );
+      } else {
+        return GameStateWithPlayer(
+          stage: GameStage.nightLastWords,
+          day: state.day,
+          currentPlayerNumber: thisNightKilledPlayer,
+        );
+      }
     }
     if (_consequentDaysWithoutKills >= 3) {
       return GameStateFinish(
@@ -555,7 +587,7 @@ class Game {
     final state = _state as GameStateVoting;
     final votes = {
       ...state.votes,
-      state.currentPlayerNumber: state.currentPlayerVotes
+      state.currentPlayerNumber: state.currentPlayerVotes,
     };
     final aliveCount = players.aliveCount;
     if (votes[state.currentPlayerNumber] == null) {
@@ -566,7 +598,9 @@ class Game {
       // The rest of the votes will be given to the last player
       votes[votes.keys.last] = aliveCount - votes.values.nonNulls.sum;
       assert(
-          votes.values.nonNulls.sum == aliveCount, "BUG in votes calculation");
+        votes.values.nonNulls.sum == aliveCount,
+        "BUG in votes calculation",
+      );
     }
     final nonNullVotes = votes.values.nonNulls;
     final votesTotal = nonNullVotes.sum;

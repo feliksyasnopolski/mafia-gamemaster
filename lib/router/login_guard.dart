@@ -6,7 +6,7 @@ import "router.gr.dart";
 class LoginGuard extends AutoRouteGuard {
   @override
   Future<void> onNavigation(
-      NavigationResolver resolver, StackRouter router) async {
+      NavigationResolver resolver, StackRouter router,) async {
     final settings = await getSettings();
     final isAuthenticated = settings.appToken.isNotEmpty;
 

@@ -13,10 +13,10 @@ Future<void> openGamePage(BuildContext context) =>
     context.router.replace(const GameRoute());
 
 Future<void> openGameLogPage(BuildContext context) =>
-    context.router.replace(const GameLogRoute());
+    context.router.push(const GameLogRoute());
 
 Future<void> openSettingsPage(BuildContext context) =>
-    context.router.replace(const SettingsRoute());
+    context.router.push(const SettingsRoute());
 
 Future<void> openLoginPage(BuildContext context) =>
     context.router.replace(const LoginRoute());

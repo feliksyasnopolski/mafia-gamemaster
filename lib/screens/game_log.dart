@@ -21,26 +21,28 @@ extension DescribeLogItem on BaseGameLogItem {
                 GameStateWithCurrentPlayer():
             // skip
             break;
+          case GameStateFirstKilled(thisNightKilledPlayerNumber: final killedPlayerNumber, bestMoves: final bestMoves):
+            result.add("Первоубиенный #$killedPlayerNumber, его ЛХ: ${bestMoves.join(", ")}");
           case GameStateSpeaking(
               currentPlayerNumber: final pn,
               accusations: final accusations
             ):
             if (accusations[pn] != null) {
               result.add(
-                  "Игрок #$pn выставил на голосование игрока #${accusations[pn]}");
+                  "Игрок #$pn выставил на голосование игрока #${accusations[pn]}",);
             }
           case GameStateVoting(
               currentPlayerNumber: final pn,
               currentPlayerVotes: final votes
             ):
             result.add(
-                "За игрока #$pn отдано голосов: ${votes ?? 0}"); // FIXME: i18n
+                "За игрока #$pn отдано голосов: ${votes ?? 0}",); // FIXME: i18n
           case GameStateDropTableVoting(votesForDropTable: final votes):
             result.add("За подъём стола отдано голосов: $votes"); // FIXME: i18n
           case GameStateFinish():
             throw AssertionError();
         }
-        result.add('- "${oldState.prettyName()}"');
+        result.add(oldState.prettyName());
       case PlayerCheckedGameLogItem(
           playerNumber: final playerNumber,
           checkedByRole: final checkedByRole,
@@ -71,8 +73,10 @@ class GameLogScreen extends StatelessWidget {
                 for (final item in controller.gameLog)
                   for (final desc in item.description)
                     ListTile(
+                      minVerticalPadding: -8,
                       title: Text(desc),
-                      dense: true,
+                      visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+                      // dense: true,
                     ),
               ],
             )

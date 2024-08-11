@@ -114,7 +114,10 @@ class ApiCalls {
   }
 
   Future<void> sendNightCheckResult(
-      String type, int playerNumber, String tableToken) async {
+    String type,
+    int playerNumber,
+    String tableToken,
+  ) async {
     final jsonData = <String, dynamic>{
       "stage": type,
       "player": playerNumber,
@@ -134,6 +137,13 @@ class ApiCalls {
       jsonData["speaker"] = state.currentPlayerNumber;
       jsonData["speaker_accusation"] =
           state.accusations[state.currentPlayerNumber];
+    }
+
+    if (state0.stage == GameStage.nightFirstKilled) {
+      final state = state0 as GameStateFirstKilled;
+      jsonData["stage"] = "nightFirstKilled";
+      jsonData["bestMoves"] = state.bestMoves;
+      jsonData["killed"] = state.thisNightKilledPlayerNumber;
     }
 
     if (state0.stage == GameStage.nightKill) {

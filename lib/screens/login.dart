@@ -66,6 +66,8 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  autocorrect: false,
                   controller: _emailController,
                   decoration: const InputDecoration(
                     labelText: "Email",
@@ -90,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               email: _emailController.text,
                               password: _passwordController.text,
                               settings: Provider.of<SettingsModel>(context,
-                                  listen: false),
+                                  listen: false,),
                             ),
                           );
                         }

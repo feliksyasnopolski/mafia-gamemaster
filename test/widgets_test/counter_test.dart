@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
-import "package:mafia_companion/widgets/counter.dart";
+import "package:mafia_gamemaster/widgets/counter.dart";
 
 Widget _buildWidget({
   required int min,

@@ -43,7 +43,7 @@ class _GameScreenState extends State<GameScreen> {
     super.initState();
     final gameController = context.read<GameController>();
     unawaited(
-        apiCalls.startGame(gameController.players, gameController.tableToken));
+        apiCalls.startGame(gameController.players, gameController.tableToken),);
   }
 
   Future<void> _askRestartGame(BuildContext context) async {
@@ -57,7 +57,7 @@ class _GameScreenState extends State<GameScreen> {
       await openMainPage(context);
       // ignore: use_build_context_synchronously
       unawaited(showSnackBar(
-          context, const SnackBar(content: Text("Игра перезапущена"))));
+          context, const SnackBar(content: Text("Игра перезапущена")),),);
     }
   }
 
@@ -95,7 +95,7 @@ class _GameScreenState extends State<GameScreen> {
           builder: (context) => const ConfirmationDialog(
             title: Text("Выход из игры"),
             content: Text(
-                "Вы уверены, что хотите выйти из игры? Все данные будут потеряны."),
+                "Вы уверены, что хотите выйти из игры? Все данные будут потеряны.",),
           ),
         );
         if ((res ?? false) && context.mounted) {
@@ -110,7 +110,7 @@ class _GameScreenState extends State<GameScreen> {
               : const Text("Подготовка к игре"),
           actions: [
             IconButton(
-              onPressed: () => Navigator.pushNamed(context, "/log"),
+              onPressed: () => openGameLogPage(context),
               tooltip: "Журнал игры",
               icon: const Icon(Icons.list),
             ),
@@ -179,7 +179,8 @@ class _GameScreenGameBodyContent extends OrientationDependentWidget {
     return Column(
       children: [
         const Expanded(
-          child: Center(
+          child: Align(
+            alignment: Alignment.topCenter,
             child: GameStateInfo(),
           ),
         ),

@@ -13,7 +13,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Future<void> _onLoginButtonPressed(
-      LoginButtonPressed event, Emitter<LoginState> emit) async {
+      LoginButtonPressed event, Emitter<LoginState> emit,) async {
     emit(LoginLoading());
 
     try {

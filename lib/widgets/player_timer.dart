@@ -108,7 +108,7 @@ class _PlayerTimerState extends State<PlayerTimer> {
                 style: TextStyle(
                     fontSize: 40,
                     color: textColor,
-                    fontWeight: FontWeight.bold)),
+                    fontWeight: FontWeight.bold,),),
           ),
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -117,7 +117,7 @@ class _PlayerTimerState extends State<PlayerTimer> {
                 onPressed: buttonCallback,
                 icon: Icon((_timer?.isPaused ?? false)
                     ? Icons.play_arrow
-                    : Icons.pause),
+                    : Icons.pause,),
               ),
               IconButton(
                 onPressed: _initTimer,
@@ -142,13 +142,13 @@ class _PlayerTimerState extends State<PlayerTimer> {
                     style: TextStyle(
                         fontSize: 40,
                         color: textColor,
-                        fontWeight: FontWeight.bold)),
+                        fontWeight: FontWeight.bold,),),
               ),
               IconButton(
                 onPressed: buttonCallback,
                 icon: Icon((_timer?.isPaused ?? false)
                     ? Icons.play_arrow
-                    : Icons.pause),
+                    : Icons.pause,),
               ),
               IconButton(
                 onPressed: _initTimer,

@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
-import "package:mafia_companion/game/player.dart";
-import "package:mafia_companion/widgets/player_button.dart";
+import "package:mafia_gamemaster/game/player.dart";
+import "package:mafia_gamemaster/widgets/player_button.dart";
 
 Widget _buildWidget({
   required int number,
