@@ -71,7 +71,7 @@ extension GameStatePrettyString on BaseGameState {
         ):
         return isLandscape
             ? "Повторное голосование против игрока $playerNumber"
-            : "повторное голосование против #$playerNumber";
+            : "повторное против #$playerNumber";
       case GameStateDropTableVoting():
         return isLandscape
             ? "Голосование за подъём стола"
@@ -194,6 +194,10 @@ Rect _getWidgetGlobalRect(BuildContext context) {
   final renderBox = context.findRenderObject()! as RenderBox;
   final offset = renderBox.localToGlobal(Offset.zero);
   debugPrint("Widget position: ${offset.dx} ${offset.dy}");
-  return Rect.fromLTWH((offset.dx / 3.5) - 20, offset.dy * 1.05,
-      renderBox.size.width, renderBox.size.height,);
+  return Rect.fromLTWH(
+    (offset.dx / 3.5) - 20,
+    offset.dy * 1.05,
+    renderBox.size.width,
+    renderBox.size.height,
+  );
 }
