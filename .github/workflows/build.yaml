@@ -112,6 +112,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+      - name: Add environment variables
+        run: echo $ENV_DATA >.env
 
       # - name: Install Java
       #   uses: actions/setup-java@v3

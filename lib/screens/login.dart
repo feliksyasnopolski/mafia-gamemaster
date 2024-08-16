@@ -91,13 +91,30 @@ class _LoginScreenState extends State<LoginScreen> {
                             LoginButtonPressed(
                               email: _emailController.text,
                               password: _passwordController.text,
-                              settings: Provider.of<SettingsModel>(context,
-                                  listen: false,),
+                              settings: Provider.of<SettingsModel>(
+                                context,
+                                listen: false,
+                              ),
                             ),
                           );
                         }
                       : null,
                   child: const Text("Login"),
+                ),
+                ElevatedButton(
+                  onPressed: state is! LoginLoading
+                      ? () {
+                          loginBloc.add(
+                            LoginGoogleButtonPressed(
+                              settings: Provider.of<SettingsModel>(
+                                context,
+                                listen: false,
+                              ),
+                            ),
+                          );
+                        }
+                      : null,
+                  child: const Text("Login with Google"),
                 ),
                 if (state is LoginLoading)
                   const Padding(

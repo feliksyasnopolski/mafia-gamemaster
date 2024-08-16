@@ -12,8 +12,11 @@ class LoginButtonPressed extends LoginEvent {
   final String password;
   SettingsModel settings;
 
-  LoginButtonPressed(
-      {required this.email, required this.password, required this.settings,});
+  LoginButtonPressed({
+    required this.email,
+    required this.password,
+    required this.settings,
+  });
 
   @override
   List<Object> get props => [email, password];
@@ -21,4 +24,18 @@ class LoginButtonPressed extends LoginEvent {
   @override
   String toString() =>
       "LoginButtonPressed { email: $email, password: $password }";
+}
+
+class LoginGoogleButtonPressed extends LoginEvent {
+  SettingsModel settings;
+
+  LoginGoogleButtonPressed({
+    required this.settings,
+  });
+
+  // @override
+  // List<Object> get props => [email, password];
+
+  @override
+  String toString() => "LoginGoogleButtonPressed ";
 }

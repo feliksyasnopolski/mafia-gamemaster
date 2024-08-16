@@ -4,6 +4,7 @@ import "dart:async";
 import "dart:convert";
 import "dart:io";
 
+import "package:flutter_web_auth_2/flutter_web_auth_2.dart";
 import "package:http/http.dart" as http;
 import "package:shared_preferences/shared_preferences.dart";
 
@@ -13,12 +14,37 @@ import "../game/states.dart";
 import "./api_models.dart";
 import "ui.dart";
 
-const String baseUrl = "https://mafiaarena.org/api/v1/";
-// const String baseUrl = "http://localhost:3000/api/v1/";
+// const String baseUrl = "https://mafiaarena.org/api/v1/";
+const String baseUrl =
+    String.fromEnvironment("backendUrl", defaultValue: "http://localhost:3000");
+const String googleClientId = String.fromEnvironment(
+  "googleClientId",
+  defaultValue:
+      "249216389685-3fu96ho8vl9r13ovb2cjpgdoa1ipn8bu.apps.googleusercontent.com",
+);
 
 class ApiCalls {
   final prefs = SharedPreferences.getInstance();
   ApiCalls() : super();
+
+  Future<void> loginGoogle() async {
+    const redirectUrl = "$baseUrl/omniauth/callback";
+    // Construct the url
+    final url = Uri.https("accounts.google.com", "/o/oauth2/v2/auth", {
+      "response_type": "code",
+      "client_id": googleClientId,
+      "redirect_uri": redirectUrl,
+      "scope": "email profile",
+    });
+
+    // Present the dialog to the user
+    final result = await FlutterWebAuth2.authenticate(
+        url: url.toString(), callbackUrlScheme: "mafiaarena",);
+
+    // Extract code from resulting url
+    final token = Uri.parse(result).queryParameters["code"];
+    await prefs.then((value) => value.setString("appToken", token ?? ""));
+  }
 
   Future<void> login(String email, String password) async {
     try {
@@ -28,7 +54,7 @@ class ApiCalls {
       };
 
       final response = await http.post(
-        Uri.parse("${baseUrl}auth/sign_in"),
+        Uri.parse("$baseUrl/api/v1/auth/sign_in"),
         body: json.encode(body),
         headers: {"Content-Type": "application/json"},
       );
@@ -47,7 +73,7 @@ class ApiCalls {
   }
 
   Future<List<PlayersModel>> getPlayers() async {
-    final body = await httpGet("${baseUrl}users");
+    final body = await httpGet("$baseUrl/api/v1/users");
     final jsonBody = json.decode(body) as List;
     return jsonBody.map((dynamic json) {
       final map = json as Map<String, dynamic>;
@@ -59,7 +85,7 @@ class ApiCalls {
   }
 
   Future<List<TablesModel>> getTables() async {
-    final body = await httpGet("${baseUrl}tables");
+    final body = await httpGet("$baseUrl/api/v1/tables");
     final jsonBody = json.decode(body) as List;
     return jsonBody.map((dynamic json) {
       final map = json as Map<String, dynamic>;
@@ -84,17 +110,17 @@ class ApiCalls {
       "table_token": tableToken,
     };
 
-    await httpPost("${baseUrl}new_game", jsonPlayers);
+    await httpPost("$baseUrl/api/v1/new_game", jsonPlayers);
   }
 
   Future<void> stopGame(String tableToken) async {
-    await httpPost("${baseUrl}stop_game", {
+    await httpPost("$baseUrl/api/v1/stop_game", {
       "table_token": tableToken,
     });
   }
 
   Future<void> updateStatus(Map<String, dynamic> status) async {
-    await httpPost("${baseUrl}update_status", status);
+    await httpPost("$baseUrl/api/v1/update_status", status);
   }
 
   Future<void> updatePlayers(List<Player> players, String tableToken) async {
@@ -110,7 +136,7 @@ class ApiCalls {
       "table_token": tableToken,
     };
 
-    await httpPost("${baseUrl}update_status", jsonPlayers);
+    await httpPost("$baseUrl/api/v1/update_status", jsonPlayers);
   }
 
   Future<void> sendNightCheckResult(
@@ -123,7 +149,7 @@ class ApiCalls {
       "player": playerNumber,
       "table_token": tableToken,
     };
-    await httpPost("${baseUrl}update_log", jsonData);
+    await httpPost("$baseUrl/api/v1/update_log", jsonData);
   }
 
   Future<void> updateLog(Game game, String tableToken) async {
@@ -232,12 +258,12 @@ class ApiCalls {
 
     jsonData["table_token"] = tableToken;
 
-    await httpPost("${baseUrl}update_log", jsonData);
+    await httpPost("$baseUrl/api/v1/update_log", jsonData);
   }
 
   Future<void> updateVoteCandidates(List<int> players) async {
     final jsonPlayers = <String, dynamic>{"vote_candidates": players};
-    await httpPost("${baseUrl}update_votes", jsonPlayers);
+    await httpPost("$baseUrl/api/v1/update_votes", jsonPlayers);
   }
 
   Future<String> httpGet(String url) async {

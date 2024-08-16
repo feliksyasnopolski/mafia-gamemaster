@@ -4,8 +4,8 @@ import "package:provider/provider.dart";
 import "../game/player.dart";
 import "../game/states.dart";
 import "../utils/game_controller.dart";
-import "orientation_dependent.dart";
 import "custom_color_menuitem.dart";
+import "orientation_dependent.dart";
 
 class PlayerButton extends OrientationDependentWidget {
   final Player player;
@@ -331,7 +331,7 @@ class PlayerButton extends OrientationDependentWidget {
           child: ElevatedButton(
             style: ButtonStyle(
               padding: WidgetStateProperty.all(
-                  const EdgeInsets.symmetric(horizontal: 2)),
+                  const EdgeInsets.symmetric(horizontal: 2),),
               shape: WidgetStateProperty.all(
                 const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)),
