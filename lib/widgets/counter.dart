@@ -1,3 +1,4 @@
+
 import "package:flutter/material.dart";
 
 class Counter extends StatefulWidget {
@@ -12,8 +13,10 @@ class Counter extends StatefulWidget {
     required this.max,
     this.onValueChanged,
     required this.initialValue,
-  }) : assert(min <= initialValue && initialValue <= max,
-            "value must be in range [min, max]",);
+  }) : assert(
+          min <= initialValue && initialValue <= max,
+          "value must be in range [min, max]",
+        );
 
   @override
   State<Counter> createState() => _CounterState();
@@ -50,23 +53,50 @@ class _CounterState extends State<Counter> {
   @override
   Widget build(BuildContext context) => Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          _IconButtonWithLongPress(
-            onTap: _onButtonPressedFactory(delta: -1),
-            onLongPress: _onButtonPressedFactory(newValue: widget.min),
-            icon: Icons.remove,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text("$_value", style: const TextStyle(fontSize: 28)),
-          ),
-          _IconButtonWithLongPress(
-            onTap: _onButtonPressedFactory(delta: 1),
-            onLongPress: _onButtonPressedFactory(newValue: widget.max),
-            icon: Icons.add,
-          ),
-        ],
+        children: buildChildren(),
       );
+
+  List<Widget> buildChildren() {
+    if (widget.min == widget.max) {
+      return [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 36,
+                child: Text("$_value",
+                    style: const TextStyle(
+                        fontSize: 34, fontWeight: FontWeight.bold,),),
+              ),
+              const Text("оставшиеся руки", style: TextStyle(fontSize: 20)),
+            ],
+          ),
+
+          // Text("$_value", style: const TextStyle(fontSize: 30)),
+        ),
+      ];
+    } else {
+      return [
+        _IconButtonWithLongPress(
+          onTap: _onButtonPressedFactory(delta: -1),
+          onLongPress: _onButtonPressedFactory(newValue: widget.min),
+          icon: Icons.remove,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text("$_value",
+              style:
+                  const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),),
+        ),
+        _IconButtonWithLongPress(
+          onTap: _onButtonPressedFactory(delta: 1),
+          onLongPress: _onButtonPressedFactory(newValue: widget.max),
+          icon: Icons.add,
+        ),
+      ];
+    }
+  }
 }
 
 class _IconButtonWithLongPress extends StatelessWidget {

@@ -1,7 +1,11 @@
+import "dart:convert";
+
 import "package:dynamic_color/dynamic_color.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
+import "package:json_theme/json_theme.dart";
 import "package:package_info_plus/package_info_plus.dart";
 import "package:provider/provider.dart";
 
@@ -14,22 +18,29 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final settings = await getSettings();
   final packageInfo = await PackageInfo.fromPlatform();
+  final themeStr = await rootBundle.loadString("assets/appainter_theme.json");
+  final themeJson = json.decode(themeStr);
+  final theme = ThemeDecoder.decodeThemeData(themeJson)!;
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider<SettingsModel>.value(value: settings),
         Provider<PackageInfo>.value(value: packageInfo),
         ChangeNotifierProvider<GameController>(
-            create: (context) => GameController(),),
+          create: (context) => GameController(),
+        ),
         BlocProvider<LoginBloc>(create: (context) => LoginBloc()),
       ],
-      child: MyApp(),
+      child: MyApp(theme: theme),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  final ThemeData theme;
+
+  MyApp({super.key, required this.theme});
 
   final _appRouter = AppRouter();
 
@@ -41,27 +52,28 @@ class MyApp extends StatelessWidget {
     return DynamicColorBuilder(
       builder: (light, dark) => MaterialApp.router(
         title: "Помощник ведущего",
-        theme: ThemeData(
-          colorScheme: (settings.colorSchemeType == ColorSchemeType.system
-                  ? light
-                  : null) ??
-              ColorScheme.fromSeed(
-                seedColor: seedColor,
-                brightness: Brightness.light,
-              ),
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData(
-          colorScheme: (settings.colorSchemeType == ColorSchemeType.system
-                  ? dark
-                  : null) ??
-              ColorScheme.fromSeed(
-                seedColor: seedColor,
-                brightness: Brightness.dark,
-              ),
-          useMaterial3: true,
-        ),
-        themeMode: settings.themeMode,
+        theme: theme,
+        // ThemeData(
+        //   colorScheme: (settings.colorSchemeType == ColorSchemeType.system
+        //           ? light
+        //           : null) ??
+        //       ColorScheme.fromSeed(
+        //         seedColor: seedColor,
+        //         brightness: Brightness.light,
+        //       ),
+        //   useMaterial3: true,
+        // ),
+        // darkTheme: ThemeData(
+        //   colorScheme: (settings.colorSchemeType == ColorSchemeType.system
+        //           ? dark
+        //           : null) ??
+        //       ColorScheme.fromSeed(
+        //         seedColor: seedColor,
+        //         brightness: Brightness.dark,
+        //       ),
+        //   useMaterial3: true,
+        // ),
+        // themeMode: settings.themeMode,
         routerConfig: _appRouter.config(),
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,

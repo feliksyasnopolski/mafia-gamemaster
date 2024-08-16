@@ -40,8 +40,9 @@ class GameStateInfo extends OrientationDependentWidget {
           ),
           // textAlign: TextAlign.center,
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 0),
+        const Align(
+          // padding: EdgeInsets.symmetric(vertical: 0),
+          alignment: Alignment.center,
           child: BottomGameStateWidget(),
         ),
       ],
@@ -87,14 +88,28 @@ class BottomGameStateWidget extends OrientationDependentWidget {
       final onlyOneSelected = selectedPlayers.length == 1;
       final aliveCount = controller.alivePlayersCount;
       final currentPlayerVotes = gameState.currentPlayerVotes ?? 0;
-      return Counter(
-        key: ValueKey(gameState.currentPlayerNumber),
-        min: onlyOneSelected ? aliveCount : 0,
-        max: aliveCount - controller.totalVotes,
-        onValueChanged: (value) =>
-            controller.vote(gameState.currentPlayerNumber, value),
-        initialValue: onlyOneSelected ? aliveCount : currentPlayerVotes,
-      );
+      if (gameState.lastPlayer == gameState.currentPlayerNumber) {
+        final votesForLast =
+            controller.alivePlayersCount - controller.totalVotes;
+
+        return Counter(
+          key: ValueKey(gameState.currentPlayerNumber),
+          min: votesForLast,
+          max: votesForLast,
+          initialValue: votesForLast,
+          onValueChanged: (value) =>
+              controller.vote(gameState.currentPlayerNumber, value),
+        );
+      } else {
+        return Counter(
+          key: ValueKey(gameState.currentPlayerNumber),
+          min: onlyOneSelected ? aliveCount : 0,
+          max: aliveCount, // - controller.totalVotes,
+          onValueChanged: (value) =>
+              controller.vote(gameState.currentPlayerNumber, value),
+          initialValue: onlyOneSelected ? aliveCount : currentPlayerVotes,
+        );
+      }
     }
 
     if (gameState is GameStateDropTableVoting) {

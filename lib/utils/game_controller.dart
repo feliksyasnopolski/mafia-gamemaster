@@ -20,6 +20,8 @@ class GameController with ChangeNotifier {
   bool isStarted = false;
   Iterable<BaseGameLogItem> get gameLog => _game.log;
 
+  // List<int> get bestMoves => _game.bestMoves;
+
   BaseGameState get state => _game.state;
 
   BaseGameState? get previousState => _game.previousState;
@@ -63,9 +65,11 @@ class GameController with ChangeNotifier {
 
   List<Player> get players => _game.players.toUnmodifiableList();
 
-  void vote(int? player, int count) {
+  void vote(int? player, int count, {bool notify = true}) {
     _game.vote(player, count);
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
   }
 
   void togglePlayerSelected(int player) {

@@ -43,7 +43,8 @@ class _GameScreenState extends State<GameScreen> {
     super.initState();
     final gameController = context.read<GameController>();
     unawaited(
-        apiCalls.startGame(gameController.players, gameController.tableToken),);
+      apiCalls.startGame(gameController.players, gameController.tableToken),
+    );
   }
 
   Future<void> _askRestartGame(BuildContext context) async {
@@ -56,8 +57,12 @@ class _GameScreenState extends State<GameScreen> {
       context.read<GameController>().restart();
       await openMainPage(context);
       // ignore: use_build_context_synchronously
-      unawaited(showSnackBar(
-          context, const SnackBar(content: Text("Игра перезапущена")),),);
+      unawaited(
+        showSnackBar(
+          context,
+          const SnackBar(content: Text("Игра перезапущена")),
+        ),
+      );
     }
   }
 
@@ -95,7 +100,8 @@ class _GameScreenState extends State<GameScreen> {
           builder: (context) => const ConfirmationDialog(
             title: Text("Выход из игры"),
             content: Text(
-                "Вы уверены, что хотите выйти из игры? Все данные будут потеряны.",),
+              "Вы уверены, что хотите выйти из игры? Все данные будут потеряны.",
+            ),
           ),
         );
         if ((res ?? false) && context.mounted) {
@@ -185,7 +191,9 @@ class _GameScreenGameBodyContent extends OrientationDependentWidget {
           ),
         ),
         BottomControlBar(
-          backLabel: previousState?.prettyName(isLandscape: isLandscape) ??
+          backLabel: previousState != null
+              ? "назад"
+              : //previousState?.prettyName(isLandscape: isLandscape) ??
               "(отмена невозможна)",
           onTapBack: previousState != null ? controller.setPreviousState : null,
           onTapNext:

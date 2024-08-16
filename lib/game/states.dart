@@ -159,14 +159,16 @@ class GameStateSpeaking extends BaseGameState {
 class GameStateVoting extends BaseGameState {
   final LinkedHashMap<int, int?> votes;
   final int currentPlayerNumber;
-  final int? currentPlayerVotes;
+  int? currentPlayerVotes;
+  int? lastPlayer;
 
-  const GameStateVoting({
+  GameStateVoting({
     required super.stage,
     required super.day,
     required this.votes,
     required this.currentPlayerNumber,
     required this.currentPlayerVotes,
+    this.lastPlayer,
   }) : assert(
           stage == GameStage.voting || stage == GameStage.finalVoting,
           "Invalid stage for GameStateVoting: $stage",
@@ -222,11 +224,13 @@ class GameStateDropTableVoting extends BaseGameState {
 @immutable
 class GameStateWithPlayers extends BaseGameState {
   final List<int> playerNumbers;
+  final LinkedHashMap<int, int?> accusations;
 
   const GameStateWithPlayers({
     required super.stage,
     required super.day,
     required this.playerNumbers,
+    required this.accusations,
   }) : assert(
           stage == GameStage.night0 ||
               stage == GameStage.preVoting ||
@@ -295,15 +299,17 @@ class GameStateFirstKilled extends BaseGameState {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is GameStateNightKill &&
+      other is GameStateFirstKilled &&
           runtimeType == other.runtimeType &&
           stage == other.stage &&
           day == other.day &&
           // mafiaTeam == other.mafiaTeam &&
-          thisNightKilledPlayerNumber == other.thisNightKilledPlayerNumber;
+          thisNightKilledPlayerNumber == other.thisNightKilledPlayerNumber &&
+          bestMoves == other.bestMoves;
 
   @override
-  int get hashCode => Object.hash(stage, day, thisNightKilledPlayerNumber);
+  int get hashCode =>
+      Object.hash(stage, day, thisNightKilledPlayerNumber, bestMoves);
 }
 
 /// Represents night check game state.
@@ -350,12 +356,14 @@ class GameStateNightCheck extends BaseGameState {
 class GameStateWithCurrentPlayer extends BaseGameState {
   final List<int> playerNumbers;
   final int currentPlayerIndex;
+  LinkedHashMap<int, int?> accusations;
 
-  const GameStateWithCurrentPlayer({
+  GameStateWithCurrentPlayer({
     required super.stage,
     required super.day,
     required this.playerNumbers,
     required this.currentPlayerIndex,
+    required LinkedHashMap<int, int?> accusations,
   })  : assert(
           stage == GameStage.excuse || stage == GameStage.dayLastWords,
           "Invalid stage for GameStateWithCurrentPlayer: $stage",
@@ -363,7 +371,8 @@ class GameStateWithCurrentPlayer extends BaseGameState {
         assert(
           0 <= currentPlayerIndex && currentPlayerIndex < playerNumbers.length,
           "Invalid playerIndex for GameStateWithCurrentPlayer: $currentPlayerIndex",
-        );
+        ),
+        accusations = accusations;
 
   @override
   bool operator ==(Object other) =>

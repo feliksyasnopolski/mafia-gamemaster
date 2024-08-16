@@ -32,87 +32,218 @@ extension PlayerRolePrettyString on PlayerRole {
 }
 
 extension GameStatePrettyString on BaseGameState {
-  String prettyName({bool isLandscape = true}) {
+  Map<String, dynamic> stateName({bool isLandscape = true}) {
+    final result = <String, dynamic>{};
     switch (this) {
       case GameState(stage: GameStage.prepare):
-        return isLandscape ? "Ожидание игроков..." : "ожидание";
+        result["state"] = "prepare";
       case GameStateWithPlayers(stage: GameStage.night0):
-        return isLandscape ? "Договорка мафии" : "договорка";
+        result["state"] = "agreement";
       case GameStateWithPlayer(stage: GameStage.night0SheriffCheck):
-        return isLandscape ? "Шериф осматривает стол" : "осмотр шерифа";
+        result["state"] = "sheriffWakeUp";
       case GameStateSpeaking(
           stage: GameStage.speaking,
           currentPlayerNumber: final playerNumber
         ):
-        return isLandscape
-            ? "Речь игрока $playerNumber"
-            : "речь #$playerNumber";
+        result["state"] = "speaking";
+        result["playerNumber"] = playerNumber;
       case GameStateWithPlayers(stage: GameStage.preVoting):
-        return isLandscape ? "Голосование" : "голосование";
+        result["state"] = "preVoting";
       case GameStateVoting(
           stage: GameStage.voting,
           currentPlayerNumber: final playerNumber
         ):
-        return isLandscape
-            ? "Голосование против игрока $playerNumber"
-            : "голосование против #$playerNumber";
+        result["state"] = "voting";
+        result["playerNumber"] = playerNumber;
       case GameStateWithCurrentPlayer(
           stage: GameStage.excuse,
           currentPlayerNumber: final playerNumber,
         ):
-        return isLandscape
-            ? "Повторная речь игрока $playerNumber"
-            : "повторная речь #$playerNumber";
+        result["state"] = "excuse";
+        result["playerNumber"] = playerNumber;
       case GameStateWithPlayers(stage: GameStage.preFinalVoting):
-        return isLandscape ? "Повторное голосование" : "повторное голосование";
+        result["state"] = "preFinalVoting";
       case GameStateVoting(
           stage: GameStage.finalVoting,
           currentPlayerNumber: final playerNumber
         ):
-        return isLandscape
-            ? "Повторное голосование против игрока $playerNumber"
-            : "повторное против #$playerNumber";
+        result["state"] = "finalVoting";
+        result["playerNumber"] = playerNumber;
       case GameStateDropTableVoting():
-        return isLandscape
-            ? "Голосование за подъём стола"
-            : "голосование за подъём стола";
+        result["state"] = "dropTableVoting";
       case GameStateWithCurrentPlayer(
           stage: GameStage.dayLastWords,
           currentPlayerNumber: final playerNumber,
         ):
-        return isLandscape
-            ? "Последние слова игрока $playerNumber"
-            : "последние слова #$playerNumber";
+        result["state"] = "lastWords";
+        result["playerNumber"] = playerNumber;
       case GameStateNightKill():
-        return isLandscape ? "Ночь, ход Мафии" : "ночь, ход мафии";
+        result["state"] = "nightKill";
       case GameStateNightCheck(
           stage: GameStage.nightCheck,
           activePlayerRole: final playerRole
         ):
         if (playerRole == PlayerRole.don) {
-          return isLandscape ? "Ночь, ход Дона" : "ночь, ход дона";
+          result["state"] = "nightCheckDon";
+        } else {
+          result["state"] = "nightCheckSheriff";
         }
-        return isLandscape ? "Ночь, ход Шерифа" : "ход шерифа";
       case GameStateWithPlayer(
           stage: GameStage.nightLastWords,
           currentPlayerNumber: final playerNumber,
         ):
-        return isLandscape
-            ? "Последние слова игрока $playerNumber"
-            : "последние слова #$playerNumber";
+        result["state"] = "lastWords";
+        result["playerNumber"] = playerNumber;
       case GameStateFirstKilled(
           stage: GameStage.nightFirstKilled,
           thisNightKilledPlayerNumber: final playerNumber,
         ):
-        return isLandscape
-            ? "Первоубиенный игрок $playerNumber оставляет ЛХ"
-            : "ЛХ игрока #$playerNumber";
+        result["state"] = "firstKilled";
+        result["playerNumber"] = playerNumber;
       case GameStateFinish():
+        result["state"] = "finish";
+      default:
+        throw AssertionError("Unknown game state: $this");
+    }
+
+    return result;
+  }
+
+  String prettyName({bool isLandscape = true}) {
+    switch (stateName()["state"]) {
+      case "prepare":
+        return isLandscape ? "Ожидание игроков..." : "ожидание";
+      case "agreement":
+        return isLandscape ? "Договорка мафии" : "договорка";
+      case "sheriffWakeUp":
+        return isLandscape ? "Шериф осматривает стол" : "осмотр шерифа";
+      case "speaking":
+        return isLandscape
+            ? "Речь игрока ${stateName()["playerNumber"]}"
+            : "речь #${stateName()["playerNumber"]}";
+      case "preVoting":
+        return isLandscape ? "Голосование" : "голосование";
+      case "voting":
+        return isLandscape
+            ? "Голосование против игрока ${stateName()["playerNumber"]}"
+            : "голосование против #${stateName()["playerNumber"]}";
+      case "excuse":
+        return isLandscape
+            ? "Повторная речь игрока ${stateName()["playerNumber"]}"
+            : "повторная речь #${stateName()["playerNumber"]}";
+      case "preFinalVoting":
+        return isLandscape ? "Повторное голосование" : "повторное голосование";
+      case "finalVoting":
+        return isLandscape
+            ? "Повторное голосование против игрока ${stateName()["playerNumber"]}"
+            : "повторное против #${stateName()["playerNumber"]}";
+      case "dropTableVoting":
+        return isLandscape
+            ? "Голосование за подъём стола"
+            : "голосование за подъём";
+      case "lastWords":
+        return isLandscape
+            ? "Последние слова игрока ${stateName()["playerNumber"]}"
+            : "прощальная #${stateName()["playerNumber"]}";
+      case "nightKill":
+        return isLandscape ? "Ночь, ход Мафии" : "ночь, ход мафии";
+      case "nightCheckDon":
+        return isLandscape ? "Ночь, ход Дона" : "ночь, ход дона";
+      case "nightCheckSheriff":
+        return isLandscape ? "Ночь, ход Шерифа" : "ход шерифа";
+      case "firstKilled":
+        return isLandscape
+            ? "Первоубиенный игрок ${stateName()["playerNumber"]} оставляет ЛХ"
+            : "ЛХ игрока #${stateName()["playerNumber"]}";
+      case "finish":
         return isLandscape ? "Игра окончена" : "конец игры";
       default:
         throw AssertionError("Unknown game state: $this");
     }
   }
+
+  // String stateName({bool isLandscape = true}) {
+
+  //   switch (this) {
+  //     case GameState(stage: GameStage.prepare):
+  //       return isLandscape ? "Ожидание игроков..." : "ожидание";
+  //     case GameStateWithPlayers(stage: GameStage.night0):
+  //       return isLandscape ? "Договорка мафии" : "договорка";
+  //     case GameStateWithPlayer(stage: GameStage.night0SheriffCheck):
+  //       return isLandscape ? "Шериф осматривает стол" : "осмотр шерифа";
+  //     case GameStateSpeaking(
+  //         stage: GameStage.speaking,
+  //         currentPlayerNumber: final playerNumber
+  //       ):
+  //       return isLandscape
+  //           ? "Речь игрока $playerNumber"
+  //           : "речь #$playerNumber";
+  //     case GameStateWithPlayers(stage: GameStage.preVoting):
+  //       return isLandscape ? "Голосование" : "голосование";
+  //     case GameStateVoting(
+  //         stage: GameStage.voting,
+  //         currentPlayerNumber: final playerNumber
+  //       ):
+  //       return isLandscape
+  //           ? "Голосование против игрока $playerNumber"
+  //           : "голосование против #$playerNumber";
+  //     case GameStateWithCurrentPlayer(
+  //         stage: GameStage.excuse,
+  //         currentPlayerNumber: final playerNumber,
+  //       ):
+  //       return isLandscape
+  //           ? "Повторная речь игрока $playerNumber"
+  //           : "повторная речь #$playerNumber";
+  //     case GameStateWithPlayers(stage: GameStage.preFinalVoting):
+  //       return isLandscape ? "Повторное голосование" : "повторное голосование";
+  //     case GameStateVoting(
+  //         stage: GameStage.finalVoting,
+  //         currentPlayerNumber: final playerNumber
+  //       ):
+  //       return isLandscape
+  //           ? "Повторное голосование против игрока $playerNumber"
+  //           : "повторное против #$playerNumber";
+  //     case GameStateDropTableVoting():
+  //       return isLandscape
+  //           ? "Голосование за подъём стола"
+  //           : "голосование за подъём";
+  //     case GameStateWithCurrentPlayer(
+  //         stage: GameStage.dayLastWords,
+  //         currentPlayerNumber: final playerNumber,
+  //       ):
+  //       return isLandscape
+  //           ? "Последние слова игрока $playerNumber"
+  //           : "прощальная #$playerNumber";
+  //     case GameStateNightKill():
+  //       return isLandscape ? "Ночь, ход Мафии" : "ночь, ход мафии";
+  //     case GameStateNightCheck(
+  //         stage: GameStage.nightCheck,
+  //         activePlayerRole: final playerRole
+  //       ):
+  //       if (playerRole == PlayerRole.don) {
+  //         return isLandscape ? "Ночь, ход Дона" : "ночь, ход дона";
+  //       }
+  //       return isLandscape ? "Ночь, ход Шерифа" : "ход шерифа";
+  //     case GameStateWithPlayer(
+  //         stage: GameStage.nightLastWords,
+  //         currentPlayerNumber: final playerNumber,
+  //       ):
+  //       return isLandscape
+  //           ? "Последние слова игрока $playerNumber"
+  //           : "прощальная #$playerNumber";
+  //     case GameStateFirstKilled(
+  //         stage: GameStage.nightFirstKilled,
+  //         thisNightKilledPlayerNumber: final playerNumber,
+  //       ):
+  //       return isLandscape
+  //           ? "Первоубиенный игрок $playerNumber оставляет ЛХ"
+  //           : "ЛХ игрока #$playerNumber";
+  //     case GameStateFinish():
+  //       return isLandscape ? "Игра окончена" : "конец игры";
+  //     default:
+  //       throw AssertionError("Unknown game state: $this");
+  //   }
+  // }
 }
 
 typedef ConverterFunction<T, R> = R Function(T value);

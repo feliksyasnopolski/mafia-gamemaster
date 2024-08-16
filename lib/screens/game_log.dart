@@ -21,22 +21,35 @@ extension DescribeLogItem on BaseGameLogItem {
                 GameStateWithCurrentPlayer():
             // skip
             break;
-          case GameStateFirstKilled(thisNightKilledPlayerNumber: final killedPlayerNumber, bestMoves: final bestMoves):
-            result.add("Первоубиенный #$killedPlayerNumber, его ЛХ: ${bestMoves.join(", ")}");
+          case GameStateFirstKilled(
+              thisNightKilledPlayerNumber: final killedPlayerNumber,
+              bestMoves: final bestMoves
+            ):
+            result.add(
+                "Первоубиенный #$killedPlayerNumber, его ЛХ: ${bestMoves.join(", ")}",);
           case GameStateSpeaking(
               currentPlayerNumber: final pn,
               accusations: final accusations
             ):
             if (accusations[pn] != null) {
               result.add(
-                  "Игрок #$pn выставил на голосование игрока #${accusations[pn]}",);
+                "Игрок #$pn выставил на голосование игрока #${accusations[pn]}",
+              );
             }
           case GameStateVoting(
               currentPlayerNumber: final pn,
-              currentPlayerVotes: final votes
+              currentPlayerVotes: final votes,
+              lastPlayer: final lastPlayer,
             ):
-            result.add(
-                "За игрока #$pn отдано голосов: ${votes ?? 0}",); // FIXME: i18n
+            if (lastPlayer == pn) {
+              result.add(
+                "За игрока #$pn ушли оставшиеся голоса",
+              );
+            } else {
+              result.add(
+                "За игрока #$pn отдано голосов: ${votes ?? 0}",
+              ); // FIXME: i18n
+            }
           case GameStateDropTableVoting(votesForDropTable: final votes):
             result.add("За подъём стола отдано голосов: $votes"); // FIXME: i18n
           case GameStateFinish():
@@ -75,7 +88,8 @@ class GameLogScreen extends StatelessWidget {
                     ListTile(
                       minVerticalPadding: -8,
                       title: Text(desc),
-                      visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+                      visualDensity:
+                          const VisualDensity(horizontal: 0, vertical: -4),
                       // dense: true,
                     ),
               ],

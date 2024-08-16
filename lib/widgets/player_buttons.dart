@@ -35,18 +35,19 @@ class PlayerButtons extends OrientationDependentWidget {
   void _onPlayerButtonTap(BuildContext context, int playerNumber) {
     final controller = context.read<GameController>();
     final player = controller.getPlayerByNumber(playerNumber);
-    
+
     if (controller.state is GameStateNightCheck) {
-      final activePlayerNumber = (controller.state as GameStateNightCheck).activePlayerNumber;
+      final activePlayerNumber =
+          (controller.state as GameStateNightCheck).activePlayerNumber;
       final activePlayer = controller.getPlayerByNumber(activePlayerNumber);
-      
+
       if (!activePlayer.isAlive) {
         return; // It's useless to allow dead players check others
       }
-      
+
       final result = controller.checkPlayer(playerNumber);
       String msg;
-      
+
       if (activePlayer.role == PlayerRole.don) {
         if (result) {
           msg = "ШЕРИФ";
@@ -72,7 +73,7 @@ class PlayerButtons extends OrientationDependentWidget {
       } else {
         throw AssertionError();
       }
-      
+
       showSimpleDialog(
         context: context,
         title: const Text("Результат проверки"),
@@ -142,7 +143,10 @@ class PlayerButtons extends OrientationDependentWidget {
   }
 
   Widget _buildPlayerButton(
-      BuildContext context, int playerNumber, BaseGameState gameState,) {
+    BuildContext context,
+    int playerNumber,
+    BaseGameState gameState,
+  ) {
     final controller = context.watch<GameController>();
     final isActive = switch (gameState) {
       GameState() || GameStateFinish() => false,
@@ -212,8 +216,11 @@ class PlayerButtons extends OrientationDependentWidget {
                   height: height,
                   child: Padding(
                     padding: const EdgeInsets.all(4),
-                    child: _buildPlayerButton(context,
-                        controller.players[j].number, controller.state,),
+                    child: _buildPlayerButton(
+                      context,
+                      controller.players[j].number,
+                      controller.state,
+                    ),
                   ),
                 ),
             ],
@@ -243,7 +250,10 @@ class PlayerButtons extends OrientationDependentWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(4),
                   child: _buildPlayerButton(
-                      context, controller.players[i].number, controller.state,),
+                    context,
+                    controller.players[i].number,
+                    controller.state,
+                  ),
                 ),
               ),
             ],
