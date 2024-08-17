@@ -91,7 +91,7 @@ jobs:
         run: flutter pub get
 
       - name: Build release app for Android
-        run: flutter config --no-enable-windows-desktop && flutter build apk --dart-define-from-file=.env
+        run: flutter config --no-enable-windows-desktop && flutter build apk --dart-define-from-file=.env --no-tree-shake-icons
         #if: startsWith(github.ref, 'refs/tags/v')
 
       #- name: Build debug app for Android
