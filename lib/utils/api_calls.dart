@@ -15,13 +15,9 @@ import "./api_models.dart";
 import "ui.dart";
 
 // const String baseUrl = "https://mafiaarena.org/api/v1/";
-const String baseUrl =
-    String.fromEnvironment("backendUrl", defaultValue: "http://localhost:3000");
-const String googleClientId = String.fromEnvironment(
-  "googleClientId",
-  defaultValue:
-      "249216389685-3fu96ho8vl9r13ovb2cjpgdoa1ipn8bu.apps.googleusercontent.com",
-);
+const String baseUrl = "https://mafiaarena.org";
+const String googleClientId =
+    "249216389685-3fu96ho8vl9r13ovb2cjpgdoa1ipn8bu.apps.googleusercontent.com";
 
 class ApiCalls {
   final prefs = SharedPreferences.getInstance();
@@ -39,7 +35,9 @@ class ApiCalls {
 
     // Present the dialog to the user
     final result = await FlutterWebAuth2.authenticate(
-        url: url.toString(), callbackUrlScheme: "mafiaarena",);
+      url: url.toString(),
+      callbackUrlScheme: "mafiaarena",
+    );
 
     // Extract code from resulting url
     final token = Uri.parse(result).queryParameters["code"];
