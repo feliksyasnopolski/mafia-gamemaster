@@ -4,6 +4,7 @@ import "dart:async";
 import "dart:convert";
 import "dart:io";
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import "package:flutter_web_auth_2/flutter_web_auth_2.dart";
 import "package:http/http.dart" as http;
 import "package:shared_preferences/shared_preferences.dart";
@@ -14,7 +15,7 @@ import "../game/states.dart";
 import "./api_models.dart";
 import "ui.dart";
 
-// const String baseUrl = "https://mafiaarena.org/api/v1/";
+// const String baseUrl = "http://localhost:3000";
 const String baseUrl = "https://mafiaarena.org";
 const String googleClientId =
     "249216389685-3fu96ho8vl9r13ovb2cjpgdoa1ipn8bu.apps.googleusercontent.com";
@@ -23,14 +24,15 @@ class ApiCalls {
   final prefs = SharedPreferences.getInstance();
   ApiCalls() : super();
 
-  Future<void> loginGoogle() async {
+  Future<void> loginGoogleMobile() async {
     const redirectUrl = "$baseUrl/omniauth/callback";
     // Construct the url
     final url = Uri.https("accounts.google.com", "/o/oauth2/v2/auth", {
       "response_type": "code",
       "client_id": googleClientId,
       "redirect_uri": redirectUrl,
-      "scope": "email profile",
+      "state": "app",
+      "scope": "email profile openid",
     });
 
     // Present the dialog to the user
@@ -42,6 +44,33 @@ class ApiCalls {
     // Extract code from resulting url
     final token = Uri.parse(result).queryParameters["code"];
     await prefs.then((value) => value.setString("appToken", token ?? ""));
+  }
+
+  Future<void> loginGoogleWeb() async {
+    final url = Uri.https("accounts.google.com", "/o/oauth2/v2/auth", {
+      "response_type": "code",
+      "client_id": googleClientId,
+      "redirect_uri": "$baseUrl/omniauth/callback",
+      "state": "web",
+      "scope": "email profile openid",
+    });
+
+    // Present the dialog to the user
+    final result = await FlutterWebAuth2.authenticate(
+      url: url.toString(),
+      callbackUrlScheme: "mafiaarena",
+    );
+
+    // Extract code from resulting url
+    final token = Uri.parse(result).queryParameters["code"];
+    await prefs.then((value) => value.setString("appToken", token ?? ""));
+  }
+
+  Future<void> loginGoogle() {
+    if (kIsWeb) {
+      return loginGoogleWeb();
+    }
+    return loginGoogleMobile();
   }
 
   Future<void> login(String email, String password) async {
