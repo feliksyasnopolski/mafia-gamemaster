@@ -113,12 +113,12 @@ class _GameScreenState extends State<GameScreen> {
         appBar: AppBar(
           title: isGameRunning
               ? Text("День ${controller.state.day}")
-              : const Text("Подготовка к игре"),
+              : const Text("подготовка"),
           actions: [
             IconButton(
               onPressed: () => openGameLogPage(context),
               tooltip: "Журнал игры",
-              icon: const Icon(Icons.list),
+              icon: const Icon(Icons.receipt_long),
             ),
             // IconButton(
             //   onPressed: () => _showNotes(context),

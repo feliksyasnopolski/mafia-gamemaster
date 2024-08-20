@@ -15,12 +15,15 @@ class AppDrawer extends StatelessWidget {
     final settings = context.watch<SettingsModel>();
 
     return Drawer(
+      width: 180,
       child: ListView(
         children: [
           DrawerHeader(
             child: Center(
-              child: Text("MafiaArena",
-                  style: Theme.of(context).textTheme.titleLarge,),
+              child: Text(
+                "MafiaArena",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
             ),
           ),
           ListTile(

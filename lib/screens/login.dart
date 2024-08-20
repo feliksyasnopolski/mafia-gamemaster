@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _passwordController,
                   obscureText: true,
                   decoration: const InputDecoration(
-                    labelText: "Password",
+                    labelText: "Пароль",
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -99,8 +99,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         }
                       : null,
-                  child: const Text("Login"),
+                  child: const Text("Войти"),
                 ),
+                const SizedBox(height: 18),
                 ElevatedButton(
                   onPressed: state is! LoginLoading
                       ? () {
@@ -114,7 +115,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         }
                       : null,
-                  child: const Text("Login with Google"),
+                  style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(0), shape: StadiumBorder()),
+                  child: Image(
+                    height: 32,
+                    image: const AssetImage("assets/google_sign_in.png"),
+                  ),
                 ),
                 if (state is LoginLoading)
                   const Padding(

@@ -13,9 +13,11 @@ abstract class BaseGameLogItem {
 @immutable
 class StateChangeGameLogItem extends BaseGameLogItem {
   final BaseGameState oldState;
+  final BaseGameState? newState;
 
   const StateChangeGameLogItem({
     required this.oldState,
+    this.newState,
   });
 }
 

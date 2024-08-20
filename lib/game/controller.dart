@@ -280,7 +280,7 @@ class Game {
       "Invalid or unspecified transition from ${_state.stage} to ${nextState.stage}",
     );
     final oldState = _state;
-    _log.add(StateChangeGameLogItem(oldState: oldState));
+    _log.add(StateChangeGameLogItem(oldState: oldState, newState: nextState));
     // if (oldState.stage.isAnyOf([GameStage.dayLastWords, GameStage.nightLastWords])) {
     if (oldState
         case GameStateWithCurrentPlayer(
@@ -583,8 +583,15 @@ class Game {
   BaseGameState _handleEndOfNight() {
     final state = _state as GameStateNightCheck;
     final thisNightKilledPlayer = state.thisNightKilledPlayerNumber;
+    final firstKillHappened = this
+            .log
+            .whereType<StateChangeGameLogItem>()
+            .map((e) => e.oldState)
+            .whereType<GameStateNightKill>()
+            .length ==
+        1;
     if (thisNightKilledPlayer != null) {
-      if (players.aliveCount == 10) {
+      if (firstKillHappened /*players.aliveCount == 10*/) {
         return GameStateFirstKilled(
           day: state.day,
           thisNightKilledPlayerNumber: thisNightKilledPlayer,

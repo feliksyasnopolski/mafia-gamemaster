@@ -6,27 +6,27 @@ import "../game/log.dart";
 import "../game/states.dart";
 import "../utils/game_controller.dart";
 import "../utils/ui.dart";
+import "../utils/log/map_items.dart";
 
 extension DescribeLogItem on BaseGameLogItem {
   List<String> get description {
     final result = <String>[];
     switch (this) {
-      case StateChangeGameLogItem(oldState: final oldState):
+      case StateChangeGameLogItem(
+          oldState: final oldState,
+          newState: final newState
+        ):
+        if (newState != null && oldState.day != newState?.day) {
+          result.add("День ${newState!.day}");
+        }
         switch (oldState) {
-          case GameState() ||
-                GameStateWithPlayer() ||
-                GameStateWithPlayers() ||
-                GameStateNightKill() ||
-                GameStateNightCheck() ||
-                GameStateWithCurrentPlayer():
-            // skip
-            break;
           case GameStateFirstKilled(
               thisNightKilledPlayerNumber: final killedPlayerNumber,
               bestMoves: final bestMoves
             ):
             result.add(
-                "Первоубиенный #$killedPlayerNumber, его ЛХ: ${bestMoves.join(", ")}",);
+              "Первоубиенный #$killedPlayerNumber, его ЛХ: ${bestMoves.join(", ")}",
+            );
           case GameStateSpeaking(
               currentPlayerNumber: final pn,
               accusations: final accusations
@@ -54,8 +54,18 @@ extension DescribeLogItem on BaseGameLogItem {
             result.add("За подъём стола отдано голосов: $votes"); // FIXME: i18n
           case GameStateFinish():
             throw AssertionError();
+          default:
+            break;
+          // case GameState() ||
+          //       GameStateWithPlayer() ||
+          //       GameStateWithPlayers() ||
+          //       GameStateNightKill() ||
+          //       GameStateNightCheck() ||
+          //       GameStateWithCurrentPlayer():
+          //   break;
         }
-        result.add(oldState.prettyName());
+
+      // result.add(oldState.prettyName());
       case PlayerCheckedGameLogItem(
           playerNumber: final playerNumber,
           checkedByRole: final checkedByRole,
@@ -82,17 +92,12 @@ class GameLogScreen extends StatelessWidget {
       ),
       body: controller.gameLog.isNotEmpty
           ? ListView(
-              children: <ListTile>[
-                for (final item in controller.gameLog)
-                  for (final desc in item.description)
-                    ListTile(
-                      minVerticalPadding: -8,
-                      title: Text(desc),
-                      visualDensity:
-                          const VisualDensity(horizontal: 0, vertical: -4),
-                      // dense: true,
-                    ),
-              ],
+              children: _buildLogItems(context),
+              // children: controller.gameLog.reversed
+              //     .map((item) => ListTile(
+              //           title: Text(item.description.,
+              //         ))
+              //     .toList(
             )
           : Center(
               child: Text(
@@ -101,5 +106,49 @@ class GameLogScreen extends StatelessWidget {
               ),
             ),
     );
+  }
+
+  List<Widget> _buildLogItems(BuildContext context) {
+    final controller = context.read<GameController>();
+    final mapItems = controller.gameLog.mapItems;
+    final result = <Widget>[];
+
+    result.add(SizedBox(height: 8));
+
+    for (final day in mapItems.keys.toList()..sort()) {
+      final cardWidgets = <Widget>[];
+      cardWidgets.add(
+        Center(
+          heightFactor: 1,
+          child: Text(
+            "День $day",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).highlightColor,
+            ),
+          ),
+        ),
+      );
+      for (final item in mapItems[day]!) {
+        cardWidgets.add(
+          ListTile(
+            title: Text(item),
+          ),
+        );
+      }
+
+      result.add(
+        Card(
+          surfaceTintColor: Theme.of(context).highlightColor,
+          borderOnForeground: true,
+          child: Column(
+            children: cardWidgets,
+          ),
+        ),
+      );
+    }
+
+    return result;
   }
 }

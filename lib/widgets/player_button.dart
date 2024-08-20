@@ -126,10 +126,9 @@ class PlayerButton extends OrientationDependentWidget {
     }
     if (isActive) {
       return Theme.of(context).colorScheme.primary.withOpacity(0.25);
+    } else if (isSelected) {
+      return Colors.green.withOpacity(0.25);
     }
-    // else if (isSelected) {
-    //   return Colors.green.withOpacity(0.25);
-    // }
     return null;
   }
 
@@ -160,7 +159,7 @@ class PlayerButton extends OrientationDependentWidget {
     }
   }
 
-  Color playerColor(int number) => buttonColors[number - 1];
+  Color playerColor(int number) => buttonColors[number];
 
   Color? getAccusedColor(BuildContext context) {
     final controller = context.read<GameController>();
@@ -186,19 +185,21 @@ class PlayerButton extends OrientationDependentWidget {
     if (controller.state.stage == GameStage.nightKill) {
       final state = controller.state as GameStateNightKill;
       if (state.thisNightKilledPlayerNumber == player.number) {
-        widgets.add(const Align(
-          alignment: Alignment.bottomRight,
-          child: SizedBox(
-            width: 18,
-            child: Text(
-              "🔫",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
+        widgets.add(
+          const Align(
+            alignment: Alignment.bottomRight,
+            child: SizedBox(
+              width: 18,
+              child: Text(
+                "🔫",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
               ),
             ),
           ),
-        ),);
+        );
       }
     } else if (controller.state.stage == GameStage.nightCheck) {
       final state = controller.state as GameStateNightCheck;
@@ -313,8 +314,7 @@ class PlayerButton extends OrientationDependentWidget {
     if (warnCount == 4 && !player.isAlive) {
       warningsText = "X";
     }
-    // final cardText =
-    //     "${player.number}\n ${player.nickname}\n ${_getRoleSuffix()}";
+
     return Stack(
       children: [
         GestureDetector(
