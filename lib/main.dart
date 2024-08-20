@@ -4,6 +4,7 @@ import "package:dynamic_color/dynamic_color.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:json_theme/json_theme.dart";
 import "package:package_info_plus/package_info_plus.dart";
@@ -21,6 +22,8 @@ void main() async {
   final themeStr = await rootBundle.loadString("assets/appainter_theme.json");
   final themeJson = json.decode(themeStr);
   final theme = ThemeDecoder.decodeThemeData(themeJson)!;
+
+  await dotenv.load(fileName: ".env");
 
   runApp(
     MultiProvider(
@@ -53,27 +56,6 @@ class MyApp extends StatelessWidget {
       builder: (light, dark) => MaterialApp.router(
         title: "Помощник ведущего",
         theme: theme,
-        // ThemeData(
-        //   colorScheme: (settings.colorSchemeType == ColorSchemeType.system
-        //           ? light
-        //           : null) ??
-        //       ColorScheme.fromSeed(
-        //         seedColor: seedColor,
-        //         brightness: Brightness.light,
-        //       ),
-        //   useMaterial3: true,
-        // ),
-        // darkTheme: ThemeData(
-        //   colorScheme: (settings.colorSchemeType == ColorSchemeType.system
-        //           ? dark
-        //           : null) ??
-        //       ColorScheme.fromSeed(
-        //         seedColor: seedColor,
-        //         brightness: Brightness.dark,
-        //       ),
-        //   useMaterial3: true,
-        // ),
-        // themeMode: settings.themeMode,
         routerConfig: _appRouter.config(),
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,

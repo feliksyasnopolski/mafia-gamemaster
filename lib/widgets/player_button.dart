@@ -33,10 +33,10 @@ class PlayerButton extends OrientationDependentWidget {
           Colors.blue,
           Colors.purple,
           Colors.brown,
-          Colors.pink,
+          const Color.fromARGB(255, 94, 7, 36),
           Colors.teal,
           Colors.indigo,
-          Colors.amber,
+          const Color.fromARGB(255, 255, 7, 7),
           Colors.cyan,
         ];
 
@@ -97,7 +97,9 @@ class PlayerButton extends OrientationDependentWidget {
 
     if (res == "add_faul") {
       if (controller.getPlayerWarnCount(player.number) >= 3) {
-        controller.killPlayer(player.number);
+        controller
+          ..warnPlayer(player.number)
+          ..killPlayer(player.number);
       } else {
         controller.warnPlayer(player.number);
       }
@@ -109,12 +111,12 @@ class PlayerButton extends OrientationDependentWidget {
   }
 
   Color? _getBorderColor(BuildContext context) {
-    if (isActive) {
-      return Theme.of(context).colorScheme.primary;
-    }
-    // if (isSelected) {
-    //   return Colors.green;
+    // if (isActive) {
+    //   return Theme.of(context).colorScheme.primary;
     // }
+    if (isSelected) {
+      return getAccusedColor(context);
+    }
     return null;
   }
 
@@ -158,30 +160,94 @@ class PlayerButton extends OrientationDependentWidget {
     }
   }
 
-  Widget accusedWidget(BuildContext context) {
+  Color playerColor(int number) => buttonColors[number - 1];
+
+  Color? getAccusedColor(BuildContext context) {
     final controller = context.read<GameController>();
-    var accusedBy = -1;
     if (controller.state.stage == GameStage.speaking) {
       final state = controller.state as GameStateSpeaking;
-      Color? color;
-      accusedBy = state.accusations.entries
+      final accusedBy = state.accusations.entries
           .firstWhere(
             (entry) => entry.value == player.number,
             orElse: () => const MapEntry(-1, -1),
           )
           .key;
       if (accusedBy != -1) {
-        color = buttonColors[accusedBy - 1];
+        return playerColor(accusedBy - 1);
       }
+    }
+    return null;
+  }
+
+  List<Widget> landscapeBottomWidgets(BuildContext context) {
+    final controller = context.read<GameController>();
+    final widgets = <Widget>[];
+
+    if (controller.state.stage == GameStage.nightKill) {
+      final state = controller.state as GameStateNightKill;
+      if (state.thisNightKilledPlayerNumber == player.number) {
+        widgets.add(const Align(
+          alignment: Alignment.bottomRight,
+          child: SizedBox(
+            width: 18,
+            child: Text(
+              "🔫",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+          ),
+        ),);
+      }
+    } else if (controller.state.stage == GameStage.nightCheck) {
+      final state = controller.state as GameStateNightCheck;
+      if (state.thisNightKilledPlayerNumber == player.number) {
+        widgets.add(
+          const SizedBox(
+            width: 18,
+            child: Text(
+              "💀",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+          ),
+        );
+      }
+    } else if (controller.state.stage == GameStage.nightFirstKilled) {
+      final state = controller.state as GameStateFirstKilled;
+      if (state.thisNightKilledPlayerNumber == player.number) {
+        widgets.add(
+          const SizedBox(
+            width: 18,
+            child: Text(
+              "💀",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+          ),
+        );
+      }
+    }
+
+    return widgets;
+  }
+
+  Widget accusedWidget(BuildContext context) {
+    final controller = context.read<GameController>();
+    if (controller.state.stage == GameStage.speaking) {
+      // final state = controller.state as GameStateSpeaking;
+      final color = getAccusedColor(context);
+
       return Container(
         width: 18,
         height: 16,
         decoration: BoxDecoration(
           color: color,
-          // border: Border.all(
-          //   color: color,
-          //   width: 1,
-          // ),
           borderRadius: const BorderRadius.all(Radius.circular(4)),
         ),
       );
@@ -190,15 +256,6 @@ class PlayerButton extends OrientationDependentWidget {
       if (state.thisNightKilledPlayerNumber == player.number) {
         return const SizedBox(
           width: 18,
-          // height: 16,
-          // decoration: BoxDecoration(
-          //   // color: buttonColors[0],
-          //   border: Border.all(
-          //     color: Colors.white,
-          //     width: 1,
-          //   ),
-          //   borderRadius: const BorderRadius.all(Radius.circular(4)),
-          // ),
           child: Text(
             "🔫",
             style: TextStyle(
@@ -221,6 +278,20 @@ class PlayerButton extends OrientationDependentWidget {
             ),
           ),
         );
+      } else if (controller.state.stage == GameStage.nightFirstKilled) {
+        final state = controller.state as GameStateFirstKilled;
+        if (state.thisNightKilledPlayerNumber == player.number) {
+          return const SizedBox(
+            width: 18,
+            child: Text(
+              "💀",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+          );
+        }
       }
     }
     // 🔫
@@ -237,6 +308,11 @@ class PlayerButton extends OrientationDependentWidget {
   @override
   Widget buildLandscape(BuildContext context) {
     final borderColor = _getBorderColor(context);
+    var warningsText = "!" * warnCount;
+
+    if (warnCount == 4 && !player.isAlive) {
+      warningsText = "X";
+    }
     // final cardText =
     //     "${player.number}\n ${player.nickname}\n ${_getRoleSuffix()}";
     return Stack(
@@ -256,7 +332,7 @@ class PlayerButton extends OrientationDependentWidget {
                   ? WidgetStateProperty.all(
                       BorderSide(
                         color: borderColor,
-                        width: 1,
+                        width: 3,
                       ),
                     )
                   : null,
@@ -272,20 +348,44 @@ class PlayerButton extends OrientationDependentWidget {
               children: [
                 Align(
                   alignment: Alignment.topCenter,
-                  child: Text(
-                    "${player.number}",
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                  ), // Adjust text style as needed
-                ),
-                Center(
-                  child: Text(
-                    player.nickname,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 6,
+                      ),
+                      Container(
+                        width: 34,
+                        height: 25,
+                        decoration: BoxDecoration(
+                          color: buttonColors[player.number - 1],
+                          border: Border.all(
+                            color: buttonColors[player.number - 1],
+                            width: 1,
+                          ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(4)),
+                        ),
+                        child: Text(
+                          "${player.number}",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        player.nickname,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ), //
+                    ],
                   ), // Adjust text style as needed
                 ),
                 Align(
@@ -304,12 +404,34 @@ class PlayerButton extends OrientationDependentWidget {
           ),
         ),
         Positioned(
-          top: 6,
+          bottom: 0,
+          right: 6,
+          child: Column(
+            children: landscapeBottomWidgets(context),
+          ),
+        ),
+        // Positioned(
+        //   right: 3,
+        //   bottom: 0,
+        //   child: Text(
+        //     "🔫",
+        //     style: const TextStyle(
+        //       color: Colors.red,
+        //       fontWeight: FontWeight.bold,
+        //       fontSize: 28,
+        //     ),
+        //   ),
+        // ),
+        Positioned(
+          top: 0,
           right: 6,
           child: Text(
-            "!" * warnCount,
-            style:
-                const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            warningsText,
+            style: const TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: 28,
+            ),
           ),
         ),
       ],
@@ -331,7 +453,8 @@ class PlayerButton extends OrientationDependentWidget {
           child: ElevatedButton(
             style: ButtonStyle(
               padding: WidgetStateProperty.all(
-                  const EdgeInsets.symmetric(horizontal: 2),),
+                const EdgeInsets.symmetric(horizontal: 2),
+              ),
               shape: WidgetStateProperty.all(
                 const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)),

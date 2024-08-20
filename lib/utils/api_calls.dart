@@ -4,7 +4,8 @@ import "dart:async";
 import "dart:convert";
 import "dart:io";
 
-import 'package:flutter/foundation.dart' show kIsWeb;
+import "package:flutter/foundation.dart" show kIsWeb;
+import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:flutter_web_auth_2/flutter_web_auth_2.dart";
 import "package:http/http.dart" as http;
 import "package:shared_preferences/shared_preferences.dart";
@@ -15,17 +16,17 @@ import "../game/states.dart";
 import "./api_models.dart";
 import "ui.dart";
 
-// const String baseUrl = "http://localhost:3000";
-const String baseUrl = "https://mafiaarena.org";
-const String googleClientId =
-    "249216389685-3fu96ho8vl9r13ovb2cjpgdoa1ipn8bu.apps.googleusercontent.com";
+String baseUrl = dotenv.env["BASE_URL"] ?? "";
+// const String baseUrl = "https://mafiaarena.org";
+String googleClientId = dotenv.env["GOOGLE_CLIENT_ID"] ?? "";
+// "249216389685-3fu96ho8vl9r13ovb2cjpgdoa1ipn8bu.apps.googleusercontent.com";
 
 class ApiCalls {
   final prefs = SharedPreferences.getInstance();
   ApiCalls() : super();
 
   Future<void> loginGoogleMobile() async {
-    const redirectUrl = "$baseUrl/omniauth/callback";
+    final redirectUrl = "$baseUrl/omniauth/callback";
     // Construct the url
     final url = Uri.https("accounts.google.com", "/o/oauth2/v2/auth", {
       "response_type": "code",
