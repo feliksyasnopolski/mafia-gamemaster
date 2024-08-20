@@ -27,6 +27,7 @@ env:
   JAVA_DISTRIBUTION: temurin
   FLUTTER_CHANNEL: stable
   FLUTTER_VERSION: "3.22.2"
+  ENV_DATA: ${{ secrets.ENV_DATA }}
 
 permissions:
   contents: read
@@ -73,7 +74,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Add environment variables
-        run: echo $ENV_DATA >.env
+        run: echo $ENV_DATA | base64 -d >.env
 
       - name: Install Java
         uses: actions/setup-java@v3
@@ -117,7 +118,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Add environment variables
-        run: echo $ENV_DATA >.env
+        run: echo $ENV_DATA | base64 -d >.env
 
       - name: Install Java
         uses: actions/setup-java@v3
@@ -136,7 +137,7 @@ jobs:
         run: flutter pub get
 
       - name: Build app for web
-        run: flutter build web
+        run: flutter build web --no-tree-shake-icons
 
       # - name: Patch app name for web
       #   run: |
