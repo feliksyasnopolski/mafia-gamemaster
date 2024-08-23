@@ -38,15 +38,6 @@ class _GameScreenState extends State<GameScreen> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    final gameController = context.read<GameController>();
-    unawaited(
-      apiCalls.startGame(gameController.players, gameController.tableToken),
-    );
-  }
-
   Future<void> _askRestartGame(BuildContext context) async {
     final restartGame = await showDialog<bool>(
       context: context,
@@ -59,6 +50,7 @@ class _GameScreenState extends State<GameScreen> {
       // ignore: use_build_context_synchronously
       unawaited(
         showSnackBar(
+          // ignore: use_build_context_synchronously
           context,
           const SnackBar(content: Text("Игра перезапущена")),
         ),
@@ -92,7 +84,7 @@ class _GameScreenState extends State<GameScreen> {
         !gameState.stage.isAnyOf([GameStage.prepare, GameStage.finish]);
 
     return PopScope(
-      canPop: controller.state.stage == GameStage.prepare,
+      // canPop: controller.state.stage == GameStage.prepare,
       onPopInvoked: (didPop) async {
         if (didPop) return;
         final res = await showDialog<bool>(

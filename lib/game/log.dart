@@ -8,6 +8,8 @@ import "states.dart";
 @immutable
 abstract class BaseGameLogItem {
   const BaseGameLogItem();
+
+  Map<String, dynamic> toJson() => {};
 }
 
 @immutable
@@ -19,6 +21,12 @@ class StateChangeGameLogItem extends BaseGameLogItem {
     required this.oldState,
     this.newState,
   });
+  @override
+  Map<String, dynamic> toJson() => {
+        "type": "stateChange",
+        "oldState": oldState.toJson(),
+        "newState": newState?.toJson(),
+      };
 }
 
 @immutable
@@ -28,6 +36,12 @@ class PlayerWarnedGameLogItem extends BaseGameLogItem {
   const PlayerWarnedGameLogItem({
     required this.playerNumber,
   });
+
+  @override
+  Map<String, dynamic> toJson() => {
+        "type": "playerWarned",
+        "playerNumber": playerNumber,
+      };
 }
 
 @immutable
@@ -39,6 +53,13 @@ class PlayerCheckedGameLogItem extends BaseGameLogItem {
     required this.playerNumber,
     required this.checkedByRole,
   });
+
+  @override
+  Map<String, dynamic> toJson() => {
+        "type": "playerChecked",
+        "playerNumber": playerNumber,
+        "checkedByRole": checkedByRole.name,
+      };
 }
 
 class GameLog with IterableMixin<BaseGameLogItem> {

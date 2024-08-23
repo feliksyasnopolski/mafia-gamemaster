@@ -28,9 +28,6 @@ class Game {
             ..toUnmodifiableList(),
         );
 
-  /// Returns current game state.
-  BaseGameState get state => _state;
-
   // List<int> get bestMoves => _bestMoves;
 
   bool get isActive =>
@@ -38,6 +35,14 @@ class Game {
 
   /// Returns game log.
   Iterable<BaseGameLogItem> get log => _log;
+  GameLog get logObject => _log;
+
+  /// Returns current game state.
+  BaseGameState get state => _state;
+
+  set state(BaseGameState state) {
+    _state = state;
+  }
 
   /// Assumes team that will win if game ends right now. Returns [PlayerRole.mafia],
   /// [PlayerRole.citizen] or `null` if the game can't end right now.
@@ -583,8 +588,7 @@ class Game {
   BaseGameState _handleEndOfNight() {
     final state = _state as GameStateNightCheck;
     final thisNightKilledPlayer = state.thisNightKilledPlayerNumber;
-    final firstKillHappened = this
-            .log
+    final firstKillHappened = log
             .whereType<StateChangeGameLogItem>()
             .map((e) => e.oldState)
             .whereType<GameStateNightKill>()

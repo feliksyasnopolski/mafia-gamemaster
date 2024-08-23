@@ -64,6 +64,132 @@ sealed class BaseGameState {
     required this.stage,
     required this.day,
   });
+
+  Map<String, dynamic> toJson() => {
+        "stage": stage.name,
+        "day": day,
+      };
+
+  factory BaseGameState.fromJson(Map<String, dynamic> json) {
+    final stage = GameStage.values.firstWhere(
+      (stage) => stage.name == json["stage"],
+    );
+    final day = json["day"] as int;
+
+    switch (stage) {
+      case GameStage.prepare:
+        return GameState(stage: stage, day: day);
+      case GameStage.night0SheriffCheck:
+      case GameStage.nightLastWords:
+        return GameStateWithPlayer(
+          stage: stage,
+          day: day,
+          currentPlayerNumber: json["currentPlayerNumber"] as int,
+        );
+      case GameStage.speaking:
+        return GameStateSpeaking(
+          day: day,
+          currentPlayerNumber: json["currentPlayerNumber"] as int,
+          accusations: LinkedHashMap.fromEntries(
+            (json["accusations"] as Map<String, dynamic>).entries.map(
+                  (entry) => MapEntry(
+                    int.parse(entry.key),
+                    entry.value as int,
+                  ),
+                ),
+          ),
+        );
+      case GameStage.voting:
+      case GameStage.finalVoting:
+        return GameStateVoting(
+          stage: stage,
+          day: day,
+          votes: LinkedHashMap.fromEntries(
+            (json["votes"] as Map<String, dynamic>).entries.map(
+                  (entry) => MapEntry(
+                    int.parse(entry.key),
+                    entry.value as int?,
+                  ),
+                ),
+          ),
+          currentPlayerNumber: json["currentPlayerNumber"] as int,
+          currentPlayerVotes: json["currentPlayerVotes"] as int?,
+          lastPlayer: json["lastPlayer"] as int?,
+        );
+      case GameStage.dropTableVoting:
+        return GameStateDropTableVoting(
+          day: day,
+          playerNumbers: List<int>.from(json["playerNumbers"] as List),
+          votesForDropTable: json["votesForDropTable"] as int,
+        );
+      case GameStage.night0:
+      case GameStage.preVoting:
+      case GameStage.preFinalVoting:
+        return GameStateWithPlayers(
+          stage: stage,
+          day: day,
+          playerNumbers: List<int>.from(json["playerNumbers"] as List),
+          accusations: LinkedHashMap.fromEntries(
+            (json["accusations"] as Map<String, dynamic>).entries.map(
+                  (entry) => MapEntry(
+                    int.parse(entry.key),
+                    entry.value as int?,
+                  ),
+                ),
+          ),
+        );
+      case GameStage.nightKill:
+        return GameStateNightKill(
+          day: day,
+          mafiaTeam: List<int>.from(json["mafiaTeam"] as List),
+          thisNightKilledPlayerNumber:
+              json["thisNightKilledPlayerNumber"] as int?,
+        );
+      case GameStage.nightFirstKilled:
+        return GameStateFirstKilled(
+          day: day,
+          // mafiaTeam: List<int>.from(json["mafiaTeam"] as List),
+          thisNightKilledPlayerNumber:
+              json["thisNightKilledPlayerNumber"] as int?,
+          bestMoves: List<int>.from(json["bestMoves"] as List),
+        );
+      case GameStage.nightCheck:
+        return GameStateNightCheck(
+          day: day,
+          activePlayerNumber: json["activePlayerNumber"] as int,
+          activePlayerRole: PlayerRole.values.firstWhere(
+            (role) => role.name == json["activePlayerRole"],
+          ),
+          thisNightKilledPlayerNumber:
+              json["thisNightKilledPlayerNumber"] as int?,
+        );
+      case GameStage.excuse:
+      case GameStage.dayLastWords:
+        return GameStateWithCurrentPlayer(
+          stage: stage,
+          day: day,
+          playerNumbers: List<int>.from(json["playerNumbers"] as List),
+          currentPlayerIndex: json["currentPlayerIndex"] as int,
+          accusations: LinkedHashMap.fromEntries(
+            (json["accusations"] as Map<String, dynamic>).entries.map(
+                  (entry) => MapEntry(
+                    int.parse(entry.key),
+                    entry.value as int,
+                  ),
+                ),
+          ),
+        );
+      case GameStage.finish:
+        return GameStateFinish(
+          day: day,
+          winner: json["winner"] == null
+              ? null
+              : PlayerRole.values.firstWhere(
+                  (role) => role.name == json["winner"],
+                ),
+        );
+    }
+  }
 }
 
 /// Represents sole game state without any additional data.
@@ -120,6 +246,12 @@ class GameStateWithPlayer extends BaseGameState {
 
   @override
   int get hashCode => Object.hash(stage, day, currentPlayerNumber);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        "currentPlayerNumber": currentPlayerNumber,
+      };
 }
 
 /// Represents state with [currentPlayerNumber] and [accusations].
@@ -149,6 +281,13 @@ class GameStateSpeaking extends BaseGameState {
 
   @override
   int get hashCode => Object.hash(stage, day, currentPlayerNumber, accusations);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        "currentPlayerNumber": currentPlayerNumber,
+        "accusations": accusations.map((k, v) => MapEntry(k.toString(), v)),
+      };
 }
 
 /// Represents state with [currentPlayerNumber], [currentPlayerVotes] and total [votes].
@@ -188,6 +327,14 @@ class GameStateVoting extends BaseGameState {
   @override
   int get hashCode =>
       Object.hash(stage, day, votes, currentPlayerNumber, currentPlayerVotes);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        "currentPlayerNumber": currentPlayerNumber,
+        "currentPlayerVotes": currentPlayerVotes,
+        "votes": votes.map((k, v) => MapEntry(k.toString(), v)),
+      };
 }
 
 /// Represents state with [playerNumbers] and [votesForDropTable].
@@ -216,6 +363,13 @@ class GameStateDropTableVoting extends BaseGameState {
 
   @override
   int get hashCode => Object.hash(stage, day, playerNumbers, votesForDropTable);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        "playerNumbers": playerNumbers,
+        "votesForDropTable": votesForDropTable,
+      };
 }
 
 /// Represents game state with related [playerNumbers].
@@ -249,6 +403,13 @@ class GameStateWithPlayers extends BaseGameState {
 
   @override
   int get hashCode => Object.hash(stage, day, playerNumbers);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        "playerNumbers": playerNumbers,
+        "accusations": accusations.map((k, v) => MapEntry(k.toString(), v)),
+      };
 }
 
 /// Represents night kill game state.
@@ -278,6 +439,13 @@ class GameStateNightKill extends BaseGameState {
   @override
   int get hashCode =>
       Object.hash(stage, day, mafiaTeam, thisNightKilledPlayerNumber);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        "mafiaTeam": mafiaTeam,
+        "thisNightKilledPlayerNumber": thisNightKilledPlayerNumber,
+      };
 }
 
 /// Represents night kill game state.
@@ -310,6 +478,14 @@ class GameStateFirstKilled extends BaseGameState {
   @override
   int get hashCode =>
       Object.hash(stage, day, thisNightKilledPlayerNumber, bestMoves);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        // "mafiaTeam": mafiaTeam,
+        "thisNightKilledPlayerNumber": thisNightKilledPlayerNumber,
+        "bestMoves": bestMoves,
+      };
 }
 
 /// Represents night check game state.
@@ -347,6 +523,14 @@ class GameStateNightCheck extends BaseGameState {
         activePlayerRole,
         thisNightKilledPlayerNumber,
       );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        "activePlayerNumber": activePlayerNumber,
+        "activePlayerRole": activePlayerRole.name,
+        "thisNightKilledPlayerNumber": thisNightKilledPlayerNumber,
+      };
 }
 
 /// Represents game state with related [playerNumbers] and current [currentPlayerIndex].
@@ -389,6 +573,14 @@ class GameStateWithCurrentPlayer extends BaseGameState {
       Object.hash(stage, day, playerNumbers, currentPlayerIndex);
 
   int get currentPlayerNumber => playerNumbers[currentPlayerIndex];
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        "playerNumbers": playerNumbers,
+        "currentPlayerIndex": currentPlayerIndex,
+        "accusations": accusations.map((k, v) => MapEntry(k.toString(), v)),
+      };
 }
 
 /// Represents finished game state. Contains [winner] team, which is one of [PlayerRole.mafia],
@@ -415,6 +607,12 @@ class GameStateFinish extends BaseGameState {
 
   @override
   int get hashCode => Object.hash(stage, day, winner);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        "winner": winner?.name,
+      };
 }
 
 const timeLimits = {

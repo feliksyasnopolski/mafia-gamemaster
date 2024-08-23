@@ -61,6 +61,22 @@ class Player {
 
   @override
   int get hashCode => Object.hash(role, number, isAlive);
+
+  Map<String, dynamic> toJson() => {
+        "role": role.toString().split(".").last,
+        "number": number,
+        "isAlive": isAlive,
+        "nickname": nickname,
+      };
+
+  factory Player.fromJson(Map<String, dynamic> json) => Player(
+        role: PlayerRole.values.firstWhere(
+          (role) => role.toString().split(".").last == json["role"],
+        ),
+        number: json["number"] as int,
+        isAlive: json["isAlive"] as bool,
+        nickname: json["nickname"] as String,
+      );
 }
 
 List<Player> generatePlayers({
@@ -92,10 +108,13 @@ List<Player> generatePlayers({
   return playerRoles
       .asMap()
       .entries
-      .map((entry) => Player(
+      .map(
+        (entry) => Player(
           role: entry.value,
           number: entry.key + 1,
-          nickname: "Игрок ${entry.key + 1}",),)
+          nickname: "Игрок ${entry.key + 1}",
+        ),
+      )
       .toList(growable: false)
     ..sort((a, b) => a.number.compareTo(b.number))
     ..toUnmodifiableList();

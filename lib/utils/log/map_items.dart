@@ -1,14 +1,11 @@
-import "package:provider/provider.dart";
-import "package:flutter/material.dart";
 import "../../game/log.dart";
 import "../../game/states.dart";
-import "../game_controller.dart";
 import "../ui.dart";
 
 extension MapItems on Iterable<BaseGameLogItem> {
   Map<int, List<String>> get mapItems {
     var currentDay = 0;
-    final result = Map<int, List<String>>();
+    final result = <int, List<String>>{};
 
     for (final item in this) {
       switch (item) {
@@ -16,8 +13,8 @@ extension MapItems on Iterable<BaseGameLogItem> {
             oldState: final oldState,
             newState: final newState
           ):
-          if (newState != null && oldState.day != newState?.day) {
-            currentDay = newState!.day;
+          if (newState != null && oldState.day != newState.day) {
+            currentDay = newState.day;
           }
           switch (oldState) {
             case GameStateFirstKilled(
@@ -70,7 +67,7 @@ extension MapItems on Iterable<BaseGameLogItem> {
             checkedByRole: final checkedByRole
           ):
           result.putIfAbsent(currentDay, () => []).add(
-              "${checkedByRole.prettyName} проверил игрока #$playerNumber ");
+              "${checkedByRole.prettyName} проверил игрока #$playerNumber ",);
       }
     }
 

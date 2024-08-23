@@ -1,11 +1,14 @@
+
 import "package:flutter/material.dart";
 
 import "../game/controller.dart";
 import "../game/log.dart";
 import "../game/player.dart";
+import "../game/players_view.dart";
 import "../game/states.dart";
 import "api_calls.dart";
 import "extensions.dart";
+import "log/save_restore.dart";
 
 class GameController with ChangeNotifier {
   Game _game = Game();
@@ -14,13 +17,17 @@ class GameController with ChangeNotifier {
   set players(List<Player> value) {
     assert(value.length == 10, "Nicknames list must have 10 elements");
     _players = value;
+    _game.players = PlayersView(value);
   }
 
   String tableToken = "";
   bool isStarted = false;
   Iterable<BaseGameLogItem> get gameLog => _game.log;
+  GameLog get gameLogObject => _game.logObject;
 
   // List<int> get bestMoves => _game.bestMoves;
+
+  Game get game => _game;
 
   BaseGameState get state => _game.state;
 
@@ -53,6 +60,13 @@ class GameController with ChangeNotifier {
     notifyListeners();
   }
 
+  void resume(Map<String, dynamic> data) {
+    _game = Game();
+    SaveRestore(this).restoreState(data);
+    isStarted = true;
+    notifyListeners();
+  }
+
   void startWithPlayers() {
     isStarted = true;
 
@@ -78,9 +92,13 @@ class GameController with ChangeNotifier {
   }
 
   void setNextState() {
+    final wholeLog = SaveRestore(this).getState();
+
     apiCalls.updateLog(_game, tableToken);
     _game.setNextState();
-    apiCalls.updatePlayers(players, tableToken);
+    apiCalls
+      ..updateState(wholeLog, tableToken)
+      ..updatePlayers(players, tableToken);
     // ..updateVoteCandidates(voteCandidates);
     notifyListeners();
   }

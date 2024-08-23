@@ -5,8 +5,8 @@ import "package:provider/provider.dart";
 import "../game/log.dart";
 import "../game/states.dart";
 import "../utils/game_controller.dart";
-import "../utils/ui.dart";
 import "../utils/log/map_items.dart";
+import "../utils/ui.dart";
 
 extension DescribeLogItem on BaseGameLogItem {
   List<String> get description {
@@ -16,8 +16,8 @@ extension DescribeLogItem on BaseGameLogItem {
           oldState: final oldState,
           newState: final newState
         ):
-        if (newState != null && oldState.day != newState?.day) {
-          result.add("День ${newState!.day}");
+        if (newState != null && oldState.day != newState.day) {
+          result.add("День ${newState.day}");
         }
         switch (oldState) {
           case GameStateFirstKilled(
@@ -113,7 +113,7 @@ class GameLogScreen extends StatelessWidget {
     final mapItems = controller.gameLog.mapItems;
     final result = <Widget>[];
 
-    result.add(SizedBox(height: 8));
+    result.add(const SizedBox(height: 8));
 
     for (final day in mapItems.keys.toList()..sort()) {
       final cardWidgets = <Widget>[];

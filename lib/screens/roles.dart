@@ -73,7 +73,7 @@ class _RolesScreenState extends State<RolesScreen> {
 
     if (context.mounted) {
       context.read<GameController>().startWithPlayers();
-      await context.router.replace(const GameRoute());
+      await context.router.push(const GameRoute());
     }
     // await openPage(context, const GameScreen());
   }

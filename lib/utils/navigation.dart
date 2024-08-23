@@ -10,7 +10,7 @@ Future<void> openMainPage(BuildContext context) =>
     context.router.replace(const MainRoute());
 
 Future<void> openGamePage(BuildContext context) =>
-    context.router.replace(const GameRoute());
+    context.router.push(const GameRoute());
 
 Future<void> openGameLogPage(BuildContext context) =>
     context.router.push(const GameLogRoute());

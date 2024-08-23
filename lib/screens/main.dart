@@ -11,9 +11,9 @@ import "../utils/game_controller.dart";
 import "../utils/ui.dart";
 import "../widgets/app_drawer.dart";
 import "../widgets/confirmation_dialog.dart";
+import "../widgets/list_games.dart";
 import "../widgets/orientation_dependent.dart";
 import "../widgets/restart_dialog.dart";
-import "../widgets/table_chooser_dialog.dart";
 
 // ignore: deprecated_member_use
 @RoutePage()
@@ -41,8 +41,12 @@ class _MainScreenState extends State<MainScreen> {
     );
     if (context.mounted && (restartGame ?? false)) {
       context.read<GameController>().restart();
-      unawaited(showSnackBar(
-          context, const SnackBar(content: Text("Игра перезапущена")),),);
+      unawaited(
+        showSnackBar(
+          context,
+          const SnackBar(content: Text("Игра перезапущена")),
+        ),
+      );
     }
   }
 
@@ -63,7 +67,8 @@ class _MainScreenState extends State<MainScreen> {
           builder: (context) => const ConfirmationDialog(
             title: Text("Выход из игры"),
             content: Text(
-                "Вы уверены, что хотите выйти из игры? Все данные будут потеряны.",),
+              "Вы уверены, что хотите выйти из игры? Все данные будут потеряны.",
+            ),
           ),
         );
         if ((res ?? false) && context.mounted) {
@@ -108,35 +113,33 @@ class _RotatableMainScreenBody extends OrientationDependentWidget {
 class _MainScreenMainBodyContent extends StatelessWidget {
   const _MainScreenMainBodyContent();
 
-  Future<void> _onStartGamePressed(
-      BuildContext context, GameController controller,) async {
-    await showDialog<String>(
-      context: context,
-      builder: (context) => TableChooserDialog(
-        gameController: controller,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<GameController>();
 
     return Align(
       alignment: Alignment.center,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            child: const Text("Начать игру", style: TextStyle(fontSize: 20)),
-            onPressed: () => _onStartGamePressed(context, controller),
-          ),
-        ],
+      child: ListGames(
+        gameController: controller,
       ),
+      // Column(
+      //   mainAxisSize: MainAxisSize.max,
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      //   crossAxisAlignment: CrossAxisAlignment.center,
+      //   children: [
+      //     ElevatedButton(
+      //       child: const Text("Начать игру", style: TextStyle(fontSize: 20)),
+      //       onPressed: () => _onStartGamePressed(context, controller),
+      //     ),
+      //     ElevatedButton(
+      //       child:
+      //           const Text("Продолжить игру", style: TextStyle(fontSize: 20)),
+      //       onPressed: () => _onResumeGamePressed(context, controller),
+      //     ),
+      //   ],
+      // ),
     );
-    
+
     // Align(
     //       alignment: Alignment.center,
     //       child: Padding(

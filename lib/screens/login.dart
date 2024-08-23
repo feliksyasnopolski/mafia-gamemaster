@@ -116,10 +116,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(0), shape: StadiumBorder()),
-                  child: Image(
+                      padding: const EdgeInsets.all(0), shape: const StadiumBorder(),),
+                  child: const Image(
                     height: 32,
-                    image: const AssetImage("assets/google_sign_in.png"),
+                    image: AssetImage("assets/google_sign_in.png"),
                   ),
                 ),
                 if (state is LoginLoading)

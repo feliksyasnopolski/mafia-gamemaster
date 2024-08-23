@@ -125,6 +125,26 @@ class ApiCalls {
     }).toList();
   }
 
+  Future<List<GamesModel>> getUnfinishedGames() async {
+    final body = await httpGet("$baseUrl/api/v1/games/unfinished");
+    final jsonBody = json.decode(body) as List;
+    return jsonBody.map((dynamic json) {
+      final map = json as Map<String, dynamic>;
+      return GamesModel(
+        tableName: "Cтол №${map["table_number"] as int}",
+        tableToken: map["table_token"] as String,
+        startedAt: DateTime.parse(map["started_at"] as String),
+      );
+    }).toList();
+  }
+
+  Future<Map<String, dynamic>> getGameState(String tableToken) async {
+    final body =
+        await httpGet("$baseUrl/api/v1/games/state?table_token=$tableToken");
+    final decoded = json.decode(body) as Map<String, dynamic>;
+    return decoded["state"] as Map<String, dynamic>;
+  }
+
   Future<void> startGame(List<Player> players, String tableToken) async {
     final jsonPlayers = <String, dynamic>{
       "players": [
@@ -138,17 +158,28 @@ class ApiCalls {
       "table_token": tableToken,
     };
 
-    await httpPost("$baseUrl/api/v1/new_game", jsonPlayers);
+    await httpPost("$baseUrl/api/v1/games/new", jsonPlayers);
   }
 
   Future<void> stopGame(String tableToken) async {
-    await httpPost("$baseUrl/api/v1/stop_game", {
+    await httpPost("$baseUrl/api/v1/games/stop_game", {
       "table_token": tableToken,
     });
   }
 
   Future<void> updateStatus(Map<String, dynamic> status) async {
-    await httpPost("$baseUrl/api/v1/update_status", status);
+    await httpPost("$baseUrl/api/v1/games/update_status", status);
+  }
+
+  Future<void> updateState(
+      Map<String, dynamic> state, String tableToken,) async {
+    await prefs.then(
+        (value) => value.setString("gameState", json.encode(state) ?? ""),);
+
+    await httpPost("$baseUrl/api/v1/games/save_game", {
+      "state": state,
+      "table_token": tableToken,
+    });
   }
 
   Future<void> updatePlayers(List<Player> players, String tableToken) async {
@@ -164,7 +195,7 @@ class ApiCalls {
       "table_token": tableToken,
     };
 
-    await httpPost("$baseUrl/api/v1/update_status", jsonPlayers);
+    await httpPost("$baseUrl/api/v1/games/update_status", jsonPlayers);
   }
 
   Future<void> sendNightCheckResult(
@@ -177,7 +208,7 @@ class ApiCalls {
       "player": playerNumber,
       "table_token": tableToken,
     };
-    await httpPost("$baseUrl/api/v1/update_log", jsonData);
+    await httpPost("$baseUrl/api/v1/games/update_log", jsonData);
   }
 
   Future<void> updateLog(Game game, String tableToken) async {
@@ -286,12 +317,12 @@ class ApiCalls {
 
     jsonData["table_token"] = tableToken;
 
-    await httpPost("$baseUrl/api/v1/update_log", jsonData);
+    await httpPost("$baseUrl/api/v1/games/update_log", jsonData);
   }
 
   Future<void> updateVoteCandidates(List<int> players) async {
     final jsonPlayers = <String, dynamic>{"vote_candidates": players};
-    await httpPost("$baseUrl/api/v1/update_votes", jsonPlayers);
+    await httpPost("$baseUrl/api/v1/games/update_votes", jsonPlayers);
   }
 
   Future<String> httpGet(String url) async {
