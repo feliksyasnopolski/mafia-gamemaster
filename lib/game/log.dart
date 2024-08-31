@@ -32,15 +32,21 @@ class StateChangeGameLogItem extends BaseGameLogItem {
 @immutable
 class PlayerWarnedGameLogItem extends BaseGameLogItem {
   final int playerNumber;
+  final bool playerRemoved;
+  final int day;
 
   const PlayerWarnedGameLogItem({
     required this.playerNumber,
+    required this.playerRemoved,
+    required this.day,
   });
 
   @override
   Map<String, dynamic> toJson() => {
         "type": "playerWarned",
         "playerNumber": playerNumber,
+        "playerRemoved": playerRemoved,
+        "day": day,
       };
 }
 

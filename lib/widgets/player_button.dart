@@ -4,6 +4,7 @@ import "package:provider/provider.dart";
 import "../game/player.dart";
 import "../game/states.dart";
 import "../utils/game_controller.dart";
+import "confirmation_dialog.dart";
 import "custom_color_menuitem.dart";
 import "orientation_dependent.dart";
 
@@ -97,9 +98,21 @@ class PlayerButton extends OrientationDependentWidget {
 
     if (res == "add_faul") {
       if (controller.getPlayerWarnCount(player.number) >= 3) {
-        controller
-          ..warnPlayer(player.number)
-          ..killPlayer(player.number);
+        final res = await showDialog<bool>(
+          // ignore: use_build_context_synchronously
+          context: context,
+          builder: (context) => ConfirmationDialog(
+            title: const Text("4-й фол"),
+            content: Text(
+              "Вы уверены, что хотите удалить игрока #${player.number}?",
+            ),
+          ),
+        );
+        if (res ?? false) {
+          controller
+            ..warnPlayer(player.number)
+            ..killPlayer(player.number);
+        }
       } else {
         controller.warnPlayer(player.number);
       }
@@ -539,7 +552,7 @@ class PlayerButton extends OrientationDependentWidget {
                 width: 32,
                 child: Text(
                   textAlign: TextAlign.right,
-                  "!" * warnCount,
+                  (warnCount <= 3) ? "!" * warnCount : "X",
                   style: const TextStyle(
                     color: Colors.red,
                     fontWeight: FontWeight.bold,

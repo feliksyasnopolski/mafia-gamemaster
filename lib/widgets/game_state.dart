@@ -101,10 +101,16 @@ class BottomGameStateWidget extends OrientationDependentWidget {
               controller.vote(gameState.currentPlayerNumber, value),
         );
       } else {
+        var alreadyVoted = 0;
+        for (final player in gameState.votes.keys) {
+          if (player == gameState.currentPlayerNumber) break;
+
+          alreadyVoted += gameState.votes[player] ?? 0;
+        }
         return Counter(
           key: ValueKey(gameState.currentPlayerNumber),
           min: onlyOneSelected ? aliveCount : 0,
-          max: aliveCount, // - controller.totalVotes,
+          max: aliveCount - alreadyVoted,
           onValueChanged: (value) =>
               controller.vote(gameState.currentPlayerNumber, value),
           initialValue: onlyOneSelected ? aliveCount : currentPlayerVotes,

@@ -87,6 +87,16 @@ class Game {
         .fold(0, (sum, votes) => votes == null ? sum : sum + votes);
   }
 
+  bool get _isPlayerDeletedToday {
+    final lastWarnedPlayer = _log
+        .whereType<PlayerWarnedGameLogItem>()
+        .where((item) => item.day == state.day)
+        .map((item) => item.playerNumber)
+        .lastOrNull;
+    return lastWarnedPlayer != null &&
+        getPlayerWarnCount(lastWarnedPlayer) == 4;
+  }
+
   /// Assumes next game state according to game internal state, and returns it.
   /// Doesn't change internal state. May throw exceptions if game internal state is inconsistent.
   BaseGameState? get nextStateAssumption {
@@ -118,6 +128,15 @@ class Game {
         if (next.number == _firstSpeakingPlayerNumber) {
           if (state.accusations.isEmpty ||
               state.day == 1 && state.accusations.length == 1) {
+            return GameStateNightKill(
+              day: state.day,
+              mafiaTeam: players.mafiaTeam
+                  .map((player) => player.number)
+                  .toUnmodifiableList(),
+              thisNightKilledPlayerNumber: null,
+            );
+          }
+          if (_isPlayerDeletedToday) {
             return GameStateNightKill(
               day: state.day,
               mafiaTeam: players.mafiaTeam
@@ -450,8 +469,15 @@ class Game {
   }
 
   void warnPlayer(int number) {
+    final isRemoved = (getPlayerWarnCount(number) + 1) == 4; // Rule 7.1
     _playerWarns.update(number - 1, (value) => value + 1, ifAbsent: () => 1);
-    _log.add(PlayerWarnedGameLogItem(playerNumber: number));
+    _log.add(
+      PlayerWarnedGameLogItem(
+        playerNumber: number,
+        playerRemoved: isRemoved,
+        day: state.day,
+      ),
+    );
   }
 
   int getPlayerWarnCount(int number) => _playerWarns[number - 1] ?? 0;
@@ -644,6 +670,9 @@ class Game {
         state.currentPlayerNumber != state.lastPlayer) {
       votes[state.currentPlayerNumber] = 0;
     }
+    if (votes.values.nonNulls.length < votes.length - 1) {
+      return null;
+    }
     if (votes.values.nonNulls.length + 1 == votes.length) {
       // All players except one was voted against
       // The rest of the votes will be given to the last player
@@ -681,7 +710,11 @@ class Game {
         ?.currentPlayerNumber;
     var result = previousFirstSpeakingPlayer ?? 1;
     if (_state is GameStateSpeaking) {
-      return result;
+      if (players[result - 1].isAlive) {
+        return result;
+      } else {
+        result = _nextAlivePlayer(fromNumber: result).number;
+      }
     }
     result = _nextAlivePlayer(fromNumber: result).number;
     if (_state

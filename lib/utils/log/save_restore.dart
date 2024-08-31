@@ -55,15 +55,25 @@ class SaveRestore {
         case "stateChange":
           final oldState = item["oldState"] as Map<String, dynamic>;
           final newState = item["newState"] as Map<String, dynamic>?;
-          gameLog.add(StateChangeGameLogItem(
-            oldState: BaseGameState.fromJson(oldState),
-            newState:
-                newState != null ? BaseGameState.fromJson(newState) : null,
-          ),);
+          gameLog.add(
+            StateChangeGameLogItem(
+              oldState: BaseGameState.fromJson(oldState),
+              newState:
+                  newState != null ? BaseGameState.fromJson(newState) : null,
+            ),
+          );
 
         case "playerWarned":
           final playerNumber = item["playerNumber"] as int;
-          gameLog.add(PlayerWarnedGameLogItem(playerNumber: playerNumber));
+          final playerRemoved = item["playerRemoved"] as bool;
+          final day = item["day"] as int;
+          gameLog.add(
+            PlayerWarnedGameLogItem(
+              playerNumber: playerNumber,
+              playerRemoved: playerRemoved,
+              day: day,
+            ),
+          );
 
         case "playerChecked":
           final playerNumber = item["playerNumber"] as int;
@@ -71,8 +81,12 @@ class SaveRestore {
             (role) => role.name == (item["checkedByRole"] as String),
           );
 
-          gameLog.add(PlayerCheckedGameLogItem(
-              playerNumber: playerNumber, checkedByRole: checkedByRole,),);
+          gameLog.add(
+            PlayerCheckedGameLogItem(
+              playerNumber: playerNumber,
+              checkedByRole: checkedByRole,
+            ),
+          );
         default:
           throw Exception("Unknown log item type: ${item["type"]}");
       }
