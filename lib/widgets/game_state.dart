@@ -129,13 +129,21 @@ class BottomGameStateWidget extends OrientationDependentWidget {
     }
 
     if (gameState case GameStateFinish(winner: final winner)) {
-      ApiCalls().stopGame(controller.tableToken);
-      final resultText = switch (winner) {
-        PlayerRole.citizen => "Победа команды мирных жителей",
-        PlayerRole.mafia => "Победа команды мафии",
+      var resultText = switch (winner) {
+        PlayerRole.citizen => "Победа мирных",
+        PlayerRole.mafia => "Победа мафии",
         null => "Ничья",
         _ => throw AssertionError(),
       };
+      if (gameState.ppkPlayer != null) {
+        resultText += "\nППК: ${gameState.ppkPlayer!.nickname}";
+        ApiCalls().stopGame(
+          tableToken: controller.tableToken,
+          winner: winner,
+          ppk: gameState.ppkPlayer?.number,
+        );
+      }
+
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [

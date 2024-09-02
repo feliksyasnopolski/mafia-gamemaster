@@ -161,9 +161,12 @@ class ApiCalls {
     await httpPost("$baseUrl/api/v1/games/new", jsonPlayers);
   }
 
-  Future<void> stopGame(String tableToken) async {
+  Future<void> stopGame(
+      {String tableToken = "", PlayerRole? winner, int? ppk,}) async {
     await httpPost("$baseUrl/api/v1/games/stop_game", {
       "table_token": tableToken,
+      "winner": winner?.jsonName,
+      "ppk": ppk,
     });
   }
 
@@ -172,9 +175,12 @@ class ApiCalls {
   }
 
   Future<void> updateState(
-      Map<String, dynamic> state, String tableToken,) async {
+    Map<String, dynamic> state,
+    String tableToken,
+  ) async {
     await prefs.then(
-        (value) => value.setString("gameState", json.encode(state) ?? ""),);
+      (value) => value.setString("gameState", json.encode(state) ?? ""),
+    );
 
     await httpPost("$baseUrl/api/v1/games/save_game", {
       "state": state,
@@ -313,6 +319,16 @@ class ApiCalls {
       jsonData["day"] = state.day;
       jsonData["votes_for"] = state.currentPlayerNumber;
       jsonData["votes"] = state.currentPlayerVotes ?? 0;
+    }
+
+    if (state0.stage == GameStage.finish) {
+      final state = state0 as GameStateFinish;
+      jsonData["stage"] = "finish";
+      jsonData["winner"] = state.winner?.name;
+      if (state.ppkPlayer != null) {
+        jsonData["ppkPlayer"] = state.ppkPlayer?.nickname;
+      }
+      // jsonData["winnerTeam"] = state.winnerTeam;
     }
 
     jsonData["table_token"] = tableToken;

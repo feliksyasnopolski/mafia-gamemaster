@@ -1,4 +1,3 @@
-import "dart:async";
 
 import "package:auto_route/auto_route.dart";
 import "package:flutter/material.dart";
@@ -8,12 +7,10 @@ import "package:provider/provider.dart";
 import "../game/states.dart";
 import "../utils/extensions.dart";
 import "../utils/game_controller.dart";
-import "../utils/ui.dart";
 import "../widgets/app_drawer.dart";
 import "../widgets/confirmation_dialog.dart";
 import "../widgets/list_games.dart";
 import "../widgets/orientation_dependent.dart";
-import "../widgets/restart_dialog.dart";
 
 // ignore: deprecated_member_use
 @RoutePage()
@@ -34,21 +31,21 @@ class _MainScreenState extends State<MainScreen> {
     super.dispose();
   }
 
-  Future<void> _askRestartGame(BuildContext context) async {
-    final restartGame = await showDialog<bool>(
-      context: context,
-      builder: (context) => const RestartGameDialog(),
-    );
-    if (context.mounted && (restartGame ?? false)) {
-      context.read<GameController>().restart();
-      unawaited(
-        showSnackBar(
-          context,
-          const SnackBar(content: Text("Игра перезапущена")),
-        ),
-      );
-    }
-  }
+  // Future<void> _askRestartGame(BuildContext context) async {
+  //   final restartGame = await showDialog<bool>(
+  //     context: context,
+  //     builder: (context) => const RestartGameDialog(),
+  //   );
+  //   if (context.mounted && (restartGame ?? false)) {
+  //     context.read<GameController>().restart();
+  //     unawaited(
+  //       showSnackBar(
+  //         context,
+  //         const SnackBar(content: Text("Игра перезапущена")),
+  //       ),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
           builder: (context) => const ConfirmationDialog(
             title: Text("Выход из игры"),
             content: Text(
-              "Вы уверены, что хотите выйти из игры? Все данные будут потеряны.",
+              "Вы уверены, что хотите выйти из приложения?",
             ),
           ),
         );

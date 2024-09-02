@@ -97,6 +97,27 @@ class Game {
         getPlayerWarnCount(lastWarnedPlayer) == 4;
   }
 
+  void ppkPlayer(final int playerNumber) {
+    // PPK - win of team other than player's
+    final player = players.getByNumber(playerNumber);
+    final playerTeam =
+        player.role.isCitizen ? players.citizenTeam : players.mafiaTeam;
+    final newState = GameStateFinish(
+      day: state.day,
+      winner: playerTeam.first.role.isCitizen
+          ? PlayerRole.mafia
+          : PlayerRole.citizen,
+      ppkPlayer: player,
+    );
+
+    for (final p in playerTeam) {
+      players.kill(p.number);
+    }
+
+    _log.add(StateChangeGameLogItem(oldState: state, newState: newState));
+    _state = newState;
+  }
+
   /// Assumes next game state according to game internal state, and returns it.
   /// Doesn't change internal state. May throw exceptions if game internal state is inconsistent.
   BaseGameState? get nextStateAssumption {

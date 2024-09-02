@@ -590,10 +590,12 @@ class GameStateWithCurrentPlayer extends BaseGameState {
 @immutable
 class GameStateFinish extends BaseGameState {
   final PlayerRole? winner;
+  final Player? ppkPlayer;
 
   const GameStateFinish({
     required super.day,
     required this.winner,
+    this.ppkPlayer,
   }) : super(stage: GameStage.finish);
 
   @override
@@ -603,7 +605,8 @@ class GameStateFinish extends BaseGameState {
           runtimeType == other.runtimeType &&
           stage == other.stage &&
           day == other.day &&
-          winner == other.winner;
+          winner == other.winner &&
+          ppkPlayer == other.ppkPlayer;
 
   @override
   int get hashCode => Object.hash(stage, day, winner);
@@ -612,6 +615,7 @@ class GameStateFinish extends BaseGameState {
   Map<String, dynamic> toJson() => {
         ...super.toJson(),
         "winner": winner?.name,
+        "ppkPlayer": ppkPlayer?.toJson(),
       };
 }
 

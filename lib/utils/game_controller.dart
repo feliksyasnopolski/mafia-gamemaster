@@ -1,4 +1,3 @@
-
 import "package:flutter/material.dart";
 
 import "../game/controller.dart";
@@ -48,7 +47,7 @@ class GameController with ChangeNotifier {
   BaseGameState? get nextStateAssumption {
     final assumption = _game.nextStateAssumption;
     if (assumption == null) {
-      apiCalls.stopGame(tableToken);
+      apiCalls.stopGame(tableToken: tableToken, winner: winTeamAssumption);
     }
     return assumption;
   }
@@ -106,6 +105,17 @@ class GameController with ChangeNotifier {
   void setPreviousState() {
     _game.setPreviousState();
     notifyListeners();
+  }
+
+  void ppkPlayer(int player) {
+    final wholeLog = SaveRestore(this).getState();
+
+    _game.ppkPlayer(player);
+    notifyListeners();
+    apiCalls
+      ..updateLog(game, tableToken)
+      ..updateState(wholeLog, tableToken)
+      ..updatePlayers(players, tableToken);
   }
 
   void warnPlayer(int player) {

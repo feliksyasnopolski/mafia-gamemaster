@@ -93,6 +93,18 @@ class PlayerButton extends OrientationDependentWidget {
             enabled: showKillPlayer,
             child: const Text("Удаление игрока"),
           ),
+        PopupMenuItem<String>(
+          value: "ppk_player",
+          height: 30,
+          enabled: showKillPlayer,
+          child: const Text(
+            "ППК",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
       ],
     );
 
@@ -120,6 +132,20 @@ class PlayerButton extends OrientationDependentWidget {
       controller.removePlayerWarn(player.number);
     } else if (res == "kill_player") {
       controller.killPlayer(player.number);
+    } else if (res == "ppk_player") {
+      final res = await showDialog<bool>(
+        // ignore: use_build_context_synchronously
+        context: context,
+        builder: (context) => ConfirmationDialog(
+          title: const Text("ППК"),
+          content: Text(
+            "Вы уверены, что игрок #${player.number} привел к ППК?",
+          ),
+        ),
+      );
+      if (res ?? false) {
+        controller.ppkPlayer(player.number);
+      }
     }
   }
 

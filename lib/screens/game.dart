@@ -44,7 +44,8 @@ class _GameScreenState extends State<GameScreen> {
       builder: (context) => const RestartGameDialog(),
     );
     if (context.mounted && (restartGame ?? false)) {
-      unawaited(apiCalls.stopGame(context.read<GameController>().tableToken));
+      unawaited(apiCalls.stopGame(
+          tableToken: context.read<GameController>().tableToken,),);
       context.read<GameController>().restart();
       await openMainPage(context);
       // ignore: use_build_context_synchronously
