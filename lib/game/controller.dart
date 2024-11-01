@@ -146,7 +146,10 @@ class Game {
       case GameStage.speaking:
         final state = _state as GameStateSpeaking;
         final next = _nextAlivePlayer(fromNumber: state.currentPlayerNumber);
-        if (next.number == _firstSpeakingPlayerNumber) {
+        final _firstSpeaking = players[_firstSpeakingPlayerNumber - 1].isAlive
+            ? _firstSpeakingPlayerNumber
+            : _nextAlivePlayer(fromNumber: _firstSpeakingPlayerNumber).number;
+        if (next.number == _firstSpeaking) {
           if (state.accusations.isEmpty ||
               state.day == 1 && state.accusations.length == 1) {
             return GameStateNightKill(
@@ -734,7 +737,7 @@ class Game {
       if (players[result - 1].isAlive) {
         return result;
       } else {
-        result = _nextAlivePlayer(fromNumber: result).number;
+        return _nextAlivePlayer(fromNumber: result).number;
       }
     }
     result = _nextAlivePlayer(fromNumber: result).number;
